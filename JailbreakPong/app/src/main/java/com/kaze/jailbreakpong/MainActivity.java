@@ -18,6 +18,17 @@ import android.view.Display;
 import android.graphics.Paint;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
+import android.widget.RelativeLayout;
 
 import static java.lang.Math.round;
 
@@ -126,4 +137,95 @@ public class MainActivity extends AppCompatActivity {
         }
         return 0;
     }
+}
+
+
+        // puts ball on screen
+        Ball ball = init();
+
+        // adds animator
+        addAnimator(ball);
+
+
+
+    }
+
+
+    // prolly move this to 
+    private void addAnimator(final Ball ball){
+
+
+        final ValueAnimator animator = ValueAnimator.ofFloat(0,
+                Resources.getSystem().getDisplayMetrics().widthPixels - ball.getSize());
+
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float animatedVal = (float) animator.getAnimatedValue();
+                ball.setX(animatedVal);
+                ball.setPosX(animatedVal);
+            }
+        });
+
+        animator.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                super.onAnimationEnd(animation);
+
+                // reverse direction of ball
+                ball.reverseDirections();
+
+                int [] dir = ball.getDir();
+
+
+                if (dir[0] == 1){
+                    // moving right
+
+                } else {
+                    // moving left
+                }
+
+                // get end direction of ball
+                float newEnd = ball.getEndPoint();
+
+                PropertyValuesHolder[] vals = ((ValueAnimator)animation).getValues();
+
+                ValueAnimator anim = (ValueAnimator)animation;
+
+//                ball.setPosX((float)anim.getAnimatedValue());
+
+                Log.d("yolo1", "onAnimationStart: called with vals: " + vals[0].toString());
+                Log.d("yolo1", "ball posX: " + ball.getPosX());
+
+                vals[0].setFloatValues(ball.getPosX() + ball.getSize(), newEnd + ball.getSize());
+
+//                Log.d("yolo1", "onAnimationStart: set vals: " + vals[0].toString());
+                ((ValueAnimator)animation).setValues(vals);
+
+            }
+        });
+
+        animator.setDuration(2000);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.start();
+
+//        ball.invalidate();
+
+    }
+
+    private Ball init(){
+
+        Log.d("init", "init() called");
+
+        Ball ball = new Ball(this, 0, 0, 100, 10);
+
+        // add to the layout
+        RelativeLayout layout = findViewById(R.id.Layout);
+        layout.addView(ball);
+
+        return ball;
+
+    }
+
 }
