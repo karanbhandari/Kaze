@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("yolo1", "onAnimationStart: called with vals: " + vals[0].toString());
                 Log.d("yolo1", "ball posX: " + ball.getPosX());
 
-                vals[0].setFloatValues(ball.getPosX() + ball.getSize(), newEnd + ball.getSize());
+                vals[0].setFloatValues(ball.getPosX(), newEnd);
 
 //                Log.d("yolo1", "onAnimationStart: set vals: " + vals[0].toString());
                 ((ValueAnimator)animation).setValues(vals);

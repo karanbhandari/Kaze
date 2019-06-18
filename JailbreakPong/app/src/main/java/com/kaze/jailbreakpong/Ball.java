@@ -139,12 +139,12 @@ public class Ball extends View {
 
         if (dir[0] == -1){
 
-            return min(0f, -posX);
+            return 0;
 
         } else {
 
             float screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-            return screenWidth;
+            return screenWidth - size;
 
         }
 
