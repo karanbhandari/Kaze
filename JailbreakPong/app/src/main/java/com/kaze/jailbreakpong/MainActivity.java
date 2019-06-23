@@ -3,6 +3,7 @@ package com.kaze.jailbreakpong;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.PixelFormat;
@@ -32,12 +33,13 @@ public class MainActivity extends AppCompatActivity {
         display.getMetrics(displayMetrics);
 
         float density = getResources().getDisplayMetrics().density;
-        float pxHeight = displayMetrics.heightPixels;
-        float pxWidth = displayMetrics.widthPixels;
+        final float pxHeight = displayMetrics.heightPixels + getNavbarHeight();
+        final float pxWidth = displayMetrics.widthPixels;
 
         Board board = Board.getInstance();
         board.init(pxWidth, pxHeight, density);
         final float gridItemSize = board.getGridItemSize();
+        final float gapSize = board.getGapSize();
         final int nRows = board.getNumRows();
         final int nCols = board.getNumColumns();
 
@@ -58,13 +60,25 @@ public class MainActivity extends AppCompatActivity {
                 paleOrange = ResourcesCompat.getColor(getResources(), R.color.paleOrange, null);
                 white = ResourcesCompat.getColor(getResources(), R.color.white, null);
 
-                mPaint.setColor(paleYellow);
+                int top = 0;
                 int sectionHeight = (int) round(nRows/3 * gridItemSize);
                 int sectionWidth = round(nCols * gridItemSize);
-                Rect oppBackground = new Rect(0, 0, sectionWidth, sectionHeight);
+                // if the dimensions of our board do not match the ratio of the device, center
+                if (gapSize != 0) {
+                    int gapYellow = ResourcesCompat.getColor(getResources(), R.color.gapYellow, null);
+
+                    int bottom = round(gapSize/2);
+                    mPaint.setColor(gapYellow);
+                    Rect oppGap = new Rect(0, 0, sectionWidth, bottom);
+                    canvas.drawRect(oppGap, mPaint);
+                    top = bottom;
+                }
+
+                mPaint.setColor(paleYellow);
+                Rect oppBackground = new Rect(0, top, sectionWidth, sectionHeight+top);
                 canvas.drawRect(oppBackground, mPaint);
 
-                int top = sectionHeight;
+                top = top + sectionHeight;
                 Rect intermediate = new Rect(0, top, sectionWidth, sectionHeight+top);
                 mPaint.setShader(new LinearGradient(0, top, 0, sectionHeight+top, palePurple, paleOrange, Shader.TileMode.CLAMP));
                 canvas.drawRect(intermediate, mPaint);
@@ -73,14 +87,23 @@ public class MainActivity extends AppCompatActivity {
                 mPaint.setColor(white);
                 mPaint.setAlpha(90);
                 mPaint.setStrokeWidth(gridItemSize/3);
-                int midpoint = (int) round(nRows/2 * gridItemSize);
+                int midpoint = (int) round(nRows/2 * gridItemSize) + round(gapSize/2);
                 canvas.drawLine(0, midpoint, sectionWidth, midpoint, mPaint);
                 mPaint.reset();
 
                 mPaint.setColor(paleBlue);
-                top = sectionHeight * 2;
+                top = sectionHeight +top;
                 Rect playerBackground = new Rect(0, top, sectionWidth, sectionHeight+top);
                 canvas.drawRect(playerBackground, mPaint);
+
+                if (gapSize != 0) {
+                    int gapBlue = ResourcesCompat.getColor(getResources(), R.color.gapBlue, null);
+                    top = sectionHeight+top;
+                    int bottom = top+round(gapSize/2);
+                    mPaint.setColor(gapBlue);
+                    Rect playerGap = new Rect(0, top, sectionWidth, bottom);
+                    canvas.drawRect(playerGap, mPaint);
+                }
 
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
@@ -117,5 +140,14 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    public int getNavbarHeight() {
+        Resources resources = getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 }

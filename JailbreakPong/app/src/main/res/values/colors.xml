@@ -5,6 +5,8 @@
     <color name="colorAccent">#D81B60</color>
     <color name="paleYellow">#FFFAE7</color>
     <color name="paleBlue">#E7FFFE</color>
+    <color name="gapYellow">#FFF0D7</color>
+    <color name="gapBlue">#C9F5FF</color>
     <color name="palePurple">#E2DDFE</color>
     <color name="paleOrange">#FEE0D8</color>
     <color name="gradientBlueDark">#0CBEEC</color>
