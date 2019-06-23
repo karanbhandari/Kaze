@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void drawBoardBackground(final Board board) {
         final SurfaceView boardBackground = findViewById(R.id.boardBackground);
-        boardBackground.setZOrderOnTop(true);
 
         boardBackground.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
                 mPaint.setColor(white);
                 mPaint.setAlpha(90);
-                mPaint.setStrokeWidth(gridItemSize / 3);
+                mPaint.setStrokeWidth(gridItemSize / 6);
                 int midpoint = (int) round(oppBtm + (midBtm - oppBtm) / 2);
                 canvas.drawLine(0, midpoint, sectionWidth, midpoint, mPaint);
                 mPaint.reset();
@@ -122,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void drawGridItems(final Board board) {
         final SurfaceView gridItemBoard = findViewById(R.id.boardBackground);
+        gridItemBoard.setZOrderOnTop(true);
         gridItemBoard.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -133,11 +133,11 @@ public class MainActivity extends AppCompatActivity {
                 int nCols = board.getNumColumns();
                 int gapBtm = (int) board.getGapBtm();
 
-                Drawing drawing = new Drawing(nRows, nCols);
-                drawing.initDraw(board.getGrid(), canvas);
-
                 // at start adjust canvas down to account for gap
                 canvas.translate(0, gapBtm);
+
+                Drawing drawing = new Drawing(board.getNumRows(), board.getNumColumns());
+                drawing.initDraw(board.getGrid(), canvas);
 
                 surfaceHolder.unlockCanvasAndPost(canvas);
                 // at very end undo canvas translation
