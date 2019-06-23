@@ -118,6 +118,32 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        gridItemBoard.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                surfaceHolder.setFormat(PixelFormat.RGBA_8888);
+                Canvas canvas = surfaceHolder.lockCanvas();
+                Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+                // at start adjust canvas down to account for gap
+                canvas.translate(0, round(gapSize/2));
+
+                surfaceHolder.unlockCanvasAndPost(canvas);
+                // at very end undo canvas translation
+                canvas.restore();
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+            }
+        });
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
