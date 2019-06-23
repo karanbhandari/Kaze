@@ -1,30 +1,42 @@
 package com.kaze.jailbreakpong;
+import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.widget.ImageView;
 
-public class Brick {
+public abstract class Brick {
 
-    private RectF rect;
+    protected RectF rect;
+//    protected ImageView rect;
 
-    private boolean isVisible;
-    private int hp;
+    protected boolean isVisible;
+    protected int hp;
+    protected Canvas canvas;
+    protected int row;
+    protected int column;
+    protected int width;
+    protected int height;
+    private int opacity;
+
 
     // this shoudl be created as a base class and the triangles and square could be the child classes
 
-    public Brick(int row, int column, int width, int height, int type){
-        // type = 1:
-        // type = 2:
-        // type = 3:
-        // type = 4:
-        // type = 5: square
+    protected Brick(Canvas canvas, int row, int column, int width, int height, int hp){
 
         isVisible = true;
+        this.hp = hp;
 
         int padding = 1;
 
-        rect = new RectF(column * width + padding,
-                row * height + padding,
-                column * width + width - padding,
-                row * height + height - padding);
+        this.canvas = canvas;
+        this.row = row;
+        this.column = column;
+        this.width = width;
+        this.height = height;
+
+//        rect = new RectF(column * width + padding,
+//                row * height + padding,
+//                column * width + width - padding,
+//                row * height + height - padding);
     }
 
     public RectF getRect(){
@@ -37,10 +49,6 @@ public class Brick {
 
     public boolean getVisibility(){
         return isVisible;
-    }
-
-    public void hit() {
-        hp-=1;
     }
 
     public int getHp() {
