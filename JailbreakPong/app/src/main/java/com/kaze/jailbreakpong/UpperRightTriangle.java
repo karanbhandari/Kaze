@@ -29,8 +29,8 @@ public class UpperRightTriangle extends Brick {
 
         Path path = new Path();
         path.moveTo(x, y);
-        path.lineTo(x + width, y);
-        path.lineTo(x, y - width);
+        path.lineTo(x - width, y);
+        path.lineTo(x, y - height);
         path.lineTo(x, y);
         path.close();
 

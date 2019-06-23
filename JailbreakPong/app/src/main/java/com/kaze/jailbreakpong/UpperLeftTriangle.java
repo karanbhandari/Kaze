@@ -17,8 +17,6 @@ public class UpperLeftTriangle extends Brick {
     public UpperLeftTriangle(Canvas canvas, int row, int column, int width, int height) {
 
         super(canvas, row, column, width, height, 1);
-//        ImageView upper_left = new ImageView();
-//        upper_left.setImageResource(R.drawable.top_left);
 
         this.rect = upper_left;
     }
@@ -40,8 +38,8 @@ public class UpperLeftTriangle extends Brick {
 
         Path path = new Path();
         path.moveTo(x, y);
-        path.lineTo(x, y + height);
-        path.lineTo(x + width, y + height);
+        path.lineTo(x + width, y );
+        path.lineTo(x, y - height);
         path.lineTo(x, y);
         path.close();
 

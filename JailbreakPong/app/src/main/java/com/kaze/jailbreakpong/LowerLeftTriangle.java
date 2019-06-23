@@ -8,7 +8,7 @@ import android.graphics.Path;
 public class LowerLeftTriangle extends Brick {
     // HP = 1
 
-    public LowerLeftTriangle(Canvas canvas, int row, int column, int width, int height) {
+    public LowerLeftTriangle(Canvas canvas, int row, int column, int width, int height, Color color) {
         super(canvas, row, column, width, height, 1);
     }
 
@@ -17,7 +17,7 @@ public class LowerLeftTriangle extends Brick {
         // change the image so that it shows one with a broken brick or decrease color
     }
 
-    public void draw(Canvas canvas, Color color) {
+    public void draw(Canvas canvas) {
 
         int halfWidth = width / 2;
 

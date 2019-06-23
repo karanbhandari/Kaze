@@ -1,6 +1,9 @@
 package com.kaze.jailbreakpong;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 
 public class Square extends Brick {
     // HP = 1
@@ -12,5 +15,24 @@ public class Square extends Brick {
     public void hit() {
         this.hp-=1;
         // change the image so that it shows one with a broken brick or decrease color
+    }
+
+    public void draw(Canvas canvas, Color color) {
+
+        Paint paint = new Paint();
+        int x = this.row;
+        int y = this.column;
+        paint.setColor(/*Some color here that is passed along with the opacity value*/);
+
+
+        Path path = new Path();
+        path.moveTo(x, y);
+        path.lineTo(x + width, y);
+        path.lineTo(x + width, y + height);
+        path.lineTo(x, y + height);
+        path.lineTo(x, y);
+        path.close();
+
+        canvas.drawPath(path, paint);
     }
 }
