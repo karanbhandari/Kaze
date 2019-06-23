@@ -4,21 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.RectF;
-import android.widget.ImageView;
 
 public class UpperLeftTriangle extends Brick {
 
     // HP = 1
-    private RectF upper_left;
-
-
-
-    public UpperLeftTriangle(Canvas canvas, int row, int column, int width, int height) {
-
-        super(canvas, row, column, width, height, 1);
-
-        this.rect = upper_left;
+    public UpperLeftTriangle(int row, int column, int width, int height, int color) {
+        super(row, column, width, height, 1, color);
     }
 
     public void hit() {
@@ -26,14 +17,15 @@ public class UpperLeftTriangle extends Brick {
         // change the image so that it shows one with a broken brick or decrease color
     }
 
-    public void draw(Canvas canvas, Color color) {
+    @Override
+    public void draw(Canvas canvas) {
 
         int halfWidth = width / 2;
 
         Paint paint = new Paint();
         int x = this.row;
         int y = this.column;
-        paint.setColor(/*Some color here that is passed along with the opacity value*/);
+        paint.setColor(this.color); // todo: have to change the this.color to a new value with a certain opacity
 
 
         Path path = new Path();

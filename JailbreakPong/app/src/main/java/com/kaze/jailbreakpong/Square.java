@@ -4,12 +4,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.Log;
 
 public class Square extends Brick {
     // HP = 1
 
-    public Square(Canvas canvas, int row, int column, int width, int height) {
-        super(canvas, row, column, width, height, 1);
+    public Square(int row, int column, int width, int height, int color) {
+        super(row, column, width, height, 1, color);
     }
 
     public void hit() {
@@ -17,12 +18,15 @@ public class Square extends Brick {
         // change the image so that it shows one with a broken brick or decrease color
     }
 
-    public void draw(Canvas canvas, Color color) {
+    @Override
+    public void draw(Canvas canvas) {
+
+        Log.d("Square", "draw called ");
 
         Paint paint = new Paint();
         int x = this.row;
         int y = this.column;
-        paint.setColor(/*Some color here that is passed along with the opacity value*/);
+        paint.setColor(this.color);
 
 
         Path path = new Path();

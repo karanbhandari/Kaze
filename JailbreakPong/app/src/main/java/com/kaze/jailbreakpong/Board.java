@@ -1,13 +1,15 @@
 package com.kaze.jailbreakpong;
 import android.graphics.Canvas;
 
+import java.util.ArrayList;
+
 public class Board {
     private static Board board = new Board(); // singleton, only one Board allowed per game.
     private int freed, escaped; // score
     private float pxHeight, pxWidth, dpi, gap; // screen dimensions
     private float gridItemSize; // in px, the width/height of each square grid
     private int nRows, nCols; // number of GridItems horizontally and vertically on screen
-    private GridItem grid[][];
+    private ArrayList<ArrayList<GridItem>> grid = new ArrayList<>();
 
     private Board() {}
 
@@ -21,7 +23,13 @@ public class Board {
         gridItemSize = dimX/nCols; // the px width of each GridItem
         gap = pxHeight - nRows * gridItemSize;
 
-        grid = new GridItem[nRows][nCols];
+        for(int col = 0; col < nCols; col++) {
+            ArrayList<GridItem> tempArray = new ArrayList<>();
+            for ( int row = 0; row < nRows; row++) {
+                tempArray.add(new GridItem(row, col));
+            }
+            grid.add(tempArray);
+        }
     }
     public static Board getInstance(){
         return board;
@@ -43,7 +51,7 @@ public class Board {
         return gap;
     }
 
-    public GridItem[][] getGrid() {
+    public ArrayList<ArrayList<GridItem>> getGrid() {
         return grid;
     }
 
@@ -79,6 +87,19 @@ public class Board {
     }
 
     public void drawGrid() {
+
+    }
+
+    public void initBoard(int color) {
+        BrickFactory bf= new BrickFactory(23, 23, color, "LowerLeftTriangle", (int) gridItemSize);
+//        for(int r = 0; r < nRows; r++) {
+//            for ( int c = 0; c < nCols; c++) {
+//                if( r == 23 && c == 23) {
+//                    grid[r][c] = bf;
+//                }
+//            }
+//        }
+        grid.get(23).set(23, bf.getItem());
 
     }
 }

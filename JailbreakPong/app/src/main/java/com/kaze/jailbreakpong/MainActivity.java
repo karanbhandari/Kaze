@@ -36,12 +36,14 @@ public class MainActivity extends AppCompatActivity {
         final float pxHeight = displayMetrics.heightPixels + getNavbarHeight();
         final float pxWidth = displayMetrics.widthPixels;
 
-        Board board = Board.getInstance();
+        final Board board = Board.getInstance();
         board.init(pxWidth, pxHeight, density);
         final float gridItemSize = board.getGridItemSize();
         final float gapSize = board.getGapSize();
         final int nRows = board.getNumRows();
         final int nCols = board.getNumColumns();
+
+        board.initBoard(ResourcesCompat.getColor(getResources(), R.color.gapBlue, null));
 
         SurfaceView gridItemBoard = findViewById(R.id.gridItemBoard);
         final SurfaceView boardBackground = findViewById(R.id.boardBackground);
@@ -119,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: MainActivity cannot keep this
-        final GridItem initGrid[][] = board.getGrid();
+        // TODO: MainActivity cannot keep this; this is a hacky way to make the items final for the surfaceCreated method
+//        final GridItem initGrid[][] = board.getGrid();
         gridItemBoard.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
                 Drawing drawing = new Drawing(nRows, nCols);
-                drawing.initDraw(initGrid, canvas);
+                drawing.initDraw(board.getGrid(), canvas);
 
                 // at start adjust canvas down to account for gap
                 canvas.translate(0, round(gapSize/2));

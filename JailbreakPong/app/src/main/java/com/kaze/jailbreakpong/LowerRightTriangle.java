@@ -8,8 +8,8 @@ import android.graphics.Path;
 public class LowerRightTriangle extends Brick {
     // HP = 1
 
-    public LowerRightTriangle(Canvas canvas, int row, int column, int width, int height) {
-        super(canvas, row, column, width, height, 1);
+    public LowerRightTriangle(int row, int column, int width, int height, int color) {
+        super(row, column, width, height, 1, color);
     }
 
     public void hit() {
@@ -17,14 +17,15 @@ public class LowerRightTriangle extends Brick {
         // change the image so that it shows one with a broken brick or decrease color
     }
 
-    public void draw(Canvas canvas, Color color) {
+    @Override
+    public void draw(Canvas canvas) {
 
         int halfWidth = width / 2;
 
         Paint paint = new Paint();
         int x = this.row;
         int y = this.column;
-        paint.setColor(/*Some color here that is passed along with the opacity value*/);
+        paint.setColor(this.color);
 
 
         Path path = new Path();

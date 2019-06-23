@@ -1,6 +1,7 @@
 package com.kaze.jailbreakpong;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 public class GridItem {
     private int row, column;   // position of GridItem in our Board object
@@ -42,6 +43,8 @@ public class GridItem {
     }
 
     public void draw(Canvas canvas) {
+
+        Log.d("GridItem", "draw called ");
         // do nothing for blank item
         // children classes overwrite this function
     }

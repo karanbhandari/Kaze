@@ -6,17 +6,23 @@ import android.graphics.Color;
 public class BrickFactory {
     // creates new bricks
 
-    public BrickFactory(Canvas canvas, int gridX, int gridY, Color color, String brickType) {
+    GridItem item;
+
+    public BrickFactory(int gridX, int gridY, int color, String brickType, int gridItemSize) {
         if (brickType == "LowerLeftTriangle") {
-            new LowerLeftTriangle(canvas, gridX, gridY, 1, 1);
+            item = new LowerLeftTriangle(gridX, gridY, gridItemSize, gridItemSize, color);
         } else if(brickType == "LowerRightTriangle") {
-            new LowerRightTriangle(canvas, gridX, gridY, 1, 1);
+            item = new LowerRightTriangle(gridX, gridY, gridItemSize, gridItemSize, color);
         } else if(brickType == "UpperLeftTriangle") {
-            new UpperLeftTriangle(canvas, gridX, gridY, 1, 1);
+            item = new UpperLeftTriangle(gridX, gridY, gridItemSize, gridItemSize, color);
         } else if(brickType == "UpperRightTriangle") {
-            new UpperRightTriangle(canvas, gridX, gridY, 1, 1);
+            item = new UpperRightTriangle(gridX, gridY, gridItemSize, gridItemSize, color);
         } else if(brickType == "Square") {
-            new Square(canvas, gridX, gridY, 1, 1);
+            item = new Square(gridX, gridY, gridItemSize, gridItemSize, color);
         }
+    }
+
+    public GridItem getItem() {
+        return item;
     }
 }

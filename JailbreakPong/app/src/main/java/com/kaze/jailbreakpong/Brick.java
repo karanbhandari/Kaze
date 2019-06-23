@@ -1,46 +1,37 @@
 package com.kaze.jailbreakpong;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.widget.ImageView;
 
-public abstract class Brick {
-
-    protected RectF rect;
-//    protected ImageView rect;
+public abstract class Brick extends GridItem{
 
     protected boolean isVisible;
     protected int hp;
-    protected Canvas canvas;
     protected int row;
     protected int column;
     protected int width;
     protected int height;
     private int opacity;
+    protected int color; // TODO: need to be changed after a hit to a new value with lesser opacity
 
 
     // this shoudl be created as a base class and the triangles and square could be the child classes
 
-    protected Brick(Canvas canvas, int row, int column, int width, int height, int hp){
+    protected Brick(int row, int column, int width, int height, int hp, int color){
+
+        super(row, column, true);
 
         isVisible = true;
         this.hp = hp;
 
         int padding = 1;
 
-        this.canvas = canvas;
-        this.row = row;
-        this.column = column;
+//        this.canvas = canvas;
+        this.row = row * width;
+        this.column = column * height;
         this.width = width;
         this.height = height;
-
-//        rect = new RectF(column * width + padding,
-//                row * height + padding,
-//                column * width + width - padding,
-//                row * height + height - padding);
-    }
-
-    public RectF getRect(){
-        return this.rect;
+        this.opacity = 1;
+        this.color = color;
     }
 
     public void setInvisible(){
@@ -54,6 +45,5 @@ public abstract class Brick {
     public int getHp() {
         return hp;
     }
-
 
 }
