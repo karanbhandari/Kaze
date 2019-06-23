@@ -43,6 +43,10 @@ public class Board {
         return gap;
     }
 
+    public GridItem[][] getGrid() {
+        return grid;
+    }
+
     public int getFreed() {
         return freed;
     }

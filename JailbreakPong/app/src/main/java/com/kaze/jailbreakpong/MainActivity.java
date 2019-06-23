@@ -119,12 +119,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // TODO: MainActivity cannot keep this
+        final GridItem initGrid[][] = board.getGrid();
         gridItemBoard.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
                 surfaceHolder.setFormat(PixelFormat.RGBA_8888);
                 Canvas canvas = surfaceHolder.lockCanvas();
                 Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+                Drawing drawing = new Drawing(nRows, nCols);
+                drawing.initDraw(initGrid, canvas);
 
                 // at start adjust canvas down to account for gap
                 canvas.translate(0, round(gapSize/2));

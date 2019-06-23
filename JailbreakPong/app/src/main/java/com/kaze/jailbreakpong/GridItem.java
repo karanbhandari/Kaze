@@ -41,7 +41,7 @@ public class GridItem {
         // children classes overwrite this function.
     }
 
-    public void onDraw(Canvas canvas) {
+    public void draw(Canvas canvas) {
         // do nothing for blank item
         // children classes overwrite this function
     }
