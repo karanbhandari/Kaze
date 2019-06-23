@@ -2,12 +2,14 @@ package com.kaze.jailbreakpong;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
+import static java.lang.Math.round;
 
 public class Board {
     private static Board board = new Board(); // singleton, only one Board allowed per game.
     private int freed, escaped; // score
     private float pxHeight, pxWidth, dpi, gap; // screen dimensions
     private float gridItemSize; // in px, the width/height of each square grid
+    private int sectionHeight, gapBtm, oppBtm, midBtm, layerBtm, playerBtm;
     private int nRows, nCols; // number of GridItems horizontally and vertically on screen
     private ArrayList<ArrayList<GridItem>> grid = new ArrayList<>();
 
@@ -30,7 +32,14 @@ public class Board {
             }
             grid.add(tempArray);
         }
+
+        sectionHeight = (int) round(nRows/3 * gridItemSize);
+        gapBtm = round(gap/2);
+        oppBtm = gapBtm + sectionHeight;
+        midBtm = oppBtm + sectionHeight;
+        playerBtm = midBtm + sectionHeight;
     }
+
     public static Board getInstance(){
         return board;
     }
@@ -45,6 +54,22 @@ public class Board {
 
     public float getGridItemSize() {
         return gridItemSize;
+    }
+
+    public float getGapBtm() {
+        return gapBtm;
+    }
+
+    public float getOppBtm() {
+        return oppBtm;
+    }
+
+    public float getMidBtm() {
+        return midBtm;
+    }
+
+    public float getPlayerBtm() {
+        return playerBtm;
     }
 
     public float getGapSize() {
