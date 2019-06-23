@@ -20,19 +20,25 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Canvas;
+import android.content.res.TypedArray;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.text.Layout;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.os.Build.VERSION;
 
 import static java.lang.Math.round;
 
 public class MainActivity extends AppCompatActivity {
+    int heightWithouNav = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +145,24 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
+        /*
+        * Getting screen size without navbar. its problematic with navbars
+        * */
+
+
+//        final RelativeLayout fullLayout = (RelativeLayout) findViewById(R.id.Layout);
+//        ViewTreeObserver vto = fullLayout.getViewTreeObserver();
+//
+//        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                //remove listener to ensure only one call is made.
+//                fullLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                int h = fullLayout.getHeight();
+//
+//                heightWithouNav = h;
+//            }
+//        });
 
         // puts ball on screen
         Ball ball = init();
@@ -146,12 +170,69 @@ public class MainActivity extends AppCompatActivity {
         // adds animator
         addAnimator(ball);
 
-
+        addYAnimator(ball);
 
     }
 
+    private void  addYAnimator(final Ball ball){
 
-    // prolly move this to 
+        final Context context = this;
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getMetrics(metrics);
+
+        // getMetrics does not account for statusBar or actionBar height
+        int statusBarHeight = Helper.getStatusBarHeight(this);
+        int actionBarHeight = Helper.getActionBarHeight(this);
+
+        float endingFloat = metrics.heightPixels - statusBarHeight - actionBarHeight - ball.getSize();
+        final ValueAnimator animator = ValueAnimator.ofFloat(0, endingFloat);
+
+        Log.d("YAnim", "height calced: " + endingFloat);
+
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float animatedVal = (float) animator.getAnimatedValue();
+
+                ball.setY(animatedVal);
+                ball.setPosY(animatedVal);
+            }
+        });
+
+        animator.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                super.onAnimationEnd(animation);
+
+                // reverse direction of ball
+                ball.reverseY();
+
+                // get end direction of ball
+                float newEndY = ball.getEndPointY(context);
+
+                PropertyValuesHolder[] vals = ((ValueAnimator)animation).getValues();
+
+                Log.d("yolo2", "onAnimationStart: called with vals: " + vals[0].toString());
+//                Log.d("yolo1", "ball posX: " + ball.getPosX());
+
+                vals[0].setFloatValues(ball.getPosY() , newEndY);
+
+//                Log.d("yolo1", "onAnimationStart: set vals: " + vals[0].toString());
+                ((ValueAnimator)animation).setValues(vals);
+
+            }
+        });
+
+        animator.setDuration(2000);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.start();
+    }
+
+
+    // prolly move this to Ball class
     private void addAnimator(final Ball ball){
 
 
@@ -174,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onAnimationEnd(animation);
 
                 // reverse direction of ball
-                ball.reverseDirections();
+                ball.reverseX();
 
                 int [] dir = ball.getDir();
 
@@ -191,9 +272,6 @@ public class MainActivity extends AppCompatActivity {
 
                 PropertyValuesHolder[] vals = ((ValueAnimator)animation).getValues();
 
-                ValueAnimator anim = (ValueAnimator)animation;
-
-//                ball.setPosX((float)anim.getAnimatedValue());
 
                 Log.d("yolo1", "onAnimationStart: called with vals: " + vals[0].toString());
                 Log.d("yolo1", "ball posX: " + ball.getPosX());
@@ -210,18 +288,15 @@ public class MainActivity extends AppCompatActivity {
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.start();
 
-//        ball.invalidate();
 
     }
 
     private Ball init(){
 
-        Log.d("init", "init() called");
-
         Ball ball = new Ball(this, 0, 0, 100, 10);
 
         // add to the layout
-        RelativeLayout layout = findViewById(R.id.Layout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.Layout);
         layout.addView(ball);
 
         return ball;

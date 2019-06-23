@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,11 +42,12 @@ public class Ball extends View {
 
 //        this.posX = (float) Resources.getSystem().getDisplayMetrics().widthPixels;
         this.posX = posX;
-        this.posY = posY;
         this.size = size;
+        this.posY = posY;
         this.speed = speed;
 
-        rect = new RectF(posX, posY, posX + (float) size, posY + (float) size);
+        rect = new RectF(posX, posY, posX + size, posY + size);
+
         paint = new Paint();
         paint.setColor(Color.RED);
 
@@ -135,20 +137,42 @@ public class Ball extends View {
         dir[1] = -1 * dir[1];
     }
 
+    public void reverseX(){
+        dir[0] = -1 * dir[0];
+    }
+
+    public void reverseY(){
+        dir[1] = -1 * dir[1];
+    }
+
     public float getEndPoint(){
 
         if (dir[0] == -1){
-
             return 0;
-
         } else {
-
             float screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
             return screenWidth - size;
-
         }
-
     }
 
+    public float getEndPointY(Context context){
+
+        if (dir[0] == -1){
+            return 0;
+        } else {
+            float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+
+            int statusBarHeight = Helper.getStatusBarHeight(context);
+            int actionBarHeight = Helper.getActionBarHeight(context);
+
+            Log.d("BALL", "getEndPointY: screenHeight: " + screenHeight);
+
+            float toRet = screenHeight - statusBarHeight - actionBarHeight;
+            Log.d("BALL", "getEndPointY: toRet: " + toRet);
+
+
+            return screenHeight - statusBarHeight - actionBarHeight - size;
+        }
+    }
 
 }
