@@ -3,4 +3,23 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="paleYellow">#FFFAE7</color>
+    <color name="paleBlue">#E7FFFE</color>
+    <color name="palePurple">#E2DDFE</color>
+    <color name="paleOrange">#FEE0D8</color>
+    <color name="gradientBlueDark">#0CBEEC</color>
+    <color name="gradientBlueLight">#00EDFF</color>
+    <color name="jailBlue">#38CAFF</color>
+    <color name="textOrangeDark">#FF5D00</color>
+    <color name="gradientYellowDark">#FF6F00</color>
+    <color name="gradientYellowLight">#FFD016</color>
+    <color name="jailYellow">#FF9900</color>
+    <color name="textBlueDark">#1C00B0</color>
+    <color name="white">#FFFFFF</color>
+    <color name="ballRed">#FF5500</color>
+    <color name="ballOrange">#FFA800</color>
+    <color name="ballTailRed">#FFC9C9</color>
+    <color name="ballPurple">#A770FF</color>
+    <color name="ballBlue">#69FFFF</color>
+    <color name="ballTailBlue">#F2FDFF</color>
 </resources>
