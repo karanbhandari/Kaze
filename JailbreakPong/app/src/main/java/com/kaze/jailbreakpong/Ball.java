@@ -16,8 +16,12 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
+
+import java.util.Random;
 
 import static android.content.ContentValues.TAG;
+import static java.lang.Float.floatToIntBits;
 import static java.lang.Float.max;
 import static java.lang.Float.min;
 
@@ -50,8 +54,9 @@ public class Ball extends View {
         this.size = size;
         this.posY = posY;
         this.speed = speed;
+        Log.d("CONSTRUCTOR", "Ball: posX: " + posX);
 
-        rect = new RectF(posX, posY, posX + size, posY + size);
+        rect = new RectF(posX, getTop(), posX + size, getTop() + size);
 
         paint = new Paint();
         paint.setColor(Color.RED);
@@ -131,31 +136,51 @@ public class Ball extends View {
 
     public float getEndX(){
 
+        DisplayMetrics metrics = Helper.getDisplayMetrics(getContext());
+        Random rand = new Random();
+        int num = rand.nextInt(2);
         if (dir[0] == -1){
-            return 0;
+            if (num == 0){
+                return 0;
+            } else {
+                return metrics.widthPixels / 2;
+            }
         } else {
-            float screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-            return screenWidth - getSize();
+            if (num == 0){
+                return metrics.widthPixels - getSize();
+            } else {
+                return metrics.widthPixels / 2;
+            }
         }
     }
 
     public float getEndY(Context context){
 
+        DisplayMetrics metrics = Helper.getDisplayMetrics(getContext());
+        Random rand = new Random();
+        int num = rand.nextInt(2);
+
+        float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        int statusBarHeight = Helper.getStatusBarHeight(context);
+        int actionBarHeight = Helper.getActionBarHeight(context);
+
+
+        float properHeight = screenHeight - statusBarHeight - actionBarHeight;
+
+        // moving up
         if (dir[1] == -1){
-            return 0;
+            if (num == 0){
+                return 0;
+            } else {
+                return properHeight/ 2;
+            }
+
         } else {
-            float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-
-            int statusBarHeight = Helper.getStatusBarHeight(context);
-            int actionBarHeight = Helper.getActionBarHeight(context);
-
-            Log.d("BALL", "getEndPointY: screenHeight: " + screenHeight);
-
-            float toRet = screenHeight - statusBarHeight - actionBarHeight;
-            Log.d("BALL", "getEndPointY: toRet: " + toRet);
-
-
-            return screenHeight - statusBarHeight - actionBarHeight - size;
+            if (num == 0){
+                return properHeight - size;
+            } else {
+                return properHeight/ 2;
+            }
         }
     }
 
@@ -175,18 +200,21 @@ public class Ball extends View {
 
     private void addXAnimator(){
 
+        final Ball ball = this;
         final Context context = getContext();
         DisplayMetrics metrics = Helper.getDisplayMetrics(context);
 
         float endingFloat = metrics.widthPixels - getSize();
-        final ValueAnimator animator = ValueAnimator.ofFloat(0, endingFloat);
+        final ValueAnimator animator = ValueAnimator.ofFloat(getPosX(), endingFloat);
 
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float animatedVal = (float) animator.getAnimatedValue();
-                setX(animatedVal);
+                Log.d("Animator", "onAnimationUpdate: animatedVal: " + getPosX());
                 setPosX(animatedVal);
+                rect.left = getPosX();
+                rect.right = getPosX() + getSize();
             }
         });
 
@@ -224,15 +252,17 @@ public class Ball extends View {
         int actionBarHeight = Helper.getActionBarHeight(context);
 
         float endingFloat = metrics.heightPixels - statusBarHeight - actionBarHeight - getSize();
-        final ValueAnimator animator = ValueAnimator.ofFloat(0, endingFloat);
+        final ValueAnimator animator = ValueAnimator.ofFloat(getPosY(), endingFloat);
         Log.d("YAnim", "height calced: " + endingFloat);
 
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float animatedVal = (float) animator.getAnimatedValue();
-                setY(animatedVal);
+
                 setPosY(animatedVal);
+                rect.top = getPosY();
+                rect.bottom = getPosY() + getSize();
             }
         });
 

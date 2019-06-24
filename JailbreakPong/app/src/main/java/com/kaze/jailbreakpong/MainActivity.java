@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.widget.LinearLayout;
 
 import static java.lang.Math.round;
@@ -140,8 +141,12 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
+        DisplayMetrics metrics = Helper.getDisplayMetrics(this);
+        float x = (float) metrics.widthPixels / 2;
+        float y = (float) metrics.heightPixels / 2;
+
         // create a ball
-        Ball ball = Helper.initBall(this, 0, 0, 100, 1f);
+        Ball ball = Helper.initBall(this, 0, 126, 100, 1f);
 
         ball.addAnimators();
 
