@@ -5,6 +5,8 @@ import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
 import static java.lang.Math.round;
 import java.util.ArrayList;
+import java.util.Random;
+
 import static java.lang.Math.round;
 
 public class Board {
@@ -33,16 +35,14 @@ public class Board {
         int midNRows = nRows - plyNRows * 2;
         midHeight = (int) (midNRows * gridItemSize);
 
-
-
         gapBtm = round(gap/2);
         oppBtm = gapBtm + sectionHeight;
         midBtm = oppBtm + midHeight;
         playerBtm = midBtm + sectionHeight;
 
-        for(int col = 0; col < nCols; col++) {
+        for(int row = 0; row < nRows; row++) {
             ArrayList<GridItem> tempArray = new ArrayList<>();
-            for ( int row = 0; row < nRows; row++) {
+            for ( int col = 0; col < nCols; col++) {
                 tempArray.add(new GridItem(row, col));
             }
             grid.add(tempArray);
@@ -124,16 +124,30 @@ public class Board {
 
     }
 
-    public void initBoard(int color) {
-        BrickFactory bf= new BrickFactory(11, 17, color, "LowerLeftTriangle", (int) gridItemSize);
-//        for(int r = 0; r < nRows; r++) {
-//            for ( int c = 0; c < nCols; c++) {
-//                if( r == 23 && c == 23) {
-//                    grid[r][c] = bf;
-//                }
-//            }
-//        }
-        grid.get(11).set(17, bf.getItem());
+    public void initBoard(int playerTileColor, int opponentTileColor) {
+        int rowsOpponent = (int) ((getOppBtm()-getGapBtm())/getGridItemSize());
+        int rowsMiddle = (int) ((getMidBtm()-getGapBtm())/getGridItemSize());
+        int rowsPlayer = (int) ((getPlayerBtm()-getGapBtm())/getGridItemSize());
+        //String brickTypes[] = {"LowerLeftTriangle", "LowerRightTriangle", "UpperLeftTriangle", "UpperRightTriangle", "Square"};
+        Random rand = new Random(1234);
+
+        for(int or = 0; or <  10; ++or) {
+            int row = rand.nextInt(rowsOpponent-1);
+            int col = rand.nextInt(getNumColumns());
+            int brickType = rand.nextInt(5);
+
+            BrickFactory bf= new BrickFactory(col, row, opponentTileColor, "Square", (int) gridItemSize);
+            grid.get(row).set(col, bf.getItem());
+        }
+
+        for(int pr = 0; pr <  10; ++pr) {
+            int row = rand.nextInt(rowsPlayer - (rowsMiddle+1)) + rowsMiddle+1;
+            int col = rand.nextInt(getNumColumns());
+            int brickType = rand.nextInt(5);
+
+            BrickFactory bf = new BrickFactory(col, row, playerTileColor, "Square", (int) gridItemSize);
+            grid.get(row).set(col, bf.getItem());
+        }
 
     }
 }

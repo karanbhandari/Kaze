@@ -40,7 +40,17 @@ public class MainActivity extends AppCompatActivity {
         board.init(pxWidth, pxHeight, density);
         drawBoardBackground(board);
 
-        board.initBoard(ResourcesCompat.getColor(getResources(), R.color.gapBlue, null));
+        int playerTileColor = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
+        int opponentTileColor = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
+        board.initBoard(playerTileColor, opponentTileColor);
+        drawGridItems(board);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Board board = Board.getInstance();
+        drawBoardBackground(board);
         drawGridItems(board);
     }
 

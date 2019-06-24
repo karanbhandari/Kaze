@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public final class Drawing {
     private int nRows, nCols; // number of GridItems horizontally and vertically on screen
 
-    public Drawing(int dimX, int dimY) {
-        nRows = dimY;
-        nCols = dimX;
+    public Drawing(int rows, int cols) {
+        nRows = rows;
+        nCols = cols;
     }
 
     public void initDraw(ArrayList<ArrayList<GridItem>> griditems, Canvas canvas) {
