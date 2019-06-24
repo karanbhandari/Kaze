@@ -3,15 +3,22 @@ package com.kaze.jailbreakpong;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Shader;
 import android.util.Log;
 
 public class Square extends Brick {
     // HP = 1
+    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    public Square(Context context, int row, int column, int width, int height, int color) {
-        super(context, row, column, width, height, 1, color);
+    public Square(Context context, int row, int column, int width, int height, int lightColor, int darkColor) {
+        super(context, row, column, width, height,1, lightColor, darkColor);
+        paint.setColor(this.lightColor);
+        paint.setShader(new LinearGradient(row, column, row+width, column+width, darkColor, lightColor, Shader.TileMode.MIRROR));
+
+
     }
 
     public void hit() {
@@ -21,14 +28,12 @@ public class Square extends Brick {
 
     @Override
     public void onDraw(Canvas canvas) {
+        canvas.translate(0, gapSize/2);
 
         Log.d("Square", "draw called ");
 
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         int x = this.row;
         int y = this.column;
-        paint.setColor(this.color);
-
 
         Path path = new Path();
         path.moveTo(x, y);
@@ -39,5 +44,7 @@ public class Square extends Brick {
         path.close();
 
         canvas.drawPath(path, paint);
+        canvas.save();
+        canvas.restore();
     }
 }

@@ -126,29 +126,49 @@ public class Board {
 
     }
 
-    public void initBoard(FrameLayout fl, Context context, int playerTileColor, int opponentTileColor) {
+    public void initBoard(FrameLayout fl, Context context, int playerTileColorLight, int playerTileColorDark, int opponentTileColorLight, int opponentTileColorDark) {
         int rowsOpponent = (int) ((getOppBtm()-getGapBtm())/getGridItemSize());
         int rowsMiddle = (int) ((getMidBtm()-getGapBtm())/getGridItemSize());
         int rowsPlayer = (int) ((getPlayerBtm()-getGapBtm())/getGridItemSize());
         //String brickTypes[] = {"LowerLeftTriangle", "LowerRightTriangle", "UpperLeftTriangle", "UpperRightTriangle", "Square"};
-        Random rand = new Random(1234);
+//        Random rand = new Random(1234);
+//
+//        for(int or = 0; or <  10; ++or) {
+//            int row = rand.nextInt(rowsOpponent-1);
+//            int col = rand.nextInt(getNumColumns());
+//            int brickType = rand.nextInt(5);
+//
+//            BrickFactory bf= new BrickFactory(context, col, row, opponentTileColorLight, opponentTileColorDark, "Square", (int) gridItemSize);
+//            grid.get(row).set(col, bf.getItem());
+//            fl.addView(bf.getItem());
+//        }
+//
+//        for(int pr = 0; pr <  10; ++pr) {
+//            int row = rand.nextInt(rowsPlayer - (rowsMiddle+1)) + rowsMiddle+1;
+//            int col = rand.nextInt(getNumColumns());
+//            int brickType = rand.nextInt(5);
+//
+//            BrickFactory bf = new BrickFactory(context, col, row, playerTileColorLight, playerTileCOlorDark, "Square", (int) gridItemSize);
+//            grid.get(row).set(col, bf.getItem());
+//            fl.addView(bf.getItem());
+//        }
+        int oppCoordinates[][] = {{0, 4}, {1, 4}, {2, 4}, {2, 5}, {2, 6}, {2, 7}, {1, 7}, {0, 7}};
+        int plyCoordinates[][] = {{20, 4}, {19, 4}, {18, 4}, {18, 5}, {18, 6}, {18, 7}, {19, 7}, {20, 7}};
 
-        for(int or = 0; or <  10; ++or) {
-            int row = rand.nextInt(rowsOpponent-1);
-            int col = rand.nextInt(getNumColumns());
-            int brickType = rand.nextInt(5);
+        for (int i = 0; i < 8; ++i) {
+            int row = oppCoordinates[i][0];
+            int col = oppCoordinates[i][1];
 
-            BrickFactory bf= new BrickFactory(context, col, row, opponentTileColor, "Square", (int) gridItemSize);
+            BrickFactory bf= new BrickFactory(context, col, row, opponentTileColorLight, opponentTileColorDark, "Square", (int) gridItemSize);
             grid.get(row).set(col, bf.getItem());
             fl.addView(bf.getItem());
         }
 
-        for(int pr = 0; pr <  10; ++pr) {
-            int row = rand.nextInt(rowsPlayer - (rowsMiddle+1)) + rowsMiddle+1;
-            int col = rand.nextInt(getNumColumns());
-            int brickType = rand.nextInt(5);
+        for (int i = 0; i < 8; ++i) {
+            int row = plyCoordinates[i][0];
+            int col = plyCoordinates[i][1];
 
-            BrickFactory bf = new BrickFactory(context, col, row, playerTileColor, "Square", (int) gridItemSize);
+            BrickFactory bf= new BrickFactory(context, col, row, playerTileColorLight, playerTileColorDark, "Square", (int) gridItemSize);
             grid.get(row).set(col, bf.getItem());
             fl.addView(bf.getItem());
         }

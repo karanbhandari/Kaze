@@ -9,7 +9,7 @@ public class BrickFactory {
 
     GridItem item;
 
-    public BrickFactory(Context context, int gridX, int gridY, int color, String brickType, int gridItemSize) {
+    public BrickFactory(Context context, int gridX, int gridY, int lightColor, int darkColor, String brickType, int gridItemSize) {
 //        if (brickType == "LowerLeftTriangle") {
 //            item = new LowerLeftTriangle(gridX, gridY, gridItemSize, gridItemSize, color);
 //        } else if(brickType == "LowerRightTriangle") {
@@ -20,7 +20,7 @@ public class BrickFactory {
 //            item = new UpperRightTriangle(gridX, gridY, gridItemSize, gridItemSize, color);
   //      } else if(brickType == "Square") {
         if (brickType == "Square") {
-            item = new Square(context, gridX, gridY, gridItemSize, gridItemSize, color);
+            item = new Square(context, gridX, gridY, gridItemSize, gridItemSize, lightColor, darkColor);
         }
     }
 

@@ -44,9 +44,11 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout fl = (FrameLayout) findViewById(R.id.FrameLayout);
         fl.addView(boardView);
 
-        int playerTileColor = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
-        int opponentTileColor = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
-        board.initBoard(fl, getApplicationContext(), playerTileColor, opponentTileColor);
+        int playerTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
+        int playerTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientBlueDark, null);
+        int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
+        int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
+        board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
         //drawGridItems(board);
     }
 

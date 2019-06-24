@@ -11,18 +11,21 @@ public abstract class Brick extends GridItem{
     protected int column;
     protected int width;
     protected int height;
+    protected int gapSize;
     private int opacity;
-    protected int color; // TODO: need to be changed after a hit to a new value with lesser opacity
+    protected int lightColor; // TODO: need to be changed after a hit to a new value with lesser opacity
+    protected int darkColor;
 
 
     // this shoudl be created as a base class and the triangles and square could be the child classes
 
-    protected Brick(Context context, int row, int column, int width, int height, int hp, int color){
+    protected Brick(Context context, int row, int column, int width, int height, int hp, int lightColor, int darkColor){
 
         super(context, row, column, true);
 
         isVisible = true;
         this.hp = hp;
+        this.gapSize = (int) Board.getInstance().getGapSize();
 
         int padding = 1;
 
@@ -32,7 +35,8 @@ public abstract class Brick extends GridItem{
         this.width = width;
         this.height = height;
         this.opacity = 1;
-        this.color = color;
+        this.lightColor = lightColor;
+        this.darkColor = darkColor;
     }
 
     public void setInvisible(){
