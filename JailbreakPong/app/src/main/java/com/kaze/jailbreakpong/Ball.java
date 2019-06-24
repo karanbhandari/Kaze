@@ -140,11 +140,12 @@ public class Ball extends View {
         Random rand = new Random();
         int num = rand.nextInt(2);
         if (dir[0] == -1){
-            if (num == 0){
-                return 0;
-            } else {
-                return metrics.widthPixels / 2;
-            }
+            return 0;
+//            if (num == 0){
+//
+//            } else {
+//                return metrics.widthPixels / 2;
+//            }
         } else {
             if (num == 0){
                 return metrics.widthPixels - getSize();
@@ -158,7 +159,7 @@ public class Ball extends View {
 
         DisplayMetrics metrics = Helper.getDisplayMetrics(getContext());
         Random rand = new Random();
-        int num = rand.nextInt(2);
+        int num = rand.nextInt(4);
 
         float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         int statusBarHeight = Helper.getStatusBarHeight(context);
@@ -169,15 +170,16 @@ public class Ball extends View {
 
         // moving up
         if (dir[1] == -1){
-            if (num == 0){
+            if (num != 0){
                 return 0;
             } else {
                 return properHeight/ 2;
             }
 
         } else {
+
             if (num == 0){
-                return properHeight - size;
+              return properHeight - size;
             } else {
                 return properHeight/ 2;
             }
