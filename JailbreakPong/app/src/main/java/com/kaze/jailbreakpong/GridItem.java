@@ -43,8 +43,6 @@ public class GridItem {
     }
 
     public void draw(Canvas canvas) {
-
-        Log.d("GridItem", "draw called ");
         // do nothing for blank item
         // children classes overwrite this function
     }
