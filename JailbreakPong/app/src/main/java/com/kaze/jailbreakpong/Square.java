@@ -1,5 +1,6 @@
 package com.kaze.jailbreakpong;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,8 +10,8 @@ import android.util.Log;
 public class Square extends Brick {
     // HP = 1
 
-    public Square(int row, int column, int width, int height, int color) {
-        super(row, column, width, height, 1, color);
+    public Square(Context context, int row, int column, int width, int height, int color) {
+        super(context, row, column, width, height, 1, color);
     }
 
     public void hit() {
@@ -19,11 +20,11 @@ public class Square extends Brick {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
 
         Log.d("Square", "draw called ");
 
-        Paint paint = new Paint();
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         int x = this.row;
         int y = this.column;
         paint.setColor(this.color);

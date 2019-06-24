@@ -1,4 +1,5 @@
 package com.kaze.jailbreakpong;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
@@ -16,9 +17,9 @@ public abstract class Brick extends GridItem{
 
     // this shoudl be created as a base class and the triangles and square could be the child classes
 
-    protected Brick(int row, int column, int width, int height, int hp, int color){
+    protected Brick(Context context, int row, int column, int width, int height, int hp, int color){
 
-        super(row, column, true);
+        super(context, row, column, true);
 
         isVisible = true;
         this.hp = hp;
@@ -38,7 +39,7 @@ public abstract class Brick extends GridItem{
         isVisible = false;
     }
 
-    public boolean getVisibility(){
+    public boolean isVisible(){
         return isVisible;
     }
 

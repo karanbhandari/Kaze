@@ -1,5 +1,7 @@
 package com.kaze.jailbreakpong;
+import android.content.Context;
 import android.graphics.Canvas;
+import android.widget.FrameLayout;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
@@ -21,7 +23,7 @@ public class Board {
     private Board() {}
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
-    public void init(float dimX, float dimY, float density) {
+    public void init(Context context, float dimX, float dimY, float density) {
         pxWidth = dimX;
         pxHeight = dimY;
         dpi = density;  // need for drawing in pixels
@@ -43,7 +45,7 @@ public class Board {
         for(int row = 0; row < nRows; row++) {
             ArrayList<GridItem> tempArray = new ArrayList<>();
             for ( int col = 0; col < nCols; col++) {
-                tempArray.add(new GridItem(row, col));
+                tempArray.add(new GridItem(context, row, col));
             }
             grid.add(tempArray);
         }
@@ -124,7 +126,7 @@ public class Board {
 
     }
 
-    public void initBoard(int playerTileColor, int opponentTileColor) {
+    public void initBoard(FrameLayout fl, Context context, int playerTileColor, int opponentTileColor) {
         int rowsOpponent = (int) ((getOppBtm()-getGapBtm())/getGridItemSize());
         int rowsMiddle = (int) ((getMidBtm()-getGapBtm())/getGridItemSize());
         int rowsPlayer = (int) ((getPlayerBtm()-getGapBtm())/getGridItemSize());
@@ -136,8 +138,9 @@ public class Board {
             int col = rand.nextInt(getNumColumns());
             int brickType = rand.nextInt(5);
 
-            BrickFactory bf= new BrickFactory(col, row, opponentTileColor, "Square", (int) gridItemSize);
+            BrickFactory bf= new BrickFactory(context, col, row, opponentTileColor, "Square", (int) gridItemSize);
             grid.get(row).set(col, bf.getItem());
+            fl.addView(bf.getItem());
         }
 
         for(int pr = 0; pr <  10; ++pr) {
@@ -145,8 +148,9 @@ public class Board {
             int col = rand.nextInt(getNumColumns());
             int brickType = rand.nextInt(5);
 
-            BrickFactory bf = new BrickFactory(col, row, playerTileColor, "Square", (int) gridItemSize);
+            BrickFactory bf = new BrickFactory(context, col, row, playerTileColor, "Square", (int) gridItemSize);
             grid.get(row).set(col, bf.getItem());
+            fl.addView(bf.getItem());
         }
 
     }

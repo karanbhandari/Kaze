@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         final float pxWidth = displayMetrics.widthPixels;
 
         final Board board = Board.getInstance();
-        board.init(pxWidth, pxHeight, density);
+        board.init(getApplicationContext(), pxWidth, pxHeight, density);
         //drawBoardBackground(board);
         BoardView boardView = new BoardView(getApplicationContext());
         FrameLayout fl = (FrameLayout) findViewById(R.id.FrameLayout);
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         int playerTileColor = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
         int opponentTileColor = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
-        board.initBoard(playerTileColor, opponentTileColor);
+        board.initBoard(fl, getApplicationContext(), playerTileColor, opponentTileColor);
         //drawGridItems(board);
     }
 
@@ -56,43 +56,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void drawGridItems(final Board board) {
-        final SurfaceView gridItemBoard = findViewById(R.id.boardBackground);
-        gridItemBoard.setZOrderOnTop(true);
-        gridItemBoard.getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                surfaceHolder.setFormat(PixelFormat.RGBA_8888);
-                Canvas canvas = surfaceHolder.lockCanvas();
-                Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-                int nRows = board.getNumRows();
-                int nCols = board.getNumColumns();
-                int gapBtm = (int) board.getGapBtm();
-
-                // at start adjust canvas down to account for gap
-                canvas.translate(0, gapBtm);
-
-                Drawing drawing = new Drawing(board.getNumRows(), board.getNumColumns());
-                drawing.initDraw(board.getGrid(), canvas);
-
-                surfaceHolder.unlockCanvasAndPost(canvas);
-                // at very end undo canvas translation
-                canvas.save();
-                canvas.restore();
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
-            }
-        });
-    }
+//    public void drawGridItems(final Board board) {
+//        final SurfaceView gridItemBoard = findViewById(R.id.boardBackground);
+//        gridItemBoard.setZOrderOnTop(true);
+//        gridItemBoard.getHolder().addCallback(new SurfaceHolder.Callback() {
+//            @Override
+//            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+//                surfaceHolder.setFormat(PixelFormat.RGBA_8888);
+//                Canvas canvas = surfaceHolder.lockCanvas();
+//                Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//
+//                int nRows = board.getNumRows();
+//                int nCols = board.getNumColumns();
+//                int gapBtm = (int) board.getGapBtm();
+//
+//                // at start adjust canvas down to account for gap
+//                canvas.translate(0, gapBtm);
+//
+//                Drawing drawing = new Drawing(board.getNumRows(), board.getNumColumns());
+//                drawing.initDraw(board.getGrid(), canvas);
+//
+//                surfaceHolder.unlockCanvasAndPost(canvas);
+//                // at very end undo canvas translation
+//                canvas.save();
+//                canvas.restore();
+//            }
+//
+//            @Override
+//            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+//
+//            }
+//        });
+//    }
 
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
