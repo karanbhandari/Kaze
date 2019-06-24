@@ -38,22 +38,15 @@ public class MainActivity extends AppCompatActivity {
 
         final Board board = Board.getInstance();
         board.init(pxWidth, pxHeight, density);
-        final int gapBtm = (int) board.getGapBtm();
-        final int oppBtm = (int) board.getOppBtm();
-        final int midBtm = (int) board.getMidBtm();
-        final int playerBtm = (int) board.getPlayerBtm();
-        final int sectionWidth = (int) round(pxWidth);
-        final int gridItemSize = (int) board.getGridItemSize();
-        drawBoardBackground(gapBtm, oppBtm, midBtm, playerBtm, sectionWidth, gridItemSize);
+        drawBoardBackground(board);
 
-        final int nRows = board.getNumRows();
-        final int nCols = board.getNumColumns();
         board.initBoard(ResourcesCompat.getColor(getResources(), R.color.gapBlue, null));
-        drawGridItems(board, nRows, nCols, gapBtm);
+        drawGridItems(board);
     }
 
-    public void drawBoardBackground(final int gapBtm, final int oppBtm, final int midBtm, final int playerBtm, final int sectionWidth, final int gridItemSize) {
+    public void drawBoardBackground(final Board board) {
         final SurfaceView boardBackground = findViewById(R.id.boardBackground);
+        boardBackground.setZOrderOnTop(true);
 
         boardBackground.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -61,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
                 surfaceHolder.setFormat(PixelFormat.RGBA_8888);
                 Canvas canvas = surfaceHolder.lockCanvas();
                 Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+                int gapBtm = (int) board.getGapBtm();
+                int oppBtm = (int) board.getOppBtm();
+                int midBtm = (int) board.getMidBtm();
+                int playerBtm = (int) board.getPlayerBtm();
+                int gridItemSize = (int) board.getGridItemSize();
+                int sectionWidth = (int) gridItemSize * board.getNumColumns();
 
                 int paleYellow, paleBlue, paleOrange, palePurple, white;
                 paleBlue = ResourcesCompat.getColor(getResources(), R.color.paleBlue, null);
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void drawGridItems(final Board board, final int nRows, final int nCols, final int gapBtm) {
+    public void drawGridItems(final Board board) {
         final SurfaceView gridItemBoard = findViewById(R.id.boardBackground);
         gridItemBoard.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -128,6 +128,10 @@ public class MainActivity extends AppCompatActivity {
                 surfaceHolder.setFormat(PixelFormat.RGBA_8888);
                 Canvas canvas = surfaceHolder.lockCanvas();
                 Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+                int nRows = board.getNumRows();
+                int nCols = board.getNumColumns();
+                int gapBtm = (int) board.getGapBtm();
 
                 Drawing drawing = new Drawing(nRows, nCols);
                 drawing.initDraw(board.getGrid(), canvas);
