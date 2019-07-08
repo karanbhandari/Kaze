@@ -33,7 +33,6 @@ import android.widget.LinearLayout;
 import static java.lang.Math.round;
 
 public class MainActivity extends AppCompatActivity {
-    int heightWithouNav = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +62,20 @@ public class MainActivity extends AppCompatActivity {
         int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
         board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
         //drawGridItems(board);
+
+        // Code to add the ball to the layout. Need to 'merge' in future commits
+//      DisplayMetrics metrics = Helper.getDisplayMetrics(this);
+//      float x = (float) metrics.widthPixels / 2;
+//      float y = (float) metrics.heightPixels / 2;
+//
+//      // create a ball
+//      Ball ball = Helper.initBall(this, 0, 126, 100, 1f);
+//
+//      ball.addAnimators();
+//
+//      // add to the layout
+//      LinearLayout layout = (LinearLayout) findViewById(R.id.Layout);
+//      layout.addView(ball);
     }
 
     @Override
@@ -139,21 +152,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return 0;
     }
-}
-
-        DisplayMetrics metrics = Helper.getDisplayMetrics(this);
-        float x = (float) metrics.widthPixels / 2;
-        float y = (float) metrics.heightPixels / 2;
-
-        // create a ball
-        Ball ball = Helper.initBall(this, 0, 126, 100, 1f);
-
-        ball.addAnimators();
-
-        // add to the layout
-        LinearLayout layout = (LinearLayout) findViewById(R.id.Layout);
-        layout.addView(ball);
-
-    }
-
 }
