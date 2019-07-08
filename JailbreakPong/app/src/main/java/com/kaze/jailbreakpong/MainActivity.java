@@ -63,20 +63,13 @@ public class MainActivity extends AppCompatActivity {
         board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
         //drawGridItems(board);
 
-        // Code to add the ball to the layout. Need to 'merge' in future commits
-//      float x = (float) metrics.widthPixels / 2;
-//      float y = (float) metrics.heightPixels / 2;
-//
-//      // create a ball
-      Ball ball = Helper.initBall(this, 0, board.getGapBtm(), 100, 0.5f);
-//
+      // create a ball
+      Ball ball = Helper.initBall(this, 0, board.getGapBtm(), 100, 1f);
       ball.addAnimators(board.getGapBtm(), board.getPlayerBtm());
-      // need y endpoints
-//
-//      // add to the layout
-      FrameLayout layout = (FrameLayout) findViewById(R.id.FrameLayout);
+
+      // add to the layout
+      FrameLayout layout = findViewById(R.id.FrameLayout);
       layout.addView(ball);
-//      layout.addView(ball);
     }
 
     @Override

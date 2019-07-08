@@ -9,21 +9,13 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
+import android.view.animation.*;
 
 import java.util.Random;
-
-import static android.content.ContentValues.TAG;
-import static java.lang.Float.floatToIntBits;
-import static java.lang.Float.max;
-import static java.lang.Float.min;
 
 
 public class Ball extends View {
@@ -157,7 +149,6 @@ public class Ball extends View {
 
     public float getEndY(Context context, float topY, float botY){
 
-        DisplayMetrics metrics = Helper.getDisplayMetrics(getContext());
         Random rand = new Random();
         int num = rand.nextInt(4);
 
@@ -165,25 +156,22 @@ public class Ball extends View {
         int statusBarHeight = Helper.getStatusBarHeight(context);
         int actionBarHeight = Helper.getActionBarHeight(context);
 
-
         float properHeight = screenHeight - statusBarHeight - actionBarHeight;
 
         // moving up
         if (dir[1] == -1){
             if (num != 0){
-//                return 0;
                 return topY;
             } else {
-                return properHeight/ 2;
+                return (botY - topY)/ 2;
             }
 
         } else {
 
             if (num == 0){
-//              return properHeight - size;
                 return botY - size;
             } else {
-                return properHeight/ 2;
+                return (botY - topY)/ 2;
             }
         }
     }
@@ -196,18 +184,14 @@ public class Ball extends View {
     * */
 
     public void addAnimators(float topY, float botY){
-
         addXAnimator();
         addYAnimator(topY, botY);
-
     }
 
     private void addXAnimator(){
 
-        final Ball ball = this;
         final Context context = getContext();
         DisplayMetrics metrics = Helper.getDisplayMetrics(context);
-
         float endingFloat = metrics.widthPixels - getSize();
         final ValueAnimator animator = ValueAnimator.ofFloat(getPosX(), endingFloat);
 
@@ -240,31 +224,25 @@ public class Ball extends View {
 
             }
         });
-        int ms = (int) (( 1 /speed ) * 1000);
-        animator.setDuration(ms);
+        setAnimatorTimeUsingSpeed(animator, speed);
+        animator.setInterpolator(new LinearInterpolator());
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.start();
     }
 
     private void addYAnimator(final float topY, final float botY){
-
         final Context context = getContext();
-        DisplayMetrics metrics = Helper.getDisplayMetrics(context);
 
-        // getMetrics does not account for statusBar or actionBar height
-        int statusBarHeight = Helper.getStatusBarHeight(context);
-        int actionBarHeight = Helper.getActionBarHeight(context);
-
-//        float endingFloat = metrics.heightPixels - statusBarHeight - actionBarHeight - getSize();
+        // subtract size cus endingFloat is supposed to be top left corner
         float endingFloat = botY - size;
         final ValueAnimator animator = ValueAnimator.ofFloat(getPosY(), endingFloat);
         Log.d("YAnim", "height calced: " + endingFloat);
 
+        // setup initial animator listener
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float animatedVal = (float) animator.getAnimatedValue();
-
                 setPosY(animatedVal);
                 rect.top = getPosY();
                 rect.bottom = getPosY() + getSize();
@@ -276,25 +254,30 @@ public class Ball extends View {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 super.onAnimationEnd(animation);
-
                 // reverse direction of ball
                 reverseY();
-
                 // get end direction of ball
                 float newEndY = getEndY(context, topY, botY);
-
                 // setup new values for the animator
-                PropertyValuesHolder[] vals = ((ValueAnimator)animation).getValues();
-                vals[0].setFloatValues(getPosY(), newEndY);
+                PropertyValuesHolder[] curVals = ((ValueAnimator)animation).getValues();
+                curVals[0].setFloatValues(getPosY(), newEndY);
 
-                ((ValueAnimator)animation).setValues(vals);
+                ((ValueAnimator)animation).setValues(curVals);
 
             }
         });
-        int ms = (int) (( 1 /speed ) * 1000);
-        animator.setDuration(ms);
+
+        setAnimatorTimeUsingSpeed(animator, speed);
+        animator.setInterpolator(new LinearInterpolator());
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.start();
+    }
+
+    // speed property is used to set the duration of the animation.
+    private void setAnimatorTimeUsingSpeed(ValueAnimator animator, float speed){
+        // calculate the time of the animation
+        int ms = (int) (( 1 /speed ) * 1000);
+        animator.setDuration(ms);
     }
 
 }
