@@ -1,6 +1,7 @@
 package com.kaze.jailbreakpong;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity {
+
+    ConstraintLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
         setupBall();
 
-
+        Paddle paddle = new Paddle(getApplicationContext(), 200, 200);
+        layout = findViewById(R.id.my_layout);
+        layout.addView(paddle);
     }
 
     @Override
