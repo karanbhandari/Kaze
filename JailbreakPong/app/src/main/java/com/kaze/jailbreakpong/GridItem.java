@@ -8,6 +8,8 @@ import android.view.View;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.util.ArrayList;
+
 public class GridItem extends View {
     private int row, column;   // position of GridItem in our Board object
     private boolean isVisible;
@@ -44,9 +46,10 @@ public class GridItem extends View {
         column = column;
     }
 
-    public void onHit() {
+    public boolean onHit(ArrayList<int[]> boundaries) {
         // do nothing for blank item
         // children classes overwrite this function.
+        return false;
     }
 
     public void onDraw(Canvas canvas) {

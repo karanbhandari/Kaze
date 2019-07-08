@@ -7,6 +7,7 @@ import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
 import static java.lang.Math.round;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import static java.lang.Math.round;
@@ -173,5 +174,37 @@ public class Board {
 //            fl.addView(bf.getItem());
 //        }
 
+
+    }
+
+    private int[] translateToCoordinate(float pxX, float pxY) {
+        int x = (int) Math.floor(pxX/gridItemSize);
+        int y = (int) Math.floor(pxY/gridItemSize);
+
+        int coordinate[] = {x, y};
+        return coordinate;
+    }
+
+    public boolean isHit(float pxX, float pxY, float size) {
+        ArrayList<int[]> boundaries = new ArrayList<int[]>();
+        // worst case scenario, the ball is simultaneously on 4 gridItems
+        boundaries.add(translateToCoordinate(pxX, pxY));
+        boundaries.add(translateToCoordinate(pxX+size, pxY));
+        boundaries.add(translateToCoordinate(pxX, pxY+size));
+        boundaries.add(translateToCoordinate(pxX+size, pxY+size));
+
+        boolean hasHit = false;
+        ArrayList<int[]> hitCoordinates = new ArrayList<int[]>();
+
+        for (int i = 0; i < 4; ++i) {
+            int[] coordinate = boundaries.get(i);
+            GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
+            if (!hitCoordinates.contains(affectedGridItem)) {
+                hasHit = affectedGridItem.onHit(boundaries);
+                hitCoordinates.add(coordinate);
+            }
+        }
+
+        return hasHit;
     }
 }
