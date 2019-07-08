@@ -64,17 +64,18 @@ public class MainActivity extends AppCompatActivity {
         //drawGridItems(board);
 
         // Code to add the ball to the layout. Need to 'merge' in future commits
-//      DisplayMetrics metrics = Helper.getDisplayMetrics(this);
 //      float x = (float) metrics.widthPixels / 2;
 //      float y = (float) metrics.heightPixels / 2;
 //
 //      // create a ball
-//      Ball ball = Helper.initBall(this, 0, 126, 100, 1f);
+      Ball ball = Helper.initBall(this, 0, board.getGapBtm(), 100, 0.5f);
 //
-//      ball.addAnimators();
+      ball.addAnimators(board.getGapBtm(), board.getPlayerBtm());
+      // need y endpoints
 //
 //      // add to the layout
-//      LinearLayout layout = (LinearLayout) findViewById(R.id.Layout);
+      FrameLayout layout = (FrameLayout) findViewById(R.id.FrameLayout);
+      layout.addView(ball);
 //      layout.addView(ball);
     }
 

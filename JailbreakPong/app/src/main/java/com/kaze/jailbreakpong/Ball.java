@@ -155,7 +155,7 @@ public class Ball extends View {
         }
     }
 
-    public float getEndY(Context context){
+    public float getEndY(Context context, float topY, float botY){
 
         DisplayMetrics metrics = Helper.getDisplayMetrics(getContext());
         Random rand = new Random();
@@ -171,7 +171,8 @@ public class Ball extends View {
         // moving up
         if (dir[1] == -1){
             if (num != 0){
-                return 0;
+//                return 0;
+                return topY;
             } else {
                 return properHeight/ 2;
             }
@@ -179,7 +180,8 @@ public class Ball extends View {
         } else {
 
             if (num == 0){
-              return properHeight - size;
+//              return properHeight - size;
+                return botY - size;
             } else {
                 return properHeight/ 2;
             }
@@ -193,10 +195,10 @@ public class Ball extends View {
     *
     * */
 
-    public void addAnimators(){
+    public void addAnimators(float topY, float botY){
 
         addXAnimator();
-        addYAnimator();
+        addYAnimator(topY, botY);
 
     }
 
@@ -244,7 +246,7 @@ public class Ball extends View {
         animator.start();
     }
 
-    private void addYAnimator(){
+    private void addYAnimator(final float topY, final float botY){
 
         final Context context = getContext();
         DisplayMetrics metrics = Helper.getDisplayMetrics(context);
@@ -253,7 +255,8 @@ public class Ball extends View {
         int statusBarHeight = Helper.getStatusBarHeight(context);
         int actionBarHeight = Helper.getActionBarHeight(context);
 
-        float endingFloat = metrics.heightPixels - statusBarHeight - actionBarHeight - getSize();
+//        float endingFloat = metrics.heightPixels - statusBarHeight - actionBarHeight - getSize();
+        float endingFloat = botY - size;
         final ValueAnimator animator = ValueAnimator.ofFloat(getPosY(), endingFloat);
         Log.d("YAnim", "height calced: " + endingFloat);
 
@@ -278,7 +281,7 @@ public class Ball extends View {
                 reverseY();
 
                 // get end direction of ball
-                float newEndY = getEndY(context);
+                float newEndY = getEndY(context, topY, botY);
 
                 // setup new values for the animator
                 PropertyValuesHolder[] vals = ((ValueAnimator)animation).getValues();
