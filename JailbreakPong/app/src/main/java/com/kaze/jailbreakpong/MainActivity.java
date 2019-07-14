@@ -19,7 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
         final Board board = Board.getInstance();
         board.init(getApplicationContext());
-        //drawBoardBackground(board);
+        Board.Boundaries boardBoundaries = Helper.getBoardBoundaries();
+
         BoardView boardView = new BoardView(getApplicationContext());
         FrameLayout fl = (FrameLayout) findViewById(R.id.FrameLayout);
         fl.addView(boardView);
@@ -29,16 +30,11 @@ public class MainActivity extends AppCompatActivity {
         int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
         int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
         board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
-        //drawGridItems(board);
 
-        // Code to add the ball to the layout. Need to 'merge' in future commits
-//      float x = (float) metrics.widthPixels / 2;
-//      float y = (float) metrics.heightPixels / 2;
-//
 //      // create a ball
-      Ball ball = Helper.initBall(this, 0, board.getBoardTop(), 100, 0.5f);
+      Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 0.5f);
 //
-      ball.addAnimators(board.getBoardTop(), board.getBoardBottom());
+      ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
       // need y endpoints
 //
 //      // add to the layout

@@ -18,6 +18,16 @@ public class Board {
 
     private Board() {}
 
+    public class Boundaries {
+        float boardTop, playerTop, opponentTop, boardBottom;
+        public Boundaries(float boardTop, float opponentTop, float playerTop, float boardBottom) {
+            this.boardTop = boardTop;
+            this.opponentTop = opponentTop;
+            this.playerTop = playerTop;
+            this.boardBottom = boardBottom;
+        }
+    }
+
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
     public void init(Context context) {
         // get current phone screen size
@@ -64,20 +74,14 @@ public class Board {
         return gridItemSize;
     }
 
-    public float getBoardTop() {
-        return verticalOffset;
-    }
+    public Boundaries getBoardBoundaries() {
+        float boardTop = verticalOffset;
+        float opponentTop = playerRows * gridItemSize + verticalOffset;
+        float playerTop = (playerRows + neutralRows) * gridItemSize + verticalOffset;
+        float boardBottom = numRows * gridItemSize + verticalOffset;
+        Boundaries boundaries = new Boundaries(boardTop, opponentTop, playerTop, boardBottom);
 
-    public float getOpponentTop() {
-        return playerRows * gridItemSize + verticalOffset;
-    }
-
-    public float getPlayerTop() {
-        return (playerRows + neutralRows) * gridItemSize + verticalOffset;
-    }
-
-    public float getBoardBottom() {
-        return numRows * gridItemSize + verticalOffset;
+        return boundaries;
     }
 
     public ArrayList<ArrayList<GridItem>> getGrid() {

@@ -1,12 +1,8 @@
 package com.kaze.jailbreakpong;
 
 import android.content.Context;
-import android.graphics.LinearGradient;
-import android.graphics.Rect;
-import android.graphics.Shader;
 import android.view.View;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 
 import java.util.ArrayList;
 

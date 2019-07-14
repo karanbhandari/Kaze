@@ -22,16 +22,16 @@ public class BoardView extends View {
 
     public BoardView(Context context){
         super(context);
-        Board board = Board.getInstance();
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         // get board boundaries
-        boardTop = board.getBoardTop();
-        opponentTop = board.getOpponentTop();
-        playerTop = board.getPlayerTop();
-        boardBottom = board.getBoardBottom();
-        gridItemSize = board.getGridItemSize();
-        sectionWidth = gridItemSize * board.getNumColumns();
+        Board.Boundaries boundaries = Helper.getBoardBoundaries();
+        boardTop = boundaries.boardTop;
+        opponentTop = boundaries.opponentTop;
+        playerTop = boundaries.playerTop;
+        boardBottom = boundaries.boardBottom;
+        gridItemSize = Helper.getGridItemSize();
+        sectionWidth = gridItemSize * Helper.getNumColumns();
 
         // initialize colors
         paleBlue = ResourcesCompat.getColor(getResources(), R.color.paleBlue, null);

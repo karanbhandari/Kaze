@@ -71,4 +71,26 @@ public class Helper {
         }
         return 0;
     }
+
+    // returns an array of board boundaries in pixels (y-axis)
+    // {boardTop, opponentTop, playerTop, boardBottom}
+    public static Board.Boundaries getBoardBoundaries(){
+        Board board = Board.getInstance();
+        return board.getBoardBoundaries();
+    }
+
+    public static float getGridItemSize() {
+        Board board = Board.getInstance();
+        return board.getGridItemSize();
+    }
+
+    public static float getNumColumns() {
+        Board board = Board.getInstance();
+        return board.getNumColumns();
+    }
+
+    public static float getNumRowss() {
+        Board board = Board.getInstance();
+        return board.getNumRows();
+    }
 }
