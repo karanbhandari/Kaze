@@ -1,6 +1,7 @@
 package com.kaze.jailbreakpong;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.nfc.Tag;
 import android.util.DisplayMetrics;
@@ -60,5 +61,14 @@ public class Helper {
 
         Log.d(DEBUG, "getStatusBarHeight: statusBarHeight: " + statusBarHeight);
         return statusBarHeight;
+    }
+
+    public static int getNavbarHeight(Context context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 }

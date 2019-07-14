@@ -1,51 +1,47 @@
 package com.kaze.jailbreakpong;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.widget.FrameLayout;
 
 import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
 import static java.lang.Math.round;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
-import static java.lang.Math.round;
-
 public class Board {
-    private static Board board = new Board(); // singleton, only one Board allowed per game.
-    private int freed, escaped; // score
-    private float pxHeight, pxWidth, dpi, gap; // screen dimensions
-    private float gridItemSize; // in px, the width/height of each square grid
-    private int nRows, nCols; // number of GridItems horizontally and vertically on screen
-    private int gapBtm, oppBtm, midBtm, playerBtm, sectionHeight, midHeight;
-    private ArrayList<ArrayList<GridItem>> grid = new ArrayList<>();
+    private static Board board = new Board();     // singleton, only one Board allowed per game.
+    private float gridItemSize;     // in px, the width/height of each square grid
+    private int numRows, numCols;   // number of GridItems horizontally and vertically on screen
+    private int playerRows, neutralRows;   // number of rows per player, and number of neutral ones
+    private float verticalOffset;   // vertical offset in pixels required to center board
+    private int freed, escaped;     // score
+    private ArrayList<ArrayList<GridItem>> grid = new ArrayList<>(); // 2D array of GridItems, same dimension as board
 
     private Board() {}
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
-    public void init(Context context, float dimX, float dimY, float density) {
-        pxWidth = dimX;
-        pxHeight = dimY;
-        dpi = density;  // need for drawing in pixels
-        nCols = 12; // default is 18 GridItems horizontally across
-        nRows = 21; // default is 32 GridItems vertically across
-        gridItemSize = dimX/nCols; // the px width of each GridItem
-        gap = pxHeight - nRows * gridItemSize;
+    public void init(Context context) {
+        // get current phone screen size
+        float screenHeight = Helper.getDisplayMetrics(context).heightPixels + Helper.getNavbarHeight(context);
+        float screenWidth = Helper.getDisplayMetrics(context).widthPixels;
 
-        int plyNRows = (int) ceil((float) nRows/3);
-        sectionHeight = (int) (plyNRows * gridItemSize);
-        int midNRows = nRows - plyNRows * 2;
-        midHeight = (int) (midNRows * gridItemSize);
+        // square grid system that follows the 16:9 ratio
+        numRows = 21; // default is 21 GridItems vertically across
+        numCols = 12; // default is 12 GridItems horizontally across
+        gridItemSize = screenWidth/numCols;
 
-        gapBtm = round(gap/2);
-        oppBtm = gapBtm + sectionHeight;
-        midBtm = oppBtm + midHeight;
-        playerBtm = midBtm + sectionHeight;
+        // split the board evenly between the player, opponent, and neutral sections
+        playerRows = (int) ceil((float) numRows/3);
+        neutralRows = numRows - playerRows * 2;
 
-        for(int row = 0; row < nRows; row++) {
+        // vertically center the board
+        // calculate the locations of each section boundary
+        float verticalGap = screenHeight - numRows * gridItemSize;
+        verticalOffset = round(verticalGap/2);
+
+        // create array of GridItems, matching dimensions of board
+        for(int row = 0; row < numRows; row++) {
             ArrayList<GridItem> tempArray = new ArrayList<>();
-            for ( int col = 0; col < nCols; col++) {
+            for ( int col = 0; col < numCols; col++) {
                 tempArray.add(new GridItem(context, row, col));
             }
             grid.add(tempArray);
@@ -57,35 +53,31 @@ public class Board {
     }
 
     public int getNumColumns() {
-        return nCols;
+        return numCols;
     }
 
     public int getNumRows() {
-        return nRows;
+        return numRows;
     }
 
     public float getGridItemSize() {
         return gridItemSize;
     }
 
-    public float getGapBtm() {
-        return gapBtm;
+    public float getBoardTop() {
+        return verticalOffset;
     }
 
-    public float getOppBtm() {
-        return oppBtm;
+    public float getOpponentTop() {
+        return playerRows * gridItemSize + verticalOffset;
     }
 
-    public float getMidBtm() {
-        return midBtm;
+    public float getPlayerTop() {
+        return (playerRows + neutralRows) * gridItemSize + verticalOffset;
     }
 
-    public float getPlayerBtm() {
-        return playerBtm;
-    }
-
-    public float getGapSize() {
-        return gap;
+    public float getBoardBottom() {
+        return numRows * gridItemSize + verticalOffset;
     }
 
     public ArrayList<ArrayList<GridItem>> getGrid() {
@@ -100,7 +92,6 @@ public class Board {
         return escaped;
     }
 
-
     // when destroyed opponent's prisons, increase your score
     public void setFreed(int freed) {
         freed = freed;
@@ -111,31 +102,16 @@ public class Board {
         escaped = escaped;
     }
 
-    public float covertPxToDp(float px) {
-        return px/dpi;
-    }
-
-    public float convertDpToPx(float dp) {
-        return dp * dpi;
-    }
-
-    public void onDraw(Canvas canvas) {
-
-    }
-
-    public void drawGrid() {
-
-    }
-
     public void initBoard(FrameLayout fl, Context context, int playerTileColorLight, int playerTileColorDark, int opponentTileColorLight, int opponentTileColorDark) {
-        int rowsOpponent = (int) ((getOppBtm()-getGapBtm())/getGridItemSize());
-        int rowsMiddle = (int) ((getMidBtm()-getGapBtm())/getGridItemSize());
-        int rowsPlayer = (int) ((getPlayerBtm()-getGapBtm())/getGridItemSize());
+        int rowsOpponent = playerRows - 1;                  // minus 1 row for opponent paddle clearance
+        int rowsMiddle = rowsOpponent + 1 + neutralRows + 1;    // add 1 row for player paddle clearance
+        int rowsPlayer = numRows;
+
         String brickTypes[] = {"LowerLeftTriangle", "LowerRightTriangle", "UpperLeftTriangle", "UpperRightTriangle", "Square"};
         Random rand = new Random(1234);
 
         for(int or = 0; or <  10; ++or) {
-            int row = rand.nextInt(rowsOpponent-1);
+            int row = rand.nextInt(rowsOpponent);
             int col = rand.nextInt(getNumColumns());
             int brickType = rand.nextInt(5);
 
@@ -145,7 +121,7 @@ public class Board {
         }
 
         for(int pr = 0; pr <  10; ++pr) {
-            int row = rand.nextInt(rowsPlayer - (rowsMiddle+1)) + rowsMiddle+1;
+            int row = rand.nextInt(rowsPlayer - rowsMiddle) + rowsMiddle;
             int col = rand.nextInt(getNumColumns());
             int brickType = rand.nextInt(5);
 

@@ -25,7 +25,7 @@ public abstract class Brick extends GridItem{
 
         isVisible = true;
         this.hp = hp;
-        this.gapSize = (int) Board.getInstance().getGapSize();
+        this.gapSize = (int) Board.getInstance().getBoardTop() * 2;
 
         int padding = 1;
 

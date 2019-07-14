@@ -2,78 +2,92 @@ package com.kaze.jailbreakpong;
 
 import android.content.Context;
 import android.graphics.LinearGradient;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.view.View;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.widget.SectionIndexer;
 
 import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.Math.round;
 
 public class BoardView extends View {
-    private int gapBtm, oppBtm, midBtm, playerBtm, sectionWidth, gridItemSize;
+    private float boardTop, opponentTop, playerTop, boardBottom, sectionWidth, gridItemSize;
+    int paleYellow, paleBlue, paleOrange, palePurple, white, darkYellow, darkBlue;
+    RectF topGapRect, opponentRect, neutralRect, playerRect, bottomGapRect;
+    LinearGradient neutralRectShader;
     Paint mPaint;
 
     public BoardView(Context context){
         super(context);
         Board board = Board.getInstance();
-
-        gapBtm = (int) board.getGapBtm();
-        oppBtm = (int) board.getOppBtm();
-        midBtm = (int) board.getMidBtm();
-        playerBtm = (int) board.getPlayerBtm();
-        gridItemSize = (int) board.getGridItemSize();
-        sectionWidth = (int) gridItemSize * board.getNumColumns();
-
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        //draw the View
-        int paleYellow, paleBlue, paleOrange, palePurple, white;
+        // get board boundaries
+        boardTop = board.getBoardTop();
+        opponentTop = board.getOpponentTop();
+        playerTop = board.getPlayerTop();
+        boardBottom = board.getBoardBottom();
+        gridItemSize = board.getGridItemSize();
+        sectionWidth = gridItemSize * board.getNumColumns();
+
+        // initialize colors
         paleBlue = ResourcesCompat.getColor(getResources(), R.color.paleBlue, null);
         paleYellow = ResourcesCompat.getColor(getResources(), R.color.paleYellow, null);
         palePurple = ResourcesCompat.getColor(getResources(), R.color.palePurple, null);
         paleOrange = ResourcesCompat.getColor(getResources(), R.color.paleOrange, null);
         white = ResourcesCompat.getColor(getResources(), R.color.white, null);
+        darkYellow = ResourcesCompat.getColor(getResources(), R.color.gapYellow, null);
+        darkBlue = ResourcesCompat.getColor(getResources(), R.color.gapBlue, null);
 
-        // if the dimensions of our board do not match the ratio of the device, center
-        if (gapBtm != 0) {
-            int gapYellow = ResourcesCompat.getColor(getResources(), R.color.gapYellow, null);
-            mPaint.setColor(gapYellow);
-            Rect oppGap = new Rect(0, 0, sectionWidth, gapBtm);
-            canvas.drawRect(oppGap, mPaint);
+        // if there is a vertical gap, then create gap rectangles to paint
+        if (boardTop == 0) {
+            topGapRect = null;
+            bottomGapRect = null;
+        } else {
+            topGapRect = new RectF(0, 0, sectionWidth, boardTop);
+            bottomGapRect = new RectF(0, boardBottom, sectionWidth, boardBottom+boardTop);
+        }
+
+        // create rectangles for each board section
+        opponentRect = new RectF(0, boardTop, sectionWidth, opponentTop);
+        neutralRect = new RectF(0, opponentTop, sectionWidth, playerTop);
+        playerRect = new RectF(0, playerTop, sectionWidth, boardBottom);
+
+        // shader object for neutral region
+        neutralRectShader = new LinearGradient(0, opponentTop, 0, playerTop, palePurple, paleOrange, Shader.TileMode.CLAMP);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+       // if the dimensions of our board do not match the ratio of the device, center
+        if (topGapRect != null) {
+            mPaint.setColor(darkYellow);
+            canvas.drawRect(topGapRect, mPaint);
         }
 
         mPaint.setColor(paleYellow);
-        Rect oppBackground = new Rect(0, gapBtm, sectionWidth, oppBtm);
-        canvas.drawRect(oppBackground, mPaint);
+        canvas.drawRect(opponentRect, mPaint);
 
-        Rect intermediate = new Rect(0, oppBtm, sectionWidth, midBtm);
-        mPaint.setShader(new LinearGradient(0, oppBtm, 0, midBtm, palePurple, paleOrange, Shader.TileMode.CLAMP));
-        canvas.drawRect(intermediate, mPaint);
+        mPaint.setShader(neutralRectShader);
+        canvas.drawRect(neutralRect, mPaint);
         mPaint.reset();
 
         mPaint.setColor(white);
         mPaint.setAlpha(90);
         mPaint.setStrokeWidth(gridItemSize / 6);
-        int midpoint = (int) round(oppBtm + (midBtm - oppBtm) / 2);
+        float midpoint = (boardBottom+boardTop) / 2;
         canvas.drawLine(0, midpoint, sectionWidth, midpoint, mPaint);
         mPaint.reset();
 
         mPaint.setColor(paleBlue);
-        Rect playerBackground = new Rect(0, midBtm, sectionWidth, playerBtm);
-        canvas.drawRect(playerBackground, mPaint);
+        canvas.drawRect(playerRect, mPaint);
 
-        if (gapBtm != 0) {
-            int gapBlue = ResourcesCompat.getColor(getResources(), R.color.gapBlue, null);
-            int bottom = playerBtm + gapBtm;
-            mPaint.setColor(gapBlue);
-            Rect playerGap = new Rect(0, playerBtm, sectionWidth, bottom);
-            canvas.drawRect(playerGap, mPaint);
+        if (bottomGapRect != null) {
+            mPaint.setColor(darkBlue);
+            canvas.drawRect(bottomGapRect, mPaint);
         }
     }
 }
