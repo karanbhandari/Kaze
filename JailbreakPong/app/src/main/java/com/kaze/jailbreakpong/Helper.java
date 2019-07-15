@@ -89,7 +89,7 @@ public class Helper {
         return board.getNumColumns();
     }
 
-    public static float getNumRowss() {
+    public static float getNumRows() {
         Board board = Board.getInstance();
         return board.getNumRows();
     }

@@ -112,7 +112,7 @@ public class Board {
         int rowsPlayer = numRows;
 
         String brickTypes[] = {"LowerLeftTriangle", "LowerRightTriangle", "UpperLeftTriangle", "UpperRightTriangle", "Square"};
-        Random rand = new Random(1234);
+        Random rand = new Random();
 
         for(int or = 0; or <  10; ++or) {
             int row = rand.nextInt(rowsOpponent);
@@ -174,14 +174,16 @@ public class Board {
         boundaries.add(translateToCoordinate(pxX+size, pxY+size));
 
         boolean hasHit = false;
-        ArrayList<int[]> hitCoordinates = new ArrayList<int[]>();
+        ArrayList<int[]> visitedCoordinates = new ArrayList<int[]>();
 
         for (int i = 0; i < 4; ++i) {
             int[] coordinate = boundaries.get(i);
             GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
-            if (!hitCoordinates.contains(affectedGridItem)) {
-                hasHit = affectedGridItem.onHit(boundaries);
-                hitCoordinates.add(coordinate);
+            if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
+                boolean localHasHit = affectedGridItem.onHit(boundaries);
+                visitedCoordinates.add(coordinate);
+
+                if (localHasHit) hasHit = true;
             }
         }
 
