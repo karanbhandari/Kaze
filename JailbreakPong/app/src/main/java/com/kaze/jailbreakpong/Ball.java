@@ -148,6 +148,9 @@ public class Ball extends View {
         Random rand = new Random();
         int num = rand.nextInt(4);
 
+        // reverse direction of ball
+        reverseY();
+
         // moving up
         if (dir[1] == -1){
             return topY;
@@ -203,12 +206,10 @@ public class Ball extends View {
     }
 
     private void addYAnimator(final float topY, final float botY){
-        final Context context = getContext();
 
         // subtract size cus endingFloat is supposed to be top left corner
-        float endingFloat = botY - size;
-        final ValueAnimator animator = ValueAnimator.ofFloat(getPosY(), endingFloat);
-        Log.d("YAnim", "height calced: " + endingFloat);
+        float endPoint = botY - getSize();
+        final ValueAnimator animator = ValueAnimator.ofFloat(getPosY(), endPoint);
 
         // setup initial animator listener
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -216,8 +217,6 @@ public class Ball extends View {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float animatedVal = (float) animator.getAnimatedValue();
                 setPosY(animatedVal);
-                rect.top = getPosY();
-                rect.bottom = getPosY() + getSize();
             }
         });
 
@@ -226,19 +225,15 @@ public class Ball extends View {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 super.onAnimationEnd(animation);
-                // reverse direction of ball
-                reverseY();
+
                 // get end direction of ball
                 float newEndY = getEndY(topY, botY);
-                // setup new values for the animator
-                PropertyValuesHolder[] curVals = ((ValueAnimator)animation).getValues();
-                curVals[0].setFloatValues(getPosY(), newEndY);
 
-                ((ValueAnimator)animation).setValues(curVals);
+                // setup new values for the animator
+                Helper.setupAnimatorVals((ValueAnimator) animation, getPosY(), newEndY);
 
             }
         });
-
         setAnimatorTimeUsingSpeed(animator, speed);
         animator.setInterpolator(new LinearInterpolator());
         animator.setRepeatCount(ValueAnimator.INFINITE);
