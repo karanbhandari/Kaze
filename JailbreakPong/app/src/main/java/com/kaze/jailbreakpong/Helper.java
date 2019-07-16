@@ -1,5 +1,7 @@
 package com.kaze.jailbreakpong;
 
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -12,7 +14,6 @@ import android.view.WindowManager;
 public class Helper {
 
     private final static String DEBUG = "HELPER";
-
 
     // initializes and returns and instance of Ball
     public static Ball initBall(Context context, float x, float y, int size, float speed){
@@ -92,5 +93,14 @@ public class Helper {
     public static float getNumRows() {
         Board board = Board.getInstance();
         return board.getNumRows();
+    }
+
+    public static void setupAnimatorVals(ValueAnimator animator, float newStart, float newEnd){
+
+        // setup new values for the animator
+        PropertyValuesHolder[] vals = (animator).getValues();
+        vals[0].setFloatValues(newStart, newEnd);
+
+        animator.setValues(vals);
     }
 }
