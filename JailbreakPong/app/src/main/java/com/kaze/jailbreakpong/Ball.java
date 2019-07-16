@@ -107,8 +107,11 @@ public class Ball extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         Log.d("BALL", "onDraw() called");
+        rect.left = getPosX();
+        rect.right = getPosX() + getSize();
+        rect.top = getPosY();
+        rect.bottom = getPosY() + getSize();
         canvas.drawOval(rect, paint);
         invalidate();
     }
@@ -128,51 +131,28 @@ public class Ball extends View {
 
     public float getEndX(){
 
+        // reverse direction of ball
+        reverseX();
+
         DisplayMetrics metrics = Helper.getDisplayMetrics(getContext());
-        Random rand = new Random();
-        int num = rand.nextInt(2);
+
         if (dir[0] == -1){
             return 0;
-//            if (num == 0){
-//
-//            } else {
-//                return metrics.widthPixels / 2;
-//            }
         } else {
-            if (num == 0){
-                return metrics.widthPixels - getSize();
-            } else {
-                return metrics.widthPixels / 2;
-            }
+            return metrics.widthPixels - getSize();
         }
     }
 
-    public float getEndY(Context context, float topY, float botY){
+    public float getEndY(float topY, float botY){
 
         Random rand = new Random();
         int num = rand.nextInt(4);
 
-        float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-        int statusBarHeight = Helper.getStatusBarHeight(context);
-        int actionBarHeight = Helper.getActionBarHeight(context);
-
-        float properHeight = screenHeight - statusBarHeight - actionBarHeight;
-
         // moving up
         if (dir[1] == -1){
-            if (num != 0){
-                return topY;
-            } else {
-                return (botY - topY)/ 2;
-            }
-
+            return topY;
         } else {
-
-            if (num == 0){
-                return botY - size;
-            } else {
-                return (botY - topY)/ 2;
-            }
+            return botY - size;
         }
     }
 
@@ -182,7 +162,6 @@ public class Ball extends View {
     * Animator methods
     *
     * */
-
     public void addAnimators(float topY, float botY){
         addXAnimator();
         addYAnimator(topY, botY);
@@ -192,35 +171,28 @@ public class Ball extends View {
 
         final Context context = getContext();
         DisplayMetrics metrics = Helper.getDisplayMetrics(context);
-        float endingFloat = metrics.widthPixels - getSize();
-        final ValueAnimator animator = ValueAnimator.ofFloat(getPosX(), endingFloat);
+        float endPoint = metrics.widthPixels - getSize();
+        final ValueAnimator animator = ValueAnimator.ofFloat(getPosX(), endPoint);
 
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                // On Update, set the X position of Ball
                 float animatedVal = (float) animator.getAnimatedValue();
-                Log.d("Animator", "onAnimationUpdate: animatedVal: " + getPosX());
                 setPosX(animatedVal);
-                rect.left = getPosX();
-                rect.right = getPosX() + getSize();
             }
         });
 
+        // setup what happens when animation starts over
         animator.addListener(new AnimatorListenerAdapter() {
 
             @Override
             public void onAnimationRepeat(Animator animation) {
                 super.onAnimationEnd(animation);
-                // reverse direction of ball
-                reverseX();
+
                 // get end direction of ball
                 float newEnd = getEndX();
-
-                // setup new values for the animator
-                PropertyValuesHolder[] vals = ((ValueAnimator)animation).getValues();
-                vals[0].setFloatValues(getPosX(), newEnd);
-
-                ((ValueAnimator)animation).setValues(vals);
+                Helper.setupAnimatorVals((ValueAnimator) animation, getPosX(), newEnd);
 
             }
         });
@@ -257,7 +229,7 @@ public class Ball extends View {
                 // reverse direction of ball
                 reverseY();
                 // get end direction of ball
-                float newEndY = getEndY(context, topY, botY);
+                float newEndY = getEndY(topY, botY);
                 // setup new values for the animator
                 PropertyValuesHolder[] curVals = ((ValueAnimator)animation).getValues();
                 curVals[0].setFloatValues(getPosY(), newEndY);
