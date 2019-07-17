@@ -131,14 +131,27 @@ public class Ball extends View {
 
     public float getEndX(){
 
-        // reverse direction of ball
-        reverseX();
+        /*
+        *   TODO:
+        *       - only reverse direction if we've hit the end of the screen
+        * */
 
         DisplayMetrics metrics = Helper.getDisplayMetrics(getContext());
 
+        Log.d("BALL", "getEndX: " + getPosX());
+
+        // hit the end of the screen
+        // Ideally this conditionshould be getPosX() == 0 and getPosX() + getSize == metrics.widthPixels
+        // but Android doesn't play a long too well :(
+        if ( Math.abs(getPosX()) <= getSize() ||  Math.abs(getPosX() + getSize() - metrics.widthPixels) <= getSize()){
+            reverseX();
+        }
+
         if (dir[0] == -1){
+            // going left
             return 0;
         } else {
+            // going right
             return metrics.widthPixels - getSize();
         }
     }
@@ -167,7 +180,7 @@ public class Ball extends View {
     * */
     public void addAnimators(float topY, float botY){
         addXAnimator();
-        addYAnimator(topY, botY);
+//        addYAnimator(topY, botY);
     }
 
     private void addXAnimator(){
@@ -192,7 +205,7 @@ public class Ball extends View {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 super.onAnimationEnd(animation);
-
+                Log.d("BALL", "onAnimationRepeat: getPostX(): " + getPosX());
                 // get end direction of ball
                 float newEnd = getEndX();
                 Helper.setupAnimatorVals((ValueAnimator) animation, getPosX(), newEnd);
