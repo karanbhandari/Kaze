@@ -64,14 +64,14 @@ public class MainActivity extends AppCompatActivity {
         int playerTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientBlueDark, null);
         int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
         int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
-//        board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
+        board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
 
     }
 
     private void setupBall(){
         Board.Boundaries boardBoundaries = Helper.getBoardBoundaries();
         // create a ball
-        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 1.5f);
+        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 1f);
         ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
 
         // add to the layout
