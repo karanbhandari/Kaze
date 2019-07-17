@@ -174,21 +174,22 @@ public class Ball extends View {
             reverseY();
         }
 
+        float actualHeight = botY - topY;
+
         // moving up
         if (dir[1] == -1){
             if (num == 1){
-
+                return topY;
             } else {
-
+                return actualHeight / 2;
             }
-            return topY;
+
         } else {
             if (num == 1){
-
+                return botY - size;
             } else {
-
+                return actualHeight / 2;
             }
-            return botY - size;
         }
     }
 
