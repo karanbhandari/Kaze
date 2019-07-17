@@ -17,29 +17,11 @@ public class MainActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         hideSystemUI();
 
-        final Board board = Board.getInstance();
-        board.init(getApplicationContext());
-        Board.Boundaries boardBoundaries = Helper.getBoardBoundaries();
+        setupBoard();
 
-        BoardView boardView = new BoardView(getApplicationContext());
-        FrameLayout fl = (FrameLayout) findViewById(R.id.FrameLayout);
-        fl.addView(boardView);
+        setupBall();
 
-        int playerTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
-        int playerTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientBlueDark, null);
-        int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
-        int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
-        board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
 
-//      // create a ball
-      Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 0.5f);
-//
-      ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
-      // need y endpoints
-//
-//      // add to the layout
-      FrameLayout layout = (FrameLayout) findViewById(R.id.FrameLayout);
-      layout.addView(ball);
     }
 
     @Override
@@ -67,5 +49,33 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    private void setupBoard(){
+
+        final Board board = Board.getInstance();
+        board.init(getApplicationContext());
+
+        BoardView boardView = new BoardView(getApplicationContext());
+        FrameLayout fl = findViewById(R.id.FrameLayout);
+        fl.addView(boardView);
+
+        int playerTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
+        int playerTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientBlueDark, null);
+        int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
+        int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
+//        board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
+
+    }
+
+    private void setupBall(){
+        Board.Boundaries boardBoundaries = Helper.getBoardBoundaries();
+        // create a ball
+        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 1.5f);
+        ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
+
+        // add to the layout
+        FrameLayout layout = findViewById(R.id.FrameLayout);
+        layout.addView(ball);
     }
 }
