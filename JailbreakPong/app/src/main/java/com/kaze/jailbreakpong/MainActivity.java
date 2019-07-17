@@ -11,12 +11,15 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    ConstraintLayout layout;
+    FrameLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        layout = findViewById(R.id.FrameLayout);
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         hideSystemUI();
 
@@ -24,13 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         setupBall();
 
-        Paddle paddle1 = new Paddle(getApplicationContext(), 200, board.getMidBtm());
-        layout = findViewById(R.id.FrameLayout);
-        layout.addView(paddle1);
+        setupPaddles();
 
-        Paddle paddle2 = new Paddle(getApplicationContext(), 200, board.getOppBtm());
-        layout = findViewById(R.id.FrameLayout);
-        layout.addView(paddle2);
     }
 
     @Override
@@ -66,14 +64,14 @@ public class MainActivity extends AppCompatActivity {
         board.init(getApplicationContext());
 
         BoardView boardView = new BoardView(getApplicationContext());
-        FrameLayout fl = findViewById(R.id.FrameLayout);
-        fl.addView(boardView);
+
+        layout.addView(boardView);
 
         int playerTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
         int playerTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientBlueDark, null);
         int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
         int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
-        board.initBoard(fl, getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
+        board.initBoard(layout , getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
 
     }
 
@@ -84,7 +82,19 @@ public class MainActivity extends AppCompatActivity {
         ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
 
         // add to the layout
-        FrameLayout layout = findViewById(R.id.FrameLayout);
         layout.addView(ball);
+    }
+
+    private void setupPaddles(){
+
+        FrameLayout layout = findViewById(R.id.FrameLayout);
+
+        Board.Boundaries boardBoundaries = Helper.getBoardBoundaries();
+
+        Paddle paddle1 = new Paddle(getApplicationContext(), 200, boardBoundaries.playerTop);
+        layout.addView(paddle1);
+
+        Paddle paddle2 = new Paddle(getApplicationContext(), 200, boardBoundaries.opponentTop);
+        layout.addView(paddle2);
     }
 }
