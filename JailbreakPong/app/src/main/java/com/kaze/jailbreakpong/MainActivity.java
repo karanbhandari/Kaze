@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupPaddles(){
 
-        FrameLayout layout = findViewById(R.id.FrameLayout);
-
         Board.Boundaries boardBoundaries = Helper.getBoardBoundaries();
 
         Paddle paddle1 = new Paddle(getApplicationContext(), 200, boardBoundaries.playerTop);
