@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.nfc.Tag;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
