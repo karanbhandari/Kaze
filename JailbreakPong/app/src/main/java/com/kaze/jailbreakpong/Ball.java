@@ -15,10 +15,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.*;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 
-public class Ball extends View {
+public class Ball extends View implements Observer {
 
     // Coordinates
     private float posX, posY;
@@ -35,6 +37,7 @@ public class Ball extends View {
     RectF rect;
     Paint paint;
 
+    Board board;
 
     /*
     * Constructors
@@ -52,6 +55,9 @@ public class Ball extends View {
 
         paint = new Paint();
         paint.setColor(Color.RED);
+
+        board = Board.getInstance();
+        board.addObserver(this);
 
     }
 
@@ -281,4 +287,16 @@ public class Ball extends View {
         animator.setDuration(ms);
     }
 
+    @Override
+    public void update(Observable observable, Object o) {
+        Board.State state = board.getState();
+
+        if (state == Board.State.PLAY) {
+            speed = 0.5f;
+            this.setVisibility(View.VISIBLE);
+        } else {
+            speed = 0;
+            this.setVisibility(View.INVISIBLE);
+        }
+    }
 }

@@ -3,6 +3,8 @@ package com.kaze.jailbreakpong;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.app.Activity;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
         setupPaddles();
 
+        FrameLayout layout = (FrameLayout) findViewById(R.id.FrameLayout);
+
+        GameControlView gc = new GameControlView(getApplicationContext());
+        layout.addView(gc);
+        board.initObservers();
     }
 
     @Override
@@ -55,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        // try to hide the actionbar
+        // if it throws an exception, keep going, not an issue.
+        try {
+            getSupportActionBar().hide();
+        }catch (Exception e) { /* do nothing */ }
     }
 
     private void setupBoard(){

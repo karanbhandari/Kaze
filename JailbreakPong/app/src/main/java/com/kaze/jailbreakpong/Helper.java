@@ -63,6 +63,7 @@ public class Helper {
         return statusBarHeight;
     }
 
+    // NOTE: on some phones with hardware navbar and disabled software buttons, getNavbarHeight still returns a positive value
     public static int getNavbarHeight(Context context) {
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
@@ -101,5 +102,13 @@ public class Helper {
         vals[0].setFloatValues(newStart, newEnd);
 
         animator.setValues(vals);
+    }
+    
+    // would use this in getNavBarHeight
+    // however, doesn't work for emulators
+    public static boolean hasSoftNavBar(Context context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        return resourceId > 0 && resources.getBoolean(resourceId);
     }
 }

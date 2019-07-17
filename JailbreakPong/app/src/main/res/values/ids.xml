@@ -1,0 +1,4 @@
+<resources>
+    <item name="controlLayout" type="id"/>
+    <item name="buildingLayout" type="id"/>
+</resources>

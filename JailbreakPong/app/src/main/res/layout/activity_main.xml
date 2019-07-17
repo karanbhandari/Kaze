@@ -12,22 +12,5 @@
         android:layout_height="match_parent"
         android:id="@+id/FrameLayout">
 
-        <SurfaceView
-            android:id="@+id/boardBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@android:color/black" />
-
-        <SurfaceView
-            android:id="@+id/gridItemBoard"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@android:color/transparent" />
-
-        <SurfaceView
-            android:id="@+id/boardMessages"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@android:color/transparent" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

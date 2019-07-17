@@ -5,18 +5,24 @@ import android.widget.FrameLayout;
 import static java.lang.Math.ceil;
 import static java.lang.Math.round;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
-public class Board {
+public class Board extends Observable {
     private static Board board = new Board();     // singleton, only one Board allowed per game.
     private float gridItemSize;     // in px, the width/height of each square grid
     private int numRows, numCols;   // number of GridItems horizontally and vertically on screen
     private int playerRows, neutralRows;   // number of rows per player, and number of neutral ones
     private float verticalOffset;   // vertical offset in pixels required to center board
     private int freed, escaped;     // score
+    private State state;
+
     private ArrayList<ArrayList<GridItem>> grid = new ArrayList<>(); // 2D array of GridItems, same dimension as board
 
     private Board() {}
+
+    public enum State { START, BUILD, PAUSE, PLAY, END, LOSE, WIN; }
 
     public class Boundaries {
         float boardTop, playerTop, opponentTop, boardBottom;
@@ -30,6 +36,7 @@ public class Board {
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
     public void init(Context context) {
+        state = State.BUILD;
         // get current phone screen size
         float screenHeight = Helper.getDisplayMetrics(context).heightPixels + Helper.getNavbarHeight(context);
         float screenWidth = Helper.getDisplayMetrics(context).widthPixels;
@@ -72,6 +79,10 @@ public class Board {
 
     public float getGridItemSize() {
         return gridItemSize;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public Boundaries getBoardBoundaries() {
@@ -188,5 +199,32 @@ public class Board {
         }
 
         return hasHit;
+    }
+
+    // Observer methods
+    // ===================
+    public void initObservers() {
+        setChanged();
+        notifyObservers();
+    }
+    @Override
+    public synchronized void deleteObserver(Observer o)
+    {
+        super.deleteObserver(o);
+    }
+    @Override
+    public synchronized void addObserver(Observer o)
+    {
+        super.addObserver(o);
+    }
+    @Override
+    public synchronized void deleteObservers()
+    {
+        super.deleteObservers();
+    }
+    @Override
+    public void notifyObservers()
+    {
+        super.notifyObservers();
     }
 }

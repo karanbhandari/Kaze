@@ -24,4 +24,6 @@
     <color name="ballPurple">#A770FF</color>
     <color name="ballBlue">#69FFFF</color>
     <color name="ballTailBlue">#F2FDFF</color>
+    <color name="darkTint">#1A000000</color>
+    <color name="frost">#40FFFFFF</color>
 </resources>
