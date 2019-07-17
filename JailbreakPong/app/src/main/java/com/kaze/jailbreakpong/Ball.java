@@ -132,13 +132,10 @@ public class Ball extends View {
     public float getEndX(){
 
         /*
-        *   TODO:
-        *       - only reverse direction if we've hit the end of the screen
-        * */
+        *   - only reverse direction if we've hit the end of the screen
+        */
 
         DisplayMetrics metrics = Helper.getDisplayMetrics(getContext());
-
-        Log.d("BALL", "getEndX: " + getPosX());
 
         // hit the end of the screen
         // Ideally this conditionshould be getPosX() == 0 and getPosX() + getSize == metrics.widthPixels
@@ -147,19 +144,30 @@ public class Ball extends View {
             reverseX();
         }
 
+        Random rand = new Random();
+        int num = rand.nextInt(2);
+
         if (dir[0] == -1){
             // going left
-            return 0;
+            if (num == 1){
+                return 0;
+            } else {
+                return (float) (metrics.widthPixels / 2) - getSize();
+            }
         } else {
             // going right
-            return metrics.widthPixels - getSize();
+            if(num == 1){
+                return metrics.widthPixels - getSize();
+            } else {
+                return (float) (metrics.widthPixels / 2) - getSize();
+            }
         }
     }
 
     public float getEndY(float topY, float botY){
 
         Random rand = new Random();
-        int num = rand.nextInt(4);
+        int num = rand.nextInt(2);
 
         // reverse direction of ball
         if (Math.abs(getPosY() - topY) < getSize() || Math.abs(getPosY() + getSize() - botY) < getSize()){
@@ -168,8 +176,18 @@ public class Ball extends View {
 
         // moving up
         if (dir[1] == -1){
+            if (num == 1){
+
+            } else {
+
+            }
             return topY;
         } else {
+            if (num == 1){
+
+            } else {
+
+            }
             return botY - size;
         }
     }
