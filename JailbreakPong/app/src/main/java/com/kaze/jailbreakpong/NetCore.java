@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.kaze.jailbreakpong;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -62,6 +62,8 @@ public class NetCore {
                 Collection<WifiP2pDevice> fo = peerList.getDeviceList();
                 int go = fo.size();
                 groupOwnerTable.clear();
+
+                // find the client we want to connect and connect to that only
                 final Iterator<WifiP2pDevice> devices = peerList.getDeviceList().iterator();
                 while (devices.hasNext()) {
                     WifiP2pDevice device = devices.next();

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.kaze.jailbreakpong;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -14,7 +14,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
     private WifiP2pManager.PeerListListener peerListListener;
-    private Activity activity;
 
     public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pManager.PeerListListener peerListListener) {
         super();
