@@ -162,7 +162,9 @@ public class Ball extends View {
         int num = rand.nextInt(4);
 
         // reverse direction of ball
-        reverseY();
+        if (Math.abs(getPosY() - topY) < getSize() || Math.abs(getPosY() + getSize() - botY) < getSize()){
+            reverseY();
+        }
 
         // moving up
         if (dir[1] == -1){
@@ -180,7 +182,7 @@ public class Ball extends View {
     * */
     public void addAnimators(float topY, float botY){
         addXAnimator();
-//        addYAnimator(topY, botY);
+        addYAnimator(topY, botY);
     }
 
     private void addXAnimator(){
