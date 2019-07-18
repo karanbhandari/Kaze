@@ -7,7 +7,6 @@ import android.widget.FrameLayout;
 import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.Math.ceil;
-import static java.lang.Math.log;
 import static java.lang.Math.round;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -288,7 +287,7 @@ public class Board extends Observable {
         return coordinate;
     }
 
-    public boolean isHit(float pxX, float pxY, float size) {
+    public boolean isHit(float pxX, float pxY, float size, Ball ball) {
         Log.d("BOARD", "isHit: called with pxX: " + pxX + " and pxY: " + pxY);
         ArrayList<int[]> boundaries = new ArrayList<int[]>();
         // worst case scenario, the ball is simultaneously on 4 gridItems
@@ -303,14 +302,16 @@ public class Board extends Observable {
         for (int i = 0; i < 4; ++i) {
             int[] coordinate = boundaries.get(i);
             if (coordinate[1] < grid.size() && coordinate[0] < grid.size()){  // to prevent out of bounds calls
+                Log.d("BOARD", "isHit: called from within if with coordinate[1]: " + coordinate[1] + " and coordinate[0]: " + coordinate[0]);
                 GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
                 if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
                     boolean localHasHit = affectedGridItem.onHit(boundaries);   // TODO - eric
-                    affectedGridItem.hasHit(coordinate);
+                    affectedGridItem.hasHit(coordinate, ball);
                     visitedCoordinates.add(coordinate);
 
                     if (localHasHit) hasHit = true;
                 }
+
             }
         }
 

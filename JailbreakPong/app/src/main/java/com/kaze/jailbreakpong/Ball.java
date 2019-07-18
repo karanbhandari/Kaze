@@ -126,7 +126,7 @@ public class Ball extends View implements Observer {
         reverseY();
     }
 
-    private void reverseX(){
+    public void reverseX(){
         dir[0] = -1 * dir[0];
     }
 
@@ -171,6 +171,18 @@ public class Ball extends View implements Observer {
         }
     }
 
+    public void setNewEnd(){
+        /*
+         *  TODO:
+         *      this methods will setup new endpoints for the animators.
+         *      will possibly be called AFTER a bounce (hit)
+         *
+         *      - Need reference to both of the animators
+         *      - update their animation values based on what we get here.
+         *      - starting probably be getPosX() and ending will have to be calculated
+         */
+    }
+
     public float getEndY(float topY, float botY){
 
         Random rand = new Random();
@@ -213,6 +225,8 @@ public class Ball extends View implements Observer {
 
     public void addXAnimator(){
 
+        final Ball ball = this;
+
         final Context context = getContext();
         DisplayMetrics metrics = Helper.getDisplayMetrics(context);
         float endPoint = metrics.widthPixels - getSize();
@@ -224,7 +238,7 @@ public class Ball extends View implements Observer {
                 // On Update, set the X position of Ball
                 float animatedVal = (float) animator.getAnimatedValue();
                 setPosX(animatedVal);
-                board.isHit(animatedVal, 0, size);
+                board.isHit(animatedVal, 0, size, ball);
             }
         });
 
