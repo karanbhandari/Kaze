@@ -80,17 +80,23 @@ public class Helper {
         return board.getBoardBoundaries();
     }
 
+    // gets true boundaries
+    public static BoardView.Boundaries getBoundaries() {
+        Board board = Board.getInstance();
+        return board.getBoundaries();
+    }
+
     public static float getGridItemSize() {
         Board board = Board.getInstance();
         return board.getGridItemSize();
     }
 
-    public static float getNumColumns() {
+    public static int getNumColumns() {
         Board board = Board.getInstance();
         return board.getNumColumns();
     }
 
-    public static float getNumRows() {
+    public static int getNumRows() {
         Board board = Board.getInstance();
         return board.getNumRows();
     }

@@ -3,11 +3,8 @@ package com.kaze.jailbreakpong;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -15,12 +12,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-
-import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -28,22 +21,22 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class BuildingView extends LinearLayout implements Observer {
-    LinearLayout buildingKit;
-    LinearLayout squareBrickBtn;
-    LinearLayout prisonBtn;
-    LinearLayout fakePrisonBtn;
-    LinearLayout doneBuildingBtn;
-    LinearLayout cancelDoneBtn;
+    private LinearLayout buildingKit;
+    private LinearLayout squareBrickBtn;
+    private LinearLayout prisonBtn;
+    private LinearLayout fakePrisonBtn;
+    private LinearLayout doneBuildingBtn;
+    private LinearLayout cancelDoneBtn;
     int selectedColor;
     Board board;
-    Selected selected;
+    private Selected selected;
     TypedValue rippleEffect;
 
     enum Selected {
         BRICK, PRISON, FAKEPRISON, DONE;
     }
 
-    Selected getSelected() {
+    public Selected getSelected() {
         return selected;
     }
 
@@ -73,7 +66,6 @@ public class BuildingView extends LinearLayout implements Observer {
 
         board = Board.getInstance();
         board.addObserver(this);
-        Board.Boundaries boundaries = Helper.getBoardBoundaries();
 
         LayoutInflater.from(context).inflate(R.layout.building_controls, this, true);
 
@@ -97,13 +89,8 @@ public class BuildingView extends LinearLayout implements Observer {
 
         this.setId(R.id.buildingLayout);
         this.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         this.setLayoutParams(params);
-
-        int halfNeutralHeight = (int) ((boundaries.playerTop - boundaries.opponentTop)/2);
-        LinearLayout.LayoutParams buildingKitParams = (LinearLayout.LayoutParams) buildingKit.getLayoutParams();
-        buildingKitParams.height = halfNeutralHeight;
-        buildingKit.setLayoutParams(buildingKitParams);
 
         this.bringToFront();
         this.setLayoutTransition(new LayoutTransition());
@@ -191,8 +178,6 @@ public class BuildingView extends LinearLayout implements Observer {
     }
 
     private void updateBackground() {
-
-
         if (selected == Selected.BRICK) {
             squareBrickBtn.setBackgroundColor(selectedColor);
         } else {
@@ -212,9 +197,9 @@ public class BuildingView extends LinearLayout implements Observer {
         }
 
         if (selected == Selected.DONE) {
-            int frost = ContextCompat.getColor(getContext(), R.color.frost);
-            int red = ContextCompat.getColor(getContext(), R.color.ballRed);
-            ColorDrawable[] color = {new ColorDrawable(frost), new ColorDrawable(red)};
+            int darkTint = ContextCompat.getColor(getContext(), R.color.darkTint);
+            int red = Color.RED;
+            ColorDrawable[] color = {new ColorDrawable(darkTint), new ColorDrawable(red)};
             TransitionDrawable transition = new TransitionDrawable(color);
             //This will work also on old devices. The latest API says you have to use setBackground instead.
             cancelDoneBtn.setBackground(transition);

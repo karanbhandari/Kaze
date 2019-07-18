@@ -5,15 +5,15 @@
     <LinearLayout
         android:id="@+id/buildingKit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="4dp"
-        android:background="@color/frost"
+        android:background="@color/darkTint"
         android:gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/squareBrickBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -42,7 +42,7 @@
 
         <LinearLayout
             android:id="@+id/prisonBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -70,7 +70,7 @@
 
         <LinearLayout
             android:id="@+id/fakeprisonBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -98,7 +98,7 @@
 
         <LinearLayout
             android:id="@+id/doneBuildingBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -126,7 +126,7 @@
 
         <LinearLayout
             android:id="@+id/cancelDoneBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"

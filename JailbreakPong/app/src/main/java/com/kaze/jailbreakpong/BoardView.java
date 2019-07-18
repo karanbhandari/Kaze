@@ -1,160 +1,164 @@
 package com.kaze.jailbreakpong;
 
 import android.content.Context;
-import android.graphics.LinearGradient;
-import android.graphics.RectF;
-import android.graphics.Shader;
+import android.graphics.PorterDuff;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.SectionIndexer;
+import android.widget.LinearLayout;
 
 import androidx.core.content.res.ResourcesCompat;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import static java.lang.Math.round;
-
 public class BoardView extends FrameLayout implements Observer {
-    private float boardTop, opponentTop, playerTop, boardBottom, sectionWidth, gridItemSize;
-    int paleYellow, paleBlue, paleOrange, palePurple, white, darkYellow, darkBlue;
-    RectF topGapRect, opponentRect, neutralRect, playerRect, bottomGapRect;
-    LinearGradient neutralRectShader;
+    private float boardTop, opponentTop, playerTop, boardBottom;
+    int darkYellow, darkBlue;
+    FrameLayout opponentBackground, playerBackground;
+    View opponentGrid, playerGrid, neutralBackground;
+    LinearLayout HUDContainer;
     Paint mPaint;
     Board board;
-    boolean isGrid = false;
     GameControlView opponentHUD, playerHUD;
+
+    public class Boundaries {
+        float boardTop, playerTop, opponentTop, boardBottom;
+        public Boundaries(float boardTop, float opponentTop, float playerTop, float boardBottom) {
+            this.boardTop = boardTop;
+            this.opponentTop = opponentTop;
+            this.playerTop = playerTop;
+            this.boardBottom = boardBottom;
+        }
+    }
 
     public BoardView(Context context){
         super(context);
         this.setWillNotDraw(false);
+        this.setId(R.id.boardView);
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        params.gravity = Gravity.CENTER;
+        this.setLayoutParams(params);
+
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         board = Board.getInstance();
         board.addObserver(this);
+        board.addBoardView(this);
 
-        // get board boundaries
-        Board.Boundaries boundaries = Helper.getBoardBoundaries();
-        boardTop = boundaries.boardTop;
-        opponentTop = boundaries.opponentTop;
-        playerTop = boundaries.playerTop;
-        boardBottom = boundaries.boardBottom;
-        gridItemSize = Helper.getGridItemSize();
-        sectionWidth = gridItemSize * Helper.getNumColumns();
+        LayoutInflater.from(context).inflate(R.layout.board_background, this, true);
+        opponentBackground = findViewById(R.id.opponentBackground);
+        playerBackground = findViewById(R.id.playerBackground);
+        neutralBackground = findViewById(R.id.neutralBackground);
+
+        // wrapper to help center the 2 HUD's
+        LinearLayout wrapper = new LinearLayout(getContext());
+        LinearLayout.LayoutParams HUDContainerParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        wrapper.setLayoutParams(HUDContainerParams);
+        wrapper.setGravity(Gravity.CENTER);
+        addView(wrapper);
+
+        // LinearLayout to wrap 2 HUD's
+        HUDContainer = new LinearLayout(getContext());
+        HUDContainerParams.gravity = Gravity.CENTER;
+        HUDContainer.setLayoutParams(HUDContainerParams);
+        HUDContainer.setOrientation(LinearLayout.VERTICAL);
+        wrapper.addView(HUDContainer);
 
         opponentHUD = new GameControlView(getContext());
         playerHUD = new GameControlView(getContext());
+        HUDContainer.addView(opponentHUD);
+        HUDContainer.addView(playerHUD);
 
-        addView(opponentHUD);
-        addView(playerHUD);
+        LinearLayout.LayoutParams HUDParams = (LinearLayout.LayoutParams) opponentHUD.getLayoutParams();
+        HUDParams.weight = 1;
+        opponentHUD.setLayoutParams(HUDParams);
 
-        opponentHUD.setRotation(180);
+        HUDParams = (LinearLayout.LayoutParams) playerHUD.getLayoutParams();
+        HUDParams.weight = 1;
+        playerHUD.setLayoutParams(HUDParams);
+
         opponentHUD.setGravity(Gravity.BOTTOM);
-        opponentHUD.setY(boundaries.opponentTop);
-        float screenMiddle = (boundaries.boardBottom-boundaries.boardTop)/2 + boundaries.boardTop;
-        playerHUD.setY(screenMiddle);
+        opponentHUD.setRotation(180);
 
-        // initialize colors
-        paleBlue = ResourcesCompat.getColor(getResources(), R.color.paleBlue, null);
-        paleYellow = ResourcesCompat.getColor(getResources(), R.color.paleYellow, null);
-        palePurple = ResourcesCompat.getColor(getResources(), R.color.palePurple, null);
-        paleOrange = ResourcesCompat.getColor(getResources(), R.color.paleOrange, null);
-        white = ResourcesCompat.getColor(getResources(), R.color.white, null);
+        opponentGrid = new GridView(getContext());
+        opponentBackground.addView(opponentGrid);
+
+        playerGrid = new GridView(getContext());
+        playerBackground.addView(playerGrid);
+
         darkYellow = ResourcesCompat.getColor(getResources(), R.color.gapYellow, null);
         darkBlue = ResourcesCompat.getColor(getResources(), R.color.gapBlue, null);
 
-        // if there is a vertical gap, then create gap rectangles to paint
-        if (boardTop == 0) {
-            topGapRect = null;
-            bottomGapRect = null;
-        } else {
-            topGapRect = new RectF(0, 0, sectionWidth, boardTop);
-            bottomGapRect = new RectF(0, boardBottom, sectionWidth, boardBottom+boardTop);
+        final ViewTreeObserver viewTreeObserver = this.getViewTreeObserver();
+        final FrameLayout reference = this;
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    updateSize();
+                    reference.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
         }
 
-        // create rectangles for each board section
-        opponentRect = new RectF(0, boardTop, sectionWidth, opponentTop);
-        neutralRect = new RectF(0, opponentTop, sectionWidth, playerTop);
-        playerRect = new RectF(0, playerTop, sectionWidth, boardBottom);
-
-        // shader object for neutral region
-        neutralRectShader = new LinearGradient(0, opponentTop, 0, playerTop, palePurple, paleOrange, Shader.TileMode.CLAMP);
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-       // if the dimensions of our board do not match the ratio of the device, center
-        if (topGapRect != null) {
-            mPaint.setColor(darkYellow);
-            canvas.drawRect(topGapRect, mPaint);
-        }
+    public void onDraw(Canvas canvas) {
+        opponentGrid.invalidate();
+        playerGrid.invalidate();
+    }
 
-        mPaint.setColor(paleYellow);
-        canvas.drawRect(opponentRect, mPaint);
+    private BuildingView.Selected getPlayerSelected() {
+        return playerHUD.getSelected();
+    }
 
-        mPaint.setShader(neutralRectShader);
-        canvas.drawRect(neutralRect, mPaint);
-        mPaint.reset();
+    private BuildingView.Selected getOpponentSelected() {
+        return opponentHUD.getSelected();
+    }
 
-        mPaint.setColor(white);
-        mPaint.setAlpha(90);
-        mPaint.setStrokeWidth(gridItemSize / 6);
-        float midpoint = (boardBottom+boardTop) / 2;
-        canvas.drawLine(0, midpoint, sectionWidth, midpoint, mPaint);
-        mPaint.reset();
+    private void updateSize() {
+        BoardView.Boundaries boundaries = getBoundaries();
+        ViewGroup.LayoutParams HUDContainerParams = HUDContainer.getLayoutParams();
+        int neutralHeight = (int) (boundaries.playerTop - boundaries.opponentTop);
+        HUDContainerParams.height = neutralHeight;
+        HUDContainer.setLayoutParams(HUDContainerParams);
+    }
 
-        mPaint.setColor(paleBlue);
-        canvas.drawRect(playerRect, mPaint);
+    public BoardView.Boundaries getBoundaries() {
+        int temp[] = {-1, -1};
+        opponentBackground.getLocationOnScreen(temp);
+        this.boardTop = temp[1];
 
-        if (bottomGapRect != null) {
-            mPaint.setColor(darkBlue);
-            canvas.drawRect(bottomGapRect, mPaint);
-        }
+        neutralBackground.getLocationOnScreen(temp);
+        this.opponentTop = temp[1];
 
-        if (isGrid) {
-            mPaint.setColor(0);
-            mPaint.setAlpha(66);
-            canvas.drawRect(neutralRect, mPaint);
-            mPaint.reset();
+        playerBackground.getLocationOnScreen(temp);
+        this.playerTop = temp[1];
 
-            // draw the rows
-            int oppRowsBottom = (int) ((opponentTop-boardTop)/gridItemSize);
-            int neutralRowsBottom = (int) ((playerTop-boardTop)/gridItemSize);
-            int numRows = board.getNumRows();
-            mPaint.setColor(darkYellow);
-            mPaint.setStrokeWidth(gridItemSize / 8);
-            for (int i = 0; i < numRows; ++i) {
-                if (i <= oppRowsBottom || i >= neutralRowsBottom) {
-                    if (i == neutralRowsBottom) {
-                        mPaint.setColor(darkBlue);
-                    }
-                    int y = (int) (boardTop + i * gridItemSize);
-                    canvas.drawLine(0, y, sectionWidth, y, mPaint);
-                }
-            }
+        this.boardBottom = temp[1] + playerBackground.getHeight();
 
-            // draw the columns
-            int cols = board.getNumColumns();
-            for (int i = 0; i < cols; ++i) {
-                int x = (int) (i * gridItemSize);
-                mPaint.setColor(darkYellow);
-                canvas.drawLine(x, 0, x, opponentTop, mPaint);
-
-                mPaint.setColor(darkBlue);
-                canvas.drawLine(x, playerTop, x, boardBottom, mPaint);
-            }
-        }
+        BoardView.Boundaries boundaries = new BoardView.Boundaries(boardTop, opponentTop, playerTop, boardBottom);
+        return boundaries;
     }
 
     @Override
     public void update(Observable observable, Object o) {
         Board.State state = board.getState();
         if (state == Board.State.BUILD) {
-            isGrid = true;
+            int tint = ResourcesCompat.getColor(getResources(), R.color.darkTint, null);
+            neutralBackground.getBackground().setColorFilter(tint, PorterDuff.Mode.DARKEN);
+            opponentGrid.setVisibility(VISIBLE);
+            playerGrid.setVisibility(VISIBLE);
         } else {
-            isGrid = false;
+            neutralBackground.getBackground().setColorFilter(null);
+            opponentGrid.setVisibility(GONE);
+            playerGrid.setVisibility(GONE);
         }
     }
 }

@@ -1,4 +1,5 @@
 <resources>
     <item name="controlLayout" type="id"/>
     <item name="buildingLayout" type="id"/>
+    <item name="boardView" type="id"/>
 </resources>

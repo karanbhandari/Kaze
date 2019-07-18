@@ -17,14 +17,14 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class GameControlView extends LinearLayout implements Observer {
-    LinearLayout wrapper;
-    LinearLayout buttonPanel;
-    ImageButton recordBtn;
-    ImageButton playPauseBtn;
-    ImageButton quitBtn;
-    BuildingView buildingKit;
+    private LinearLayout wrapper;
+    private LinearLayout buttonPanel;
+    private ImageButton recordBtn;
+    private ImageButton playPauseBtn;
+    private ImageButton quitBtn;
+    private BuildingView buildingKit;
     Board board;
-    TextView msg;
+    private TextView msg;
 
     /* Programmatic Constructor */
     public GameControlView(Context context) {
@@ -46,7 +46,6 @@ public class GameControlView extends LinearLayout implements Observer {
     public void init(Context context) {
         board = Board.getInstance();
         board.addObserver(this);
-        Board.Boundaries boundaries = Helper.getBoardBoundaries();
 
         LayoutInflater.from(context).inflate(R.layout.game_controls_view, this, true);
 
@@ -67,12 +66,7 @@ public class GameControlView extends LinearLayout implements Observer {
 
         this.setId(R.id.controlLayout);
         this.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.setLayoutParams(params);
-
-        int halfNeutralHeight = (int) ((boundaries.playerTop - boundaries.opponentTop)/2);
-        params = (LinearLayout.LayoutParams) buildingKit.getLayoutParams();
-        params.height = halfNeutralHeight;
+        LinearLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         this.setLayoutParams(params);
 
         this.setLayoutTransition(new LayoutTransition());
@@ -85,6 +79,9 @@ public class GameControlView extends LinearLayout implements Observer {
     }
 
     public BuildingView.Selected getSelected() {
+        if (buildingKit.getVisibility() == GONE) {
+            return null;
+        }
         return buildingKit.getSelected();
     }
 
@@ -96,7 +93,7 @@ public class GameControlView extends LinearLayout implements Observer {
             case BUILD:
                 buttonPanel.setVisibility(INVISIBLE);
                 msg.setText("build your board!");
-                msg.animate().alpha(0.0f).setStartDelay(3000)
+                msg.animate().alpha(0.0f).setStartDelay(2000)
                                 .alpha(0.0f)
                                 .setDuration(1500)
                                 .setListener(new AnimatorListenerAdapter() {

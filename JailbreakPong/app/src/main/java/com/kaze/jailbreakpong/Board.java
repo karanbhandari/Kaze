@@ -17,6 +17,7 @@ public class Board extends Observable {
     private float verticalOffset;   // vertical offset in pixels required to center board
     private int freed, escaped;     // score
     private State state;
+    private BoardView boardView;
 
     private ArrayList<ArrayList<GridItem>> grid = new ArrayList<>(); // 2D array of GridItems, same dimension as board
 
@@ -85,6 +86,10 @@ public class Board extends Observable {
         return state;
     }
 
+    public void addBoardView(BoardView boardView) {
+        this.boardView = boardView;
+    }
+
     public Boundaries getBoardBoundaries() {
         float boardTop = verticalOffset;
         float opponentTop = playerRows * gridItemSize + verticalOffset;
@@ -93,6 +98,11 @@ public class Board extends Observable {
         Boundaries boundaries = new Boundaries(boardTop, opponentTop, playerTop, boardBottom);
 
         return boundaries;
+    }
+
+    public BoardView.Boundaries getBoundaries() {
+        if (boardView == null) return null;
+        return boardView.getBoundaries();
     }
 
     public ArrayList<ArrayList<GridItem>> getGrid() {

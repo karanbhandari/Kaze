@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <item>
+        <shape android:id="@+id/neutralBackgroundGradient">
+            <gradient
+                android:startColor="@color/palePurple"
+                android:endColor="@color/paleOrange"
+                android:type="linear"
+                android:angle="-90"/>
+        </shape>
+    </item>
+</selector>
