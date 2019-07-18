@@ -106,6 +106,16 @@ public class Helper {
         board.addObserver(o);
     }
 
+    public static void remove(BuildingView.Selected selection, int row, int col) {
+        Board board = Board.getInstance();
+        board.remove(selection, row, col);
+    }
+
+    public static void add(BuildingView.Selected selection, int row, int col) {
+        Board board = Board.getInstance();
+        board.add(selection, row, col);
+    }
+
     public static void setupAnimatorVals(ValueAnimator animator, float newStart, float newEnd){
 
         // setup new values for the animator

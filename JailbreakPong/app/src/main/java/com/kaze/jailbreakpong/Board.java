@@ -1,9 +1,11 @@
 package com.kaze.jailbreakpong;
 import android.content.Context;
+import android.content.res.Resources;
 import android.widget.FrameLayout;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import static java.lang.Math.ceil;
-import static java.lang.Math.round;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,23 +19,12 @@ public class Board extends Observable {
     private State state;
     private BoardView boardView;
     private float gridItemSize;     // in px, the width/height of each square grid
-//    private float verticalOffset;   // vertical offset in pixels required to center board
 
     private ArrayList<ArrayList<GridItem>> grid = new ArrayList<>(); // 2D array of GridItems, same dimension as board
 
     private Board() {}
 
     public enum State { START, BUILD, PAUSE, PLAY, END, LOSE, WIN; }
-
-//    public class Boundaries {
-//        float boardTop, playerTop, opponentTop, boardBottom;
-//        public Boundaries(float boardTop, float opponentTop, float playerTop, float boardBottom) {
-//            this.boardTop = boardTop;
-//            this.opponentTop = opponentTop;
-//            this.playerTop = playerTop;
-//            this.boardBottom = boardBottom;
-//        }
-//    }
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
     public void init(Context context) {
@@ -117,6 +108,53 @@ public class Board extends Observable {
         escaped = escaped;
     }
 
+    public void build(BuildingView.Selected selection, float x, float y) {
+        int coordinate[] = translateToCoordinate(x, y);
+
+        // range of rows where no building is allowed
+        int unallowedTop = playerRows - 2;
+        int unallowedBottom = playerRows + neutralRows + 1;
+
+        if (coordinate[1] > unallowedTop && coordinate[1] < unallowedBottom) {
+            return;
+        }
+
+        GridItem item = grid.get(coordinate[1]).get(coordinate[0]);
+        item.replace(selection);
+    }
+
+    public void add(BuildingView.Selected selection, int row, int column) {
+        Context context = boardView.getContext();
+        Resources res = boardView.getResources();
+        int tileColorLight = -1;
+        int tileColorDark = -1;
+
+        if (row <= playerRows) {
+            tileColorLight = ResourcesCompat.getColor(res, R.color.gradientYellowLight, null);
+            tileColorDark = ResourcesCompat.getColor(res, R.color.gradientYellowDark, null);
+        } else {
+            tileColorLight = ResourcesCompat.getColor(res, R.color.gradientBlueLight, null);
+            tileColorDark = ResourcesCompat.getColor(res, R.color.gradientBlueDark, null);
+        }
+
+        String brickType = "";
+        if (selection == BuildingView.Selected.BRICK) {
+            brickType = "Square";
+        } else {
+            brickType = "Jail";
+            brickType = "Square";
+        }
+
+        BrickFactory bf= new BrickFactory(context, column, row, tileColorLight, tileColorDark, brickType, (int) gridItemSize);
+        grid.get(row).set(column, bf.getItem());
+        boardView.addView(bf.getItem());
+    }
+
+    public void remove(BuildingView.Selected selection, int row, int column) {
+        GridItem replacementBlank = new GridItem(boardView.getContext(), row, column);
+        grid.get(row).set(column, replacementBlank);
+    }
+
     public void initBoard(FrameLayout fl, Context context, int playerTileColorLight, int playerTileColorDark, int opponentTileColorLight, int opponentTileColorDark) {
         int rowsOpponent = playerRows - 1;                  // minus 1 row for opponent paddle clearance
         int rowsMiddle = rowsOpponent + 1 + neutralRows + 1;    // add 1 row for player paddle clearance
@@ -170,7 +208,7 @@ public class Board extends Observable {
 
     private int[] translateToCoordinate(float pxX, float pxY) {
         float topOffset = getBoundaries().boardTop;
-        int x = (int) Math.floor((pxX-topOffset)/gridItemSize);
+        int x = (int) Math.floor((pxX)/gridItemSize);
         int y = (int) Math.floor((pxY-topOffset)/gridItemSize);
 
         int coordinate[] = {x, y};

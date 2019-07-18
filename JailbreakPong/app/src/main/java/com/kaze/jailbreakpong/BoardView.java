@@ -86,6 +86,7 @@ public class BoardView extends FrameLayout implements Observer {
 
         // add grids to each player's side of the board
         opponentGrid = new GridView(getContext());
+        opponentGrid.setRotation(180);
         opponentBackground.addView(opponentGrid);
         playerGrid = new GridView(getContext());
         playerBackground.addView(playerGrid);
@@ -155,6 +156,28 @@ public class BoardView extends FrameLayout implements Observer {
             playerGrid.setVisibility(VISIBLE);
             opponentBackground.setClickable(true);
             playerBackground.setClickable(true);
+
+            opponentBackground.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        float absY = motionEvent.getY() + boardTop;
+                        board.build(opponentHUD.getSelected(), motionEvent.getX(), absY);
+                    }
+                    return false;
+                }
+            });
+
+            playerBackground.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        float absY = motionEvent.getY() + playerTop;
+                        board.build(playerHUD.getSelected(), motionEvent.getX(), absY);
+                    }
+                    return false;
+                }
+            });
 
         } else {
             neutralBackground.getBackground().setColorFilter(null);

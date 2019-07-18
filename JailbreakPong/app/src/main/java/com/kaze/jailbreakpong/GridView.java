@@ -49,16 +49,18 @@ public class GridView extends View {
     public void onDraw(Canvas canvas) {
         mPaint.setColor(tintDark);
         mPaint.setStrokeWidth(gridItemSize / 20);
-        for (int i = 0; i < rows; ++i) {
-            int y = (int) (i * gridItemSize);
+        // only do rows-1 because we don't want users to create bricks on top row.
+        for (int i = 0; i < rows-1; ++i) {
+            int y = (int) ((i+1) * gridItemSize);
             canvas.drawLine(0, y, sectionWidth, y, mPaint);
         }
 
         // draw the columns
+        float height = this.getHeight() - gridItemSize;
         for (int i = 0; i < cols; ++i) {
             int x = (int) (i * gridItemSize);
             mPaint.setColor(tintDark);
-            canvas.drawLine(x, 0, x, this.getHeight(), mPaint);
+            canvas.drawLine(x, gridItemSize, x, height+gridItemSize, mPaint);
         }
     }
 }

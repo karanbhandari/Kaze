@@ -3,6 +3,7 @@ package com.kaze.jailbreakpong;
 import android.content.Context;
 import android.view.View;
 import android.graphics.Canvas;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,11 @@ public class GridItem extends View {
         // do nothing for blank item
         // children classes overwrite this function.
         return false;
+    }
+
+    public void replace(BuildingView.Selected selection) {
+        Helper.add(selection, row, column);
+//        ((ViewGroup) this.getParent()).removeView(this);
     }
 
     public void onDraw(Canvas canvas) {

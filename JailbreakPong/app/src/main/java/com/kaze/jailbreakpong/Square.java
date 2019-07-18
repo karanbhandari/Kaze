@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Shader;
 import android.util.Log;
+import android.view.ViewGroup;
 
 public class Square extends Brick {
     // HP = 1
@@ -16,8 +17,17 @@ public class Square extends Brick {
         super(context, row, column, width, height,1, lightColor, darkColor);
         paint.setColor(this.lightColor);
         paint.setShader(new LinearGradient(row, column, row+width, column+width, darkColor, lightColor, Shader.TileMode.MIRROR));
+    }
 
-
+    public void replace(BuildingView.Selected selection) {
+        int gridRow = (int) column/width;
+        int gridColumn = (int) row/height;
+        if (selection == BuildingView.Selected.BRICK) {
+            Helper.remove(selection, gridRow, gridColumn);
+        } else if (selection == BuildingView.Selected.PRISON) {
+            Helper.add(selection, gridRow, gridColumn);
+        }
+        if (this.getParent() != null) ((ViewGroup) this.getParent()).removeView(this);
     }
 
     public void hit() {
