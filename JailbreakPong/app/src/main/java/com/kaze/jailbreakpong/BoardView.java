@@ -2,6 +2,7 @@ package com.kaze.jailbreakpong;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,6 +26,7 @@ public class BoardView extends FrameLayout implements Observer {
     LinearLayout HUDContainer;
     Board board;
     GameControlView opponentHUD, playerHUD;
+    int doneBuildCount; // when it is two, start the game.
 
     public class Boundaries {
         float boardTop, playerTop, opponentTop, boardBottom;
@@ -119,6 +121,28 @@ public class BoardView extends FrameLayout implements Observer {
         return opponentHUD.getSelected();
     }
 
+    public void onDoneBuild(boolean doneBuild) {
+        doneBuildCount += (doneBuild)? 1 : 0;
+        if (doneBuildCount == 2) {
+            triggerPlay();
+        } else if (doneBuildCount == 1) {
+            final Handler handler = new Handler();
+            final Runnable r = new Runnable() {
+                public void run() {
+                    //handler.postDelayed(this, 30000);
+                    triggerPlay();
+                }
+            };
+            handler.postDelayed(r, 30000);
+        }
+    }
+
+    private void triggerPlay() {
+        if (doneBuildCount >=1 && Helper.getGameState() == Board.State.BUILD) {
+            board.play();
+        }
+    }
+
     private void updateSize() {
         updateBoundaries();
         BoardView.Boundaries boundaries = getBoundaries();
@@ -185,6 +209,7 @@ public class BoardView extends FrameLayout implements Observer {
             playerGrid.setVisibility(GONE);
             opponentBackground.setClickable(false);
             playerBackground.setClickable(false);
+            doneBuildCount = 0;
         }
     }
 }

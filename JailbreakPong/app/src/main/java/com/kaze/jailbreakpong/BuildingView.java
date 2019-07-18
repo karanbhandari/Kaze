@@ -134,6 +134,7 @@ public class BuildingView extends LinearLayout implements Observer {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     delayUpdateBackground(selected, Selected.DONE);
                     selected = Selected.DONE;
+                    Helper.onDoneBuild(true);
                 }
                 return false;
             }
@@ -145,6 +146,7 @@ public class BuildingView extends LinearLayout implements Observer {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     delayUpdateBackground(selected, Selected.BRICK);
                     selected = Selected.BRICK;
+                    Helper.onDoneBuild(false);
                 }
                 return false;
             }

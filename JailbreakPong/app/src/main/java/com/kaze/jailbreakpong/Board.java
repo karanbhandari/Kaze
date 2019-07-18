@@ -240,6 +240,16 @@ public class Board extends Observable {
         return hasHit;
     }
 
+    public void onDoneBuild(boolean isDone) {
+        boardView.onDoneBuild(isDone);
+    }
+
+    public void play() {
+        setChanged();
+        state = State.PLAY;
+        notifyObservers();
+    }
+
     // Observer methods
     // ===================
     public void initObservers() {

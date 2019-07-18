@@ -116,6 +116,11 @@ public class Helper {
         board.add(selection, row, col);
     }
 
+    public static void onDoneBuild(boolean isDone) {
+        Board board = Board.getInstance();
+        board.onDoneBuild(isDone);
+    }
+
     public static void setupAnimatorVals(ValueAnimator animator, float newStart, float newEnd){
 
         // setup new values for the animator
