@@ -37,6 +37,8 @@ public class Ball extends View implements Observer {
     RectF rect;
     Paint paint;
 
+    Board board = Board.getInstance();
+
     /*
     * Constructors
     */
@@ -155,14 +157,16 @@ public class Ball extends View implements Observer {
             if (num == 1){
                 return 0;
             } else {
-                return (float) (metrics.widthPixels / 2) - getSize();
+                return 0;
+//                return (float) (metrics.widthPixels / 2) - getSize();
             }
         } else {
             // going right
             if(num == 1){
                 return metrics.widthPixels - getSize();
             } else {
-                return (float) (metrics.widthPixels / 2) - getSize();
+                return metrics.widthPixels - getSize();
+//                return (float) (metrics.widthPixels / 2) - getSize();
             }
         }
     }
@@ -207,7 +211,7 @@ public class Ball extends View implements Observer {
         addYAnimator(topY, botY);
     }
 
-    private void addXAnimator(){
+    public void addXAnimator(){
 
         final Context context = getContext();
         DisplayMetrics metrics = Helper.getDisplayMetrics(context);
@@ -220,6 +224,7 @@ public class Ball extends View implements Observer {
                 // On Update, set the X position of Ball
                 float animatedVal = (float) animator.getAnimatedValue();
                 setPosX(animatedVal);
+                board.isHit(animatedVal, 0, size);
             }
         });
 
