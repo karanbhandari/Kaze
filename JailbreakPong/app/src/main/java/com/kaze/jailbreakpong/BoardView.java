@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -26,6 +25,8 @@ public class BoardView extends FrameLayout implements Observer {
     LinearLayout HUDContainer;
     Board board;
     GameControlView opponentHUD, playerHUD;
+    final Handler handler;
+    final Runnable delayStartGame;
     int doneBuildCount; // when it is two, start the game.
 
     public class Boundaries {
@@ -94,6 +95,12 @@ public class BoardView extends FrameLayout implements Observer {
         playerBackground.addView(playerGrid);
 
         scrim = findViewById(R.id.scrim);
+        handler = new Handler();
+        delayStartGame = new Runnable() {
+            public void run() {
+                triggerPlay();
+            }
+        };
 
         final ViewTreeObserver viewTreeObserver = this.getViewTreeObserver();
         final FrameLayout reference = this;
@@ -128,14 +135,11 @@ public class BoardView extends FrameLayout implements Observer {
         if (doneBuildCount == 2) {
             triggerPlay();
         } else if (doneBuildCount == 1) {
-            final Handler handler = new Handler();
-            final Runnable r = new Runnable() {
-                public void run() {
-                    //handler.postDelayed(this, 30000);
-                    triggerPlay();
-                }
-            };
-            handler.postDelayed(r, 30000);
+            handler.postDelayed(delayStartGame, 10000);
+        }
+
+        if (!doneBuild) {
+            handler.removeCallbacks(delayStartGame);
         }
     }
 

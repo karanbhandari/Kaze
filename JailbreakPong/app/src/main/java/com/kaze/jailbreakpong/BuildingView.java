@@ -203,7 +203,7 @@ public class BuildingView extends LinearLayout implements Observer {
             TransitionDrawable transition = new TransitionDrawable(color);
             //This will work also on old devices. The latest API says you have to use setBackground instead.
             cancelDoneBtn.setBackground(transition);
-            transition.startTransition(30000);
+            transition.startTransition(15000);
         }
 
     }

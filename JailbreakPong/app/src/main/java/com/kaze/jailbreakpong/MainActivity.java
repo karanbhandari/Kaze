@@ -1,7 +1,6 @@
 package com.kaze.jailbreakpong;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Bundle;
 import android.view.View;
