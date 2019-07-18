@@ -34,10 +34,16 @@ public class Ball extends View implements Observer {
     // direction
     private int [] dir = {1, 1};
 
+    // For painting
     RectF rect;
     Paint paint;
 
+    // Need access to the board
     Board board = Board.getInstance();
+
+    // Animators
+    ValueAnimator animatorX = null;
+    ValueAnimator animatorY = null;
 
     /*
     * Constructors
@@ -230,20 +236,20 @@ public class Ball extends View implements Observer {
         final Context context = getContext();
         DisplayMetrics metrics = Helper.getDisplayMetrics(context);
         float endPoint = metrics.widthPixels - getSize();
-        final ValueAnimator animator = ValueAnimator.ofFloat(getPosX(), endPoint);
+        animatorX = ValueAnimator.ofFloat(getPosX(), endPoint);
 
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        animatorX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 // On Update, set the X position of Ball
-                float animatedVal = (float) animator.getAnimatedValue();
+                float animatedVal = (float) animatorX.getAnimatedValue();
                 setPosX(animatedVal);
                 board.isHit(animatedVal, getPosY(), size, ball);  // TODO: need to change this hardcoded value too
             }
         });
 
         // setup what happens when animation starts over
-        animator.addListener(new AnimatorListenerAdapter() {
+        animatorX.addListener(new AnimatorListenerAdapter() {
 
             @Override
             public void onAnimationRepeat(Animator animation) {
@@ -255,10 +261,10 @@ public class Ball extends View implements Observer {
 
             }
         });
-        setAnimatorTimeUsingSpeed(animator, speed);
-        animator.setInterpolator(new LinearInterpolator());
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.start();
+        setAnimatorTimeUsingSpeed(animatorX, speed);
+        animatorX.setInterpolator(new LinearInterpolator());
+        animatorX.setRepeatCount(ValueAnimator.INFINITE);
+        animatorX.start();
     }
 
     private void addYAnimator(final float topY, final float botY){
