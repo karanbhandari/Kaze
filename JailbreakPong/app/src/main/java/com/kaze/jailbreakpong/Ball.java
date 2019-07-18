@@ -271,18 +271,18 @@ public class Ball extends View implements Observer {
 
         // subtract size cus endingFloat is supposed to be top left corner
         float endPoint = botY - getSize();
-        final ValueAnimator animator = ValueAnimator.ofFloat(getPosY(), endPoint);
+        animatorY = ValueAnimator.ofFloat(getPosY(), endPoint);
 
         // setup initial animator listener
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        animatorY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float animatedVal = (float) animator.getAnimatedValue();
+                float animatedVal = (float) animatorY.getAnimatedValue();
                 setPosY(animatedVal);
             }
         });
 
-        animator.addListener(new AnimatorListenerAdapter() {
+        animatorY.addListener(new AnimatorListenerAdapter() {
 
             @Override
             public void onAnimationRepeat(Animator animation) {
@@ -296,10 +296,10 @@ public class Ball extends View implements Observer {
 
             }
         });
-        setAnimatorTimeUsingSpeed(animator, speed);
-        animator.setInterpolator(new LinearInterpolator());
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.start();
+        setAnimatorTimeUsingSpeed(animatorY, speed);
+        animatorY.setInterpolator(new LinearInterpolator());
+        animatorY.setRepeatCount(ValueAnimator.INFINITE);
+        animatorY.start();
     }
 
     // speed property is used to set the duration of the animation.
