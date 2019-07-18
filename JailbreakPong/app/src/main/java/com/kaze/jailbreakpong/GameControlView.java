@@ -23,7 +23,6 @@ public class GameControlView extends LinearLayout implements Observer {
     private ImageButton playPauseBtn;
     private ImageButton quitBtn;
     private BuildingView buildingKit;
-    Board board;
     private TextView msg;
 
     /* Programmatic Constructor */
@@ -44,8 +43,7 @@ public class GameControlView extends LinearLayout implements Observer {
 
     @SuppressLint("RtlHardcoded")
     public void init(Context context) {
-        board = Board.getInstance();
-        board.addObserver(this);
+        Helper.addObserver(this);
 
         LayoutInflater.from(context).inflate(R.layout.game_controls_view, this, true);
 
@@ -87,7 +85,7 @@ public class GameControlView extends LinearLayout implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        Board.State state = board.getState();
+        Board.State state = Helper.getGameState();
 
         switch(state) {
             case BUILD:

@@ -22,7 +22,7 @@ public class GridView extends View {
         this.setWillNotDraw(false);
         rows = (int) Math.ceil((float)Helper.getNumRows()/3);
         cols = Helper.getNumColumns();
-        mPaint = new Paint();
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         tintDark = ResourcesCompat.getColor(getResources(), R.color.darkTint, null);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         this.setLayoutParams(params);

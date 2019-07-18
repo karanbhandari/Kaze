@@ -5,6 +5,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -23,16 +24,6 @@ public class MainActivity extends AppCompatActivity {
         hideSystemUI();
 
         setupBoard();
-
-        setupBall();
-
-        setupPaddles();
-
-        FrameLayout layout = (FrameLayout) findViewById(R.id.FrameLayout);
-
-        GameControlView gc = new GameControlView(getApplicationContext());
-        layout.addView(gc);
-        board.initObservers();
     }
 
     @Override
@@ -73,19 +64,33 @@ public class MainActivity extends AppCompatActivity {
         board.init(getApplicationContext());
 
         BoardView boardView = new BoardView(getApplicationContext());
-
         layout.addView(boardView);
 
-        int playerTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
-        int playerTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientBlueDark, null);
-        int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
-        int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
-        board.initBoard(layout , getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
+        // create ball and paddle after boardView is completed inflated, to get accurate boundaries
+        final ViewTreeObserver viewTreeObserver = boardView.getViewTreeObserver();
+        final BoardView ref = boardView;
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    setupBall();
+                    setupPaddles();
+                    board.initObservers();
+                    ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
+        }
+
+//        int playerTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
+//        int playerTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientBlueDark, null);
+//        int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
+//        int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
+//        board.initBoard(layout , getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
 
     }
 
     private void setupBall(){
-        Board.Boundaries boardBoundaries = Helper.getBoardBoundaries();
+        BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
         // create a ball
         Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 1f);
         ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
@@ -96,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupPaddles(){
 
-        Board.Boundaries boardBoundaries = Helper.getBoardBoundaries();
+        BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
 
         Paddle paddle1 = new Paddle(getApplicationContext(), 200, boardBoundaries.playerTop);
         layout.addView(paddle1);

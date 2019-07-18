@@ -77,7 +77,8 @@
             android:background="?android:selectableItemBackground"
             android:clickable="true"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/fakeprisonImg"

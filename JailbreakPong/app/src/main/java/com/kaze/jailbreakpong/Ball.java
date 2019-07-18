@@ -37,8 +37,6 @@ public class Ball extends View implements Observer {
     RectF rect;
     Paint paint;
 
-    Board board;
-
     /*
     * Constructors
     */
@@ -56,8 +54,7 @@ public class Ball extends View implements Observer {
         paint = new Paint();
         paint.setColor(Color.RED);
 
-        board = Board.getInstance();
-        board.addObserver(this);
+        Helper.addObserver(this);
 
     }
 
@@ -289,14 +286,14 @@ public class Ball extends View implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        Board.State state = board.getState();
+        Board.State state = Helper.getGameState();
 
         if (state == Board.State.PLAY) {
             speed = 0.5f;
             this.setVisibility(View.VISIBLE);
         } else {
             speed = 0;
-            this.setVisibility(View.INVISIBLE);
+            this.setVisibility(View.GONE);
         }
     }
 }

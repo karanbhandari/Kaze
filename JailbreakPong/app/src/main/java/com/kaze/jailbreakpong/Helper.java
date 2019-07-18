@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import java.util.Observer;
+
 public class Helper {
 
     private final static String DEBUG = "HELPER";
@@ -73,13 +75,6 @@ public class Helper {
         return 0;
     }
 
-    // returns an array of board boundaries in pixels (y-axis)
-    // {boardTop, opponentTop, playerTop, boardBottom}
-    public static Board.Boundaries getBoardBoundaries(){
-        Board board = Board.getInstance();
-        return board.getBoardBoundaries();
-    }
-
     // gets true boundaries
     public static BoardView.Boundaries getBoundaries() {
         Board board = Board.getInstance();
@@ -99,6 +94,16 @@ public class Helper {
     public static int getNumRows() {
         Board board = Board.getInstance();
         return board.getNumRows();
+    }
+
+    public static Board.State getGameState() {
+        Board board = Board.getInstance();
+        return board.getState();
+    }
+
+    public static void addObserver(Observer o) {
+        Board board = Board.getInstance();
+        board.addObserver(o);
     }
 
     public static void setupAnimatorVals(ValueAnimator animator, float newStart, float newEnd){

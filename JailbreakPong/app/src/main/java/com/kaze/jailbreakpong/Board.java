@@ -11,13 +11,13 @@ import java.util.Random;
 
 public class Board extends Observable {
     private static Board board = new Board();     // singleton, only one Board allowed per game.
-    private float gridItemSize;     // in px, the width/height of each square grid
     private int numRows, numCols;   // number of GridItems horizontally and vertically on screen
     private int playerRows, neutralRows;   // number of rows per player, and number of neutral ones
-    private float verticalOffset;   // vertical offset in pixels required to center board
     private int freed, escaped;     // score
     private State state;
     private BoardView boardView;
+    private float gridItemSize;     // in px, the width/height of each square grid
+//    private float verticalOffset;   // vertical offset in pixels required to center board
 
     private ArrayList<ArrayList<GridItem>> grid = new ArrayList<>(); // 2D array of GridItems, same dimension as board
 
@@ -25,36 +25,28 @@ public class Board extends Observable {
 
     public enum State { START, BUILD, PAUSE, PLAY, END, LOSE, WIN; }
 
-    public class Boundaries {
-        float boardTop, playerTop, opponentTop, boardBottom;
-        public Boundaries(float boardTop, float opponentTop, float playerTop, float boardBottom) {
-            this.boardTop = boardTop;
-            this.opponentTop = opponentTop;
-            this.playerTop = playerTop;
-            this.boardBottom = boardBottom;
-        }
-    }
+//    public class Boundaries {
+//        float boardTop, playerTop, opponentTop, boardBottom;
+//        public Boundaries(float boardTop, float opponentTop, float playerTop, float boardBottom) {
+//            this.boardTop = boardTop;
+//            this.opponentTop = opponentTop;
+//            this.playerTop = playerTop;
+//            this.boardBottom = boardBottom;
+//        }
+//    }
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
     public void init(Context context) {
         state = State.BUILD;
-        // get current phone screen size
-        float screenHeight = Helper.getDisplayMetrics(context).heightPixels + Helper.getNavbarHeight(context);
-        float screenWidth = Helper.getDisplayMetrics(context).widthPixels;
-
         // square grid system that follows the 16:9 ratio
         numRows = 21; // default is 21 GridItems vertically across
         numCols = 12; // default is 12 GridItems horizontally across
+        float screenWidth = Helper.getDisplayMetrics(context).widthPixels;
         gridItemSize = screenWidth/numCols;
 
         // split the board evenly between the player, opponent, and neutral sections
         playerRows = (int) ceil((float) numRows/3);
         neutralRows = numRows - playerRows * 2;
-
-        // vertically center the board
-        // calculate the locations of each section boundary
-        float verticalGap = screenHeight - numRows * gridItemSize;
-        verticalOffset = round(verticalGap/2);
 
         // create array of GridItems, matching dimensions of board
         for(int row = 0; row < numRows; row++) {
@@ -86,18 +78,16 @@ public class Board extends Observable {
         return state;
     }
 
-    public void addBoardView(BoardView boardView) {
-        this.boardView = boardView;
+    public int getNumPlayerRows() {
+        return playerRows;
     }
 
-    public Boundaries getBoardBoundaries() {
-        float boardTop = verticalOffset;
-        float opponentTop = playerRows * gridItemSize + verticalOffset;
-        float playerTop = (playerRows + neutralRows) * gridItemSize + verticalOffset;
-        float boardBottom = numRows * gridItemSize + verticalOffset;
-        Boundaries boundaries = new Boundaries(boardTop, opponentTop, playerTop, boardBottom);
+    public int getNumNeutralRows() {
+        return neutralRows;
+    }
 
-        return boundaries;
+    public void addBoardView(BoardView boardView) {
+        this.boardView = boardView;
     }
 
     public BoardView.Boundaries getBoundaries() {
@@ -179,8 +169,9 @@ public class Board extends Observable {
     }
 
     private int[] translateToCoordinate(float pxX, float pxY) {
-        int x = (int) Math.floor(pxX/gridItemSize);
-        int y = (int) Math.floor(pxY/gridItemSize);
+        float topOffset = getBoundaries().boardTop;
+        int x = (int) Math.floor((pxX-topOffset)/gridItemSize);
+        int y = (int) Math.floor((pxY-topOffset)/gridItemSize);
 
         int coordinate[] = {x, y};
         return coordinate;

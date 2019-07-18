@@ -28,7 +28,6 @@ public class BuildingView extends LinearLayout implements Observer {
     private LinearLayout doneBuildingBtn;
     private LinearLayout cancelDoneBtn;
     int selectedColor;
-    Board board;
     private Selected selected;
     TypedValue rippleEffect;
 
@@ -64,8 +63,7 @@ public class BuildingView extends LinearLayout implements Observer {
         rippleEffect = new TypedValue();
         getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, rippleEffect, true);
 
-        board = Board.getInstance();
-        board.addObserver(this);
+        Helper.addObserver(this);
 
         LayoutInflater.from(context).inflate(R.layout.building_controls, this, true);
 
@@ -163,13 +161,13 @@ public class BuildingView extends LinearLayout implements Observer {
                     cancelDoneBtn.setBackgroundResource(rippleEffect.resourceId);
                     squareBrickBtn.setVisibility(VISIBLE);
                     prisonBtn.setVisibility(VISIBLE);
-                    fakePrisonBtn.setVisibility(VISIBLE);
+                    //fakePrisonBtn.setVisibility(VISIBLE);
                     doneBuildingBtn.setVisibility(VISIBLE);
                     cancelDoneBtn.setVisibility(GONE);
                 } else if (curSelected == Selected.DONE) {
                     squareBrickBtn.setVisibility(GONE);
                     prisonBtn.setVisibility(GONE);
-                    fakePrisonBtn.setVisibility(GONE);
+                    //fakePrisonBtn.setVisibility(GONE);
                     doneBuildingBtn.setVisibility(GONE);
                     cancelDoneBtn.setVisibility(VISIBLE);
                 }
@@ -210,7 +208,7 @@ public class BuildingView extends LinearLayout implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        Board.State state = board.getState();
+        Board.State state = Helper.getGameState();
 
         if (state != Board.State.BUILD) {
             this.setVisibility(GONE);
