@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -68,12 +69,14 @@ public class GameControlView extends LinearLayout implements Observer {
         this.setLayoutParams(params);
 
         this.setLayoutTransition(new LayoutTransition());
-
-        float dpi = Helper.getDisplayMetrics(context).density;
-//
-//        float screenMiddle = (boundaries.boardBottom-boundaries.boardTop)/2 + boundaries.boardTop;
-//        this.setY(screenMiddle);
         this.bringToFront();
+
+        playPauseBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.togglePlayPause();
+            }
+        });
     }
 
     public BuildingView.Selected getSelected() {
@@ -110,11 +113,13 @@ public class GameControlView extends LinearLayout implements Observer {
             case PAUSE:
                 wrapper.setVisibility(VISIBLE);
                 buttonPanel.setVisibility(VISIBLE);
+                playPauseBtn.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                 msg.setText("game paused");
                 break;
             case PLAY:
                 wrapper.setVisibility(VISIBLE);
                 buttonPanel.setVisibility(VISIBLE);
+                playPauseBtn.setImageResource(R.drawable.ic_pause_black_24dp);
                 msg.clearComposingText();
                 break;
             default:

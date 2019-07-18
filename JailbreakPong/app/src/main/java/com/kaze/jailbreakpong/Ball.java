@@ -288,12 +288,15 @@ public class Ball extends View implements Observer {
     public void update(Observable observable, Object o) {
         Board.State state = Helper.getGameState();
 
-        if (state == Board.State.PLAY) {
-            speed = 0.5f;
-            this.setVisibility(View.VISIBLE);
-        } else {
-            speed = 0;
-            this.setVisibility(View.GONE);
+        switch(state) {
+            case PLAY:
+                this.setVisibility(View.VISIBLE);
+                break;
+            case PAUSE:
+                this.setVisibility(View.GONE); // should instead pause the ball, visibility should be VISIBLE
+                break;
+            default:
+                this.setVisibility(View.GONE);
         }
     }
 }

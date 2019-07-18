@@ -121,6 +121,11 @@ public class Helper {
         board.onDoneBuild(isDone);
     }
 
+    public static void togglePlayPause() {
+        Board board = Board.getInstance();
+        board.togglePlayPause();
+    }
+
     public static void setupAnimatorVals(ValueAnimator animator, float newStart, float newEnd){
 
         // setup new values for the animator

@@ -250,6 +250,20 @@ public class Board extends Observable {
         notifyObservers();
     }
 
+    public void pause() {
+        setChanged();
+        state = State.PAUSE;
+        notifyObservers();
+    }
+
+    public void togglePlayPause() {
+        if (state == State.PAUSE) {
+            play();
+        } else if (state == State.PLAY) {
+            pause();
+        }
+    }
+
     // Observer methods
     // ===================
     public void initObservers() {

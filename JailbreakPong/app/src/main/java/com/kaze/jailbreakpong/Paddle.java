@@ -88,10 +88,15 @@ public class Paddle extends AppCompatImageView implements Observer {
     public void update(Observable observable, Object o) {
         Board.State state = Helper.getGameState();
 
-        if (state == Board.State.BUILD) {
-            this.setVisibility(GONE);
-        } else {
-            this.setVisibility(VISIBLE);
+        switch(state) {
+            case PLAY:
+                this.setVisibility(View.VISIBLE);
+                break;
+            case PAUSE:
+                this.setVisibility(View.GONE); // should instead disable touch events on the board, visibility should be VISIBLE
+                break;
+            default:
+                this.setVisibility(View.GONE);
         }
     }
 }
