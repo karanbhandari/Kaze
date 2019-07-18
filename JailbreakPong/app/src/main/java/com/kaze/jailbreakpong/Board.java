@@ -15,7 +15,7 @@ public class Board extends Observable {
     private static Board board = new Board();     // singleton, only one Board allowed per game.
     private int numRows, numCols;   // number of GridItems horizontally and vertically on screen
     private int playerRows, neutralRows;   // number of rows per player, and number of neutral ones
-    private int freed, escaped;     // score
+    private int playerScore, opponentScore;     // score
     private boolean isRecording = false;
     private State state;
     private BoardView boardView;
@@ -39,6 +39,9 @@ public class Board extends Observable {
         // split the board evenly between the player, opponent, and neutral sections
         playerRows = (int) ceil((float) numRows/3);
         neutralRows = numRows - playerRows * 2;
+
+        playerScore = 0;
+        opponentScore = 0;
 
         // create array of GridItems, matching dimensions of board
         for(int row = 0; row < numRows; row++) {
@@ -78,6 +81,14 @@ public class Board extends Observable {
         return neutralRows;
     }
 
+    public int getPlayerScore() {
+        return playerScore;
+    }
+
+    public int getOpponentScore() {
+        return opponentScore;
+    }
+
     public void addBoardView(BoardView boardView) {
         this.boardView = boardView;
     }
@@ -89,24 +100,6 @@ public class Board extends Observable {
 
     public ArrayList<ArrayList<GridItem>> getGrid() {
         return grid;
-    }
-
-    public int getFreed() {
-        return freed;
-    }
-
-    public int getEscaped() {
-        return escaped;
-    }
-
-    // when destroyed opponent's prisons, increase your score
-    public void setFreed(int freed) {
-        freed = freed;
-    }
-
-    // when opponent destroys your prisons, increase their score.
-    public void setEscaped(int escaped) {
-        escaped = escaped;
     }
 
     public boolean getIsRecording() {
@@ -155,9 +148,22 @@ public class Board extends Observable {
         boardView.addView(bf.getItem());
     }
 
-    public void remove(BuildingView.Selected selection, int row, int column) {
+    public void remove(int row, int column) {
         GridItem replacementBlank = new GridItem(boardView.getContext(), row, column);
         grid.get(row).set(column, replacementBlank);
+    }
+
+    public void removePrison(int row, int column) {
+//        Jail jail = grid.get(row).get(column);
+        if (row <= playerRows) {
+//            playerScore += jail.getScore();
+        } else {
+//            opponentScore += jail.getScore();
+        }
+        remove(row, column);
+
+        setChanged();
+        notifyObservers();
     }
 
     public void initBoard(FrameLayout fl, Context context, int playerTileColorLight, int playerTileColorDark, int opponentTileColorLight, int opponentTileColorDark) {
@@ -271,6 +277,8 @@ public class Board extends Observable {
 
     public void restart() {
         state = State.BUILD;
+        playerScore = 0;
+        opponentScore = 0;
         setChanged();
         notifyObservers();
     }

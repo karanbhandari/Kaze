@@ -23,7 +23,7 @@ public class Square extends Brick {
         int gridRow = (int) column/width;
         int gridColumn = (int) row/height;
         if (selection == BuildingView.Selected.BRICK) {
-            Helper.remove(selection, gridRow, gridColumn);
+            Helper.remove(gridRow, gridColumn);
         } else if (selection == BuildingView.Selected.PRISON) {
             Helper.add(selection, gridRow, gridColumn);
         }

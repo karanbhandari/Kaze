@@ -19,13 +19,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class GameControlView extends LinearLayout implements Observer {
-    private LinearLayout wrapper;
+    private LinearLayout wrapper, scoreboard;
     private LinearLayout buttonPanel;
     private ImageButton recordBtn;
     private ImageButton playPauseBtn;
     private ImageButton quitBtn;
     private BuildingView buildingKit;
-    private TextView msg;
+    private TextView msg, playerScore, opponentScore;
 
     /* Programmatic Constructor */
     public GameControlView(Context context) {
@@ -55,6 +55,9 @@ public class GameControlView extends LinearLayout implements Observer {
         quitBtn = (ImageButton) findViewById(R.id.endBtn);
         recordBtn = (ImageButton) findViewById(R.id.recordBtn);
         msg = (TextView) findViewById(R.id.message);
+        scoreboard = findViewById(R.id.scoreboard);
+        playerScore = findViewById(R.id.playerScore);
+        opponentScore = findViewById(R.id.opponentScore);
 
         buildingKit = new BuildingView(getContext());
         addView(buildingKit);
@@ -107,6 +110,7 @@ public class GameControlView extends LinearLayout implements Observer {
         switch(state) {
             case BUILD:
                 buttonPanel.setVisibility(INVISIBLE);
+                scoreboard.setVisibility(INVISIBLE);
                 msg.setVisibility(VISIBLE);
                 msg.bringToFront();
                 msg.setText("build your board!");
@@ -125,11 +129,11 @@ public class GameControlView extends LinearLayout implements Observer {
                                         buildingKit.animate().alpha(1.0f);
                                     }
                                 });
-
                 break;
             case PAUSE:
                 wrapper.setVisibility(VISIBLE);
                 buttonPanel.setVisibility(VISIBLE);
+                scoreboard.setVisibility(VISIBLE);
                 playPauseBtn.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                 msg.setVisibility(VISIBLE);
                 msg.setText("game paused");
@@ -138,11 +142,13 @@ public class GameControlView extends LinearLayout implements Observer {
             case PLAY:
                 wrapper.setVisibility(VISIBLE);
                 buttonPanel.setVisibility(VISIBLE);
+                scoreboard.setVisibility(VISIBLE);
                 playPauseBtn.setImageResource(R.drawable.ic_pause_black_24dp);
                 msg.setVisibility(GONE);
                 break;
             default:
                 wrapper.setVisibility(GONE);
+                scoreboard.setVisibility(VISIBLE);
                 buttonPanel.setVisibility(VISIBLE);
                 msg.setVisibility(GONE);
                 break;
@@ -153,5 +159,8 @@ public class GameControlView extends LinearLayout implements Observer {
         } else {
             recordBtn.setColorFilter(Color.WHITE);
         }
+
+        opponentScore.setText(Integer.toString(Helper.getOpponentScore()));
+        playerScore.setText(Integer.toString(Helper.getPlayerScore()));
     }
 }

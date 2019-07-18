@@ -106,9 +106,14 @@ public class Helper {
         board.addObserver(o);
     }
 
-    public static void remove(BuildingView.Selected selection, int row, int col) {
+    public static void remove(int row, int col) {
         Board board = Board.getInstance();
-        board.remove(selection, row, col);
+        board.remove(row, col);
+    }
+
+    public static void removePrison(int row, int col) {
+        Board board = Board.getInstance();
+        board.removePrison(row, col);
     }
 
     public static void add(BuildingView.Selected selection, int row, int col) {
@@ -139,6 +144,16 @@ public class Helper {
     public static Boolean isRecording() {
         Board board = Board.getInstance();
         return board.getIsRecording();
+    }
+
+    public static int getPlayerScore() {
+        Board board = Board.getInstance();
+        return board.getPlayerScore();
+    }
+
+    public static int getOpponentScore() {
+        Board board = Board.getInstance();
+        return board.getOpponentScore();
     }
 
     public static void setupAnimatorVals(ValueAnimator animator, float newStart, float newEnd){
