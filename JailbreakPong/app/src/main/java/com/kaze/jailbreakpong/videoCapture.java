@@ -156,9 +156,7 @@ public class videoCapture extends AppCompatActivity {
             mediaRecorder.setVideoEncodingBitRate(512*1000);
             mediaRecorder.setVideoFrameRate(30);
 
-            int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            int orientation = ORIENTATION.get(rotation);
-            mediaRecorder.setOrientationHint(orientation);
+            mediaRecorder.setOrientationHint(0);
             mediaRecorder.prepare();
         } catch (IOException e) {
             e.printStackTrace();
