@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,20 @@ public class GameControlView extends LinearLayout implements Observer {
                 Helper.togglePlayPause();
             }
         });
+
+        quitBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.restart();
+            }
+        });
+
+        recordBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.toggleRecord();
+            }
+        });
     }
 
     public BuildingView.Selected getSelected() {
@@ -85,7 +100,6 @@ public class GameControlView extends LinearLayout implements Observer {
         }
         return buildingKit.getSelected();
     }
-
     @Override
     public void update(Observable observable, Object o) {
         Board.State state = Helper.getGameState();
@@ -93,6 +107,8 @@ public class GameControlView extends LinearLayout implements Observer {
         switch(state) {
             case BUILD:
                 buttonPanel.setVisibility(INVISIBLE);
+                msg.setVisibility(VISIBLE);
+                msg.bringToFront();
                 msg.setText("build your board!");
                 msg.animate().alpha(0.0f).setStartDelay(2000)
                                 .alpha(0.0f)
@@ -102,6 +118,7 @@ public class GameControlView extends LinearLayout implements Observer {
                                     public void onAnimationEnd(Animator animation) {
                                         super.onAnimationEnd(animation);
                                         msg.clearAnimation();
+                                        msg.setAlpha(1);
                                         msg.setVisibility(GONE);
                                         wrapper.setVisibility(GONE);
                                         buildingKit.setVisibility(VISIBLE);
@@ -114,19 +131,27 @@ public class GameControlView extends LinearLayout implements Observer {
                 wrapper.setVisibility(VISIBLE);
                 buttonPanel.setVisibility(VISIBLE);
                 playPauseBtn.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                msg.setVisibility(VISIBLE);
                 msg.setText("game paused");
+                msg.bringToFront();
                 break;
             case PLAY:
                 wrapper.setVisibility(VISIBLE);
                 buttonPanel.setVisibility(VISIBLE);
                 playPauseBtn.setImageResource(R.drawable.ic_pause_black_24dp);
-                msg.clearComposingText();
+                msg.setVisibility(GONE);
                 break;
             default:
                 wrapper.setVisibility(GONE);
                 buttonPanel.setVisibility(VISIBLE);
-                msg.clearComposingText();
+                msg.setVisibility(GONE);
                 break;
+        }
+
+        if (Helper.isRecording()) {
+            recordBtn.setColorFilter(Color.RED);
+        } else {
+            recordBtn.setColorFilter(Color.WHITE);
         }
     }
 }

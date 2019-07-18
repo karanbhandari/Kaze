@@ -212,7 +212,15 @@ public class BuildingView extends LinearLayout implements Observer {
     public void update(Observable observable, Object o) {
         Board.State state = Helper.getGameState();
 
-        if (state != Board.State.BUILD) {
+        if (state == Board.State.BUILD) {
+            selected = Selected.BRICK;
+            squareBrickBtn.setVisibility(VISIBLE);
+            prisonBtn.setVisibility(VISIBLE);
+            //fakePrisonBtn.setVisibility(VISIBLE);
+            doneBuildingBtn.setVisibility(VISIBLE);
+            cancelDoneBtn.setVisibility(GONE);
+            updateBackground();
+        } else {
             this.setVisibility(GONE);
         }
 

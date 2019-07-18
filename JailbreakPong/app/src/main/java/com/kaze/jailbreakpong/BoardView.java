@@ -22,7 +22,7 @@ import java.util.Observer;
 public class BoardView extends FrameLayout implements Observer {
     private float boardTop, opponentTop, playerTop, boardBottom;
     FrameLayout opponentBackground, playerBackground;
-    View opponentGrid, playerGrid, neutralBackground;
+    View opponentGrid, playerGrid, neutralBackground, scrim;
     LinearLayout HUDContainer;
     Board board;
     GameControlView opponentHUD, playerHUD;
@@ -93,6 +93,8 @@ public class BoardView extends FrameLayout implements Observer {
         playerGrid = new GridView(getContext());
         playerBackground.addView(playerGrid);
 
+        scrim = findViewById(R.id.scrim);
+
         final ViewTreeObserver viewTreeObserver = this.getViewTreeObserver();
         final FrameLayout reference = this;
         if (viewTreeObserver.isAlive()) {
@@ -122,7 +124,7 @@ public class BoardView extends FrameLayout implements Observer {
     }
 
     public void onDoneBuild(boolean doneBuild) {
-        doneBuildCount += (doneBuild)? 1 : 0;
+        doneBuildCount += (doneBuild)? 1 : -1;
         if (doneBuildCount == 2) {
             triggerPlay();
         } else if (doneBuildCount == 1) {
@@ -180,6 +182,7 @@ public class BoardView extends FrameLayout implements Observer {
             playerGrid.setVisibility(VISIBLE);
             opponentBackground.setClickable(true);
             playerBackground.setClickable(true);
+            scrim.setVisibility(INVISIBLE);
 
             opponentBackground.setOnTouchListener(new OnTouchListener() {
                 @Override
@@ -210,6 +213,13 @@ public class BoardView extends FrameLayout implements Observer {
             opponentBackground.setClickable(false);
             playerBackground.setClickable(false);
             doneBuildCount = 0;
+
+            if (state == Board.State.PAUSE) {
+                scrim.setVisibility(VISIBLE);
+                scrim.bringToFront();
+            } else {
+                scrim.setVisibility(INVISIBLE);
+            }
         }
     }
 }

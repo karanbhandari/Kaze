@@ -16,6 +16,7 @@ public class Board extends Observable {
     private int numRows, numCols;   // number of GridItems horizontally and vertically on screen
     private int playerRows, neutralRows;   // number of rows per player, and number of neutral ones
     private int freed, escaped;     // score
+    private boolean isRecording = false;
     private State state;
     private BoardView boardView;
     private float gridItemSize;     // in px, the width/height of each square grid
@@ -106,6 +107,10 @@ public class Board extends Observable {
     // when opponent destroys your prisons, increase their score.
     public void setEscaped(int escaped) {
         escaped = escaped;
+    }
+
+    public boolean getIsRecording() {
+        return isRecording;
     }
 
     public void build(BuildingView.Selected selection, float x, float y) {
@@ -261,6 +266,32 @@ public class Board extends Observable {
             play();
         } else if (state == State.PLAY) {
             pause();
+        }
+    }
+
+    public void restart() {
+        state = State.BUILD;
+        setChanged();
+        notifyObservers();
+    }
+
+    public void endRecording() {
+        isRecording = false;
+        setChanged();
+        notifyObservers();
+    }
+
+    public void startRecording() {
+        isRecording = true;
+        setChanged();
+        notifyObservers();
+    }
+
+    public void toggleRecord() {
+        if (isRecording) {
+            endRecording();
+        } else {
+            startRecording();
         }
     }
 

@@ -126,6 +126,21 @@ public class Helper {
         board.togglePlayPause();
     }
 
+    public static void restart() {
+        Board board = Board.getInstance();
+        board.restart();
+    }
+
+    public static void toggleRecord() {
+        Board board = Board.getInstance();
+        board.toggleRecord();
+    }
+
+    public static Boolean isRecording() {
+        Board board = Board.getInstance();
+        return board.getIsRecording();
+    }
+
     public static void setupAnimatorVals(ValueAnimator animator, float newStart, float newEnd){
 
         // setup new values for the animator
