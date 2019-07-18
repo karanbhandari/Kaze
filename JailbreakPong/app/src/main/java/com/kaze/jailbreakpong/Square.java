@@ -9,6 +9,8 @@ import android.graphics.Shader;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 public class Square extends Brick {
     // HP = 1
     Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -39,6 +41,25 @@ public class Square extends Brick {
             Helper.remove(gridRow, gridColumn);
             if (this.getParent() != null) ((ViewGroup) this.getParent()).removeView(this);
         }
+        invalidate();   // force a redraw
+    }
+
+    @Override
+    public boolean onHit(ArrayList<int[]> boundaries) {
+        // do nothing for blank item
+        // children classes overwrite this function.
+        Log.d("SQUARE", "onHit: called from within Square class");
+
+        // TODO:
+        //  - this will eventually call the hit method()
+        //  - also needs a reference to the Ball to reverse direction. Or maybe board??
+        return false;
+    }
+
+    @Override
+    public void hasHit(int [] coordinates){
+        Log.d("SQUARE", "hasHit: called with x: " + coordinates[0] + " and y: " + coordinates[1]);
+        hit();
     }
 
     @Override
@@ -50,16 +71,23 @@ public class Square extends Brick {
         int x = this.row;
         int y = this.column;
 
-        Path path = new Path();
-        path.moveTo(x, y);
-        path.lineTo(x + width, y);
-        path.lineTo(x + width, y + height);
-        path.lineTo(x, y + height);
-        path.lineTo(x, y);
-        path.close();
+        if(hp <= 0){
+            // not draw
+            Log.d("SQUARE", "onDraw: called with " + hp + " hp");
+            canvas.save();
+            canvas.restore();
+        } else {
+            Path path = new Path();
+            path.moveTo(x, y);
+            path.lineTo(x + width, y);
+            path.lineTo(x + width, y + height);
+            path.lineTo(x, y + height);
+            path.lineTo(x, y);
+            path.close();
+            canvas.drawPath(path, paint);
+            canvas.save();
+            canvas.restore();
+        }
 
-        canvas.drawPath(path, paint);
-        canvas.save();
-        canvas.restore();
     }
 }

@@ -59,6 +59,10 @@ public class GridItem extends View {
 //        ((ViewGroup) this.getParent()).removeView(this);
     }
 
+    public void hasHit(int [] coordinates){
+
+    }
+
     public void onDraw(Canvas canvas) {
         // do nothing for blank item
         // children classes overwrite this function

@@ -1,11 +1,14 @@
 package com.kaze.jailbreakpong;
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.Math.ceil;
+import static java.lang.Math.log;
+import static java.lang.Math.round;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -226,25 +229,32 @@ public class Board extends Observable {
         String brickTypes[] = {"LowerLeftTriangle", "LowerRightTriangle", "UpperLeftTriangle", "UpperRightTriangle", "Square"};
         Random rand = new Random();
 
-        for(int or = 0; or <  10; ++or) {
-            int row = rand.nextInt(rowsOpponent);
-            int col = rand.nextInt(getNumColumns());
-            int brickType = rand.nextInt(5);
+        int row = 0;
+        int col = 11;
 
-            BrickFactory bf= new BrickFactory(context, col, row, opponentTileColorLight, opponentTileColorDark, "Square", (int) gridItemSize);
-            grid.get(row).set(col, bf.getItem());
-            fl.addView(bf.getItem());
-        }
+        BrickFactory bf= new BrickFactory(context, col, row, opponentTileColorLight, opponentTileColorDark, "Square", (int) gridItemSize);
+        grid.get(row).set(col, bf.getItem());
+        fl.addView(bf.getItem());
 
-        for(int pr = 0; pr <  10; ++pr) {
-            int row = rand.nextInt(rowsPlayer - rowsMiddle) + rowsMiddle;
-            int col = rand.nextInt(getNumColumns());
-            int brickType = rand.nextInt(5);
+//        for(int or = 0; or <  10; ++or) {
+//            int row = rand.nextInt(rowsOpponent);
+//            int col = rand.nextInt(getNumColumns());
+//            int brickType = rand.nextInt(5);
+//
+//            BrickFactory bf= new BrickFactory(context, col, row, opponentTileColorLight, opponentTileColorDark, "Square", (int) gridItemSize);
+//            grid.get(row).set(col, bf.getItem());
+//            fl.addView(bf.getItem());
+//        }
 
-            BrickFactory bf = new BrickFactory(context, col, row, playerTileColorLight, playerTileColorDark, "Square", (int) gridItemSize);
-            grid.get(row).set(col, bf.getItem());
-            fl.addView(bf.getItem());
-        }
+//        for(int pr = 0; pr <  10; ++pr) {
+//            int row = rand.nextInt(rowsPlayer - rowsMiddle) + rowsMiddle;
+//            int col = rand.nextInt(getNumColumns());
+//            int brickType = rand.nextInt(5);
+//
+//            BrickFactory bf = new BrickFactory(context, col, row, playerTileColorLight, playerTileColorDark, "Square", (int) gridItemSize);
+//            grid.get(row).set(col, bf.getItem());
+//            fl.addView(bf.getItem());
+//        }
 //        int oppCoordinates[][] = {{0, 4}, {1, 4}, {2, 4}, {2, 5}, {2, 6}, {2, 7}, {1, 7}, {0, 7}};
 //        int plyCoordinates[][] = {{20, 4}, {19, 4}, {18, 4}, {18, 5}, {18, 6}, {18, 7}, {19, 7}, {20, 7}};
 //
@@ -279,6 +289,7 @@ public class Board extends Observable {
     }
 
     public boolean isHit(float pxX, float pxY, float size) {
+        Log.d("BOARD", "isHit: called with pxX: " + pxX + " and pxY: " + pxY);
         ArrayList<int[]> boundaries = new ArrayList<int[]>();
         // worst case scenario, the ball is simultaneously on 4 gridItems
         boundaries.add(translateToCoordinate(pxX, pxY));
@@ -291,12 +302,15 @@ public class Board extends Observable {
 
         for (int i = 0; i < 4; ++i) {
             int[] coordinate = boundaries.get(i);
-            GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
-            if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
-                boolean localHasHit = affectedGridItem.onHit(boundaries);
-                visitedCoordinates.add(coordinate);
+            if (coordinate[1] < grid.size() && coordinate[0] < grid.size()){  // to prevent out of bounds calls
+                GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
+                if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
+                    boolean localHasHit = affectedGridItem.onHit(boundaries);   // TODO - eric
+                    affectedGridItem.hasHit(coordinate);
+                    visitedCoordinates.add(coordinate);
 
-                if (localHasHit) hasHit = true;
+                    if (localHasHit) hasHit = true;
+                }
             }
         }
 

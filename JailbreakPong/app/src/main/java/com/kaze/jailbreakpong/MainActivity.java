@@ -84,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
     private void setupBall(){
         BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
         // create a ball
-        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 1f);
-        ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
+        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 0.5f);
+//        ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
+
+        ball.addXAnimator();
 
         // add to the layout
         layout.addView(ball);
