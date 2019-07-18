@@ -9,14 +9,17 @@ import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.View;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,12 +55,14 @@ public class videoCapture extends AppCompatActivity {
 
     // View
     private ToggleButton toggleButton;
+    private VideoView videoView;
     private String videoUri = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -68,6 +73,9 @@ public class videoCapture extends AppCompatActivity {
 
         // View
         toggleButton = (ToggleButton) findViewById(R.id.recording);
+        videoView = (VideoView) findViewById(R.id.videoView);
+
+        Log.d("VIDEOCApyute", " toggle button got");
 
         // Event
         toggleButton.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +111,15 @@ public class videoCapture extends AppCompatActivity {
         if(((ToggleButton)view).isChecked()) {
             initRecorder();
             recordScreen();
+        } else {
+            mediaRecorder.stop();
+            mediaRecorder.reset();
+            stopRecordScreen();
+
+            // view
+            videoView.setVisibility(View.VISIBLE);
+            videoView.setVideoURI(Uri.parse(videoUri));
+            videoView.start();
         }
     }
 
@@ -113,6 +130,7 @@ public class videoCapture extends AppCompatActivity {
         }
         virtualDisplay = createVirtualDisplay();
         mediaRecorder.start();
+        Log.d("VideoCapture", "Recording video");
     }
 
     private VirtualDisplay createVirtualDisplay() {
@@ -128,7 +146,7 @@ public class videoCapture extends AppCompatActivity {
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 
             videoUri = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    + new StringBuilder("/").append(new SimpleDateFormat("JAILBREAKPONG_RECORD_dd-MM-yyyy-hh_mm_ss")
+                    + new StringBuilder("/JailBreakPong").append(new SimpleDateFormat("dd-MM-yyyy-hh_mm_ss")
             .format(new Date())).append(".mp4").toString();
 
             mediaRecorder.setOutputFile(videoUri);
@@ -139,7 +157,7 @@ public class videoCapture extends AppCompatActivity {
             mediaRecorder.setVideoFrameRate(30);
 
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            int orientation = ORIENTATION.get(rotation*90);
+            int orientation = ORIENTATION.get(rotation);
             mediaRecorder.setOrientationHint(orientation);
             mediaRecorder.prepare();
         } catch (IOException e) {
@@ -189,6 +207,7 @@ public class videoCapture extends AppCompatActivity {
     }
 
     private void stopRecordScreen() {
+        Log.d("VideoCapture","VIDEO CAPTURE STOPEED");
         if(virtualDisplay == null) {
             return;
         }
