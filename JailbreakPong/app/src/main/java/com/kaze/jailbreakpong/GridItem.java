@@ -59,7 +59,7 @@ public class GridItem extends View {
 //        ((ViewGroup) this.getParent()).removeView(this);
     }
 
-    public void hasHit(int [] coordinates){
+    public void hasHit(int [] coordinates, Ball ball){
 
     }
 

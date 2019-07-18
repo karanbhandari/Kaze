@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.Math.ceil;
+import static java.lang.Math.min;
 import static java.lang.Math.round;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -32,7 +33,7 @@ public class Board extends Observable {
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
     public void init(Context context) {
-        state = State.BUILD;
+        state = State.PLAY; // TODO: testing change
         // square grid system that follows the 16:9 ratio
         numRows = 21; // default is 21 GridItems vertically across
         numCols = 12; // default is 12 GridItems horizontally across
@@ -54,6 +55,7 @@ public class Board extends Observable {
             }
             grid.add(tempArray);
         }
+
     }
 
     public static Board getInstance(){
@@ -283,6 +285,12 @@ public class Board extends Observable {
         int x = (int) Math.floor((pxX)/gridItemSize);
         int y = (int) Math.floor((pxY-topOffset)/gridItemSize);
 
+        // make sure we don't get out of bounds in later .get() calls
+        y = min(y, numRows - 1);
+        x = min(x, numCols - 1);
+
+        Log.d("BOARD", "translateToCoordinate: x: " + x + " y: " + y + " topPffset: " + topOffset);
+
         int coordinate[] = {x, y};
         return coordinate;
     }
@@ -297,22 +305,20 @@ public class Board extends Observable {
         boundaries.add(translateToCoordinate(pxX+size, pxY+size));
 
         boolean hasHit = false;
-        ArrayList<int[]> visitedCoordinates = new ArrayList<int[]>();
+        ArrayList<int[]> visitedCoordinates = new ArrayList<>();
 
         for (int i = 0; i < 4; ++i) {
             int[] coordinate = boundaries.get(i);
-            if (coordinate[1] < grid.size() && coordinate[0] < grid.size()){  // to prevent out of bounds calls
-                Log.d("BOARD", "isHit: called from within if with coordinate[1]: " + coordinate[1] + " and coordinate[0]: " + coordinate[0]);
-                GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
-                if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
-                    boolean localHasHit = affectedGridItem.onHit(boundaries);   // TODO - eric
-                    affectedGridItem.hasHit(coordinate, ball);
-                    visitedCoordinates.add(coordinate);
+            GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
 
-                    if (localHasHit) hasHit = true;
-                }
+            if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
+                boolean localHasHit = affectedGridItem.onHit(boundaries);   // TODO - eric
+                affectedGridItem.hasHit(coordinate, ball);
+                visitedCoordinates.add(coordinate);
 
+                if (localHasHit) hasHit = true;
             }
+
         }
 
         return hasHit;

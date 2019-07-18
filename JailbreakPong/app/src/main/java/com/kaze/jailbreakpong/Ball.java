@@ -238,7 +238,7 @@ public class Ball extends View implements Observer {
                 // On Update, set the X position of Ball
                 float animatedVal = (float) animator.getAnimatedValue();
                 setPosX(animatedVal);
-                board.isHit(animatedVal, 0, size, ball);
+                board.isHit(animatedVal, getPosY(), size, ball);  // TODO: need to change this hardcoded value too
             }
         });
 

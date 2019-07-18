@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onGlobalLayout() {
                     setupBall();
                     setupPaddles();
+                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 11, board.getBoundaries().boardTop);
                     board.initObservers();
                     ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
