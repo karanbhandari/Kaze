@@ -187,6 +187,8 @@ public class Ball extends View implements Observer {
          *      - update their animation values based on what we get here.
          *      - starting probably be getPosX() and ending will have to be calculated
          */
+
+        animatorX.pause();
     }
 
     public float getEndY(float topY, float botY){
