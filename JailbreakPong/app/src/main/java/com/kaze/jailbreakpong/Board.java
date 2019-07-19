@@ -127,20 +127,29 @@ public class Board extends Observable {
         int tileColorLight = -1;
         int tileColorDark = -1;
 
-        if (row <= playerRows) {
-            tileColorLight = ResourcesCompat.getColor(res, R.color.gradientYellowLight, null);
-            tileColorDark = ResourcesCompat.getColor(res, R.color.gradientYellowDark, null);
-        } else {
-            tileColorLight = ResourcesCompat.getColor(res, R.color.gradientBlueLight, null);
-            tileColorDark = ResourcesCompat.getColor(res, R.color.gradientBlueDark, null);
+        if (selection == BuildingView.Selected.BRICK) {
+            if (row <= playerRows) {
+                tileColorLight = ResourcesCompat.getColor(res, R.color.gradientYellowLight, null);
+                tileColorDark = ResourcesCompat.getColor(res, R.color.gradientYellowDark, null);
+            } else {
+                tileColorLight = ResourcesCompat.getColor(res, R.color.gradientBlueLight, null);
+                tileColorDark = ResourcesCompat.getColor(res, R.color.gradientBlueDark, null);
+            }
+        } else if (selection == BuildingView.Selected.PRISON) {
+            if (row <= playerRows) {
+                tileColorLight = ResourcesCompat.getColor(res, R.color.jailYellow, null);
+                tileColorDark = ResourcesCompat.getColor(res, R.color.gradientYellowDark, null);
+            } else {
+                tileColorLight = ResourcesCompat.getColor(res, R.color.jailBlue, null);
+                tileColorDark = ResourcesCompat.getColor(res, R.color.gradientBlueDark, null);
+            }
         }
 
         String brickType = "";
         if (selection == BuildingView.Selected.BRICK) {
             brickType = "Square";
-        } else {
-            brickType = "Jail";
-            brickType = "Square";
+        } else if (selection == BuildingView.Selected.PRISON) {
+            brickType = "Prison";
         }
 
         BrickFactory bf= new BrickFactory(context, column, row, tileColorLight, tileColorDark, brickType, (int) gridItemSize);
@@ -149,21 +158,19 @@ public class Board extends Observable {
     }
 
     public void remove(int row, int column) {
+        if (state == State.PLAY) {
+            GridItem hitObj = grid.get(row).get(column);
+            if (row <= playerRows) {
+            playerScore += hitObj.getScore();
+            } else {
+            opponentScore += hitObj.getScore();
+            }
+
+            setChanged();
+            notifyObservers();
+        }
         GridItem replacementBlank = new GridItem(boardView.getContext(), row, column);
         grid.get(row).set(column, replacementBlank);
-    }
-
-    public void removePrison(int row, int column) {
-//        Jail jail = grid.get(row).get(column);
-        if (row <= playerRows) {
-//            playerScore += jail.getScore();
-        } else {
-//            opponentScore += jail.getScore();
-        }
-        remove(row, column);
-
-        setChanged();
-        notifyObservers();
     }
 
     public void initBoard(FrameLayout fl, Context context, int playerTileColorLight, int playerTileColorDark, int opponentTileColorLight, int opponentTileColorDark) {

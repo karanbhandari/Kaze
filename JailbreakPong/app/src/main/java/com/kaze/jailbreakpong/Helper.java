@@ -111,11 +111,6 @@ public class Helper {
         board.remove(row, col);
     }
 
-    public static void removePrison(int row, int col) {
-        Board board = Board.getInstance();
-        board.removePrison(row, col);
-    }
-
     public static void add(BuildingView.Selected selection, int row, int col) {
         Board board = Board.getInstance();
         board.add(selection, row, col);
