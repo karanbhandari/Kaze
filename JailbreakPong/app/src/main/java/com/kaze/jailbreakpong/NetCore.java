@@ -8,6 +8,7 @@ import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Handler;
 import android.os.Message;
@@ -35,20 +36,25 @@ public class NetCore {
     WifiP2pManager.Channel channel;
     BroadcastReceiver broadcastReceiver;
     HashMap<String, WifiP2pDevice> groupOwnerTable;
+    WifiP2pManager.ConnectionInfoListener connectionInfoListener;
     Handler asyncIsOkHandler;
     boolean isInGroup;
     WifiP2pManager.PeerListListener peersListListener;
     private ArrayList<WifiP2pDevice> devicesList;
     private ServerSocket serverSocket;
+    Server server;
+    Client client;
 
     public ArrayList<WifiP2pDevice> getDevices(){
         return devicesList;
     }
+    public void setDevicesList(ArrayList devicesListValue){devicesList = devicesListValue;}
 
     public NetCore(Context context, Handler asyncIsOkHandler) {
         this.context = context;
         this.wifiP2pManager = (WifiP2pManager) this.context.getApplicationContext().getSystemService(Context.WIFI_P2P_SERVICE);
         this.intentFilter = new IntentFilter();
+        this.devicesList = new ArrayList<>();
         this.intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         this.intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         this.intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
@@ -59,24 +65,38 @@ public class NetCore {
             @Override
             public void onPeersAvailable(WifiP2pDeviceList peerList) {
                 //groupList.removeAllViews();
-                Collection<WifiP2pDevice> fo = peerList.getDeviceList();
-                int go = fo.size();
-                groupOwnerTable.clear();
-
-                // find the client we want to connect and connect to that only
-                final Iterator<WifiP2pDevice> devices = peerList.getDeviceList().iterator();
-                while (devices.hasNext()) {
-                    WifiP2pDevice device = devices.next();
-                    connectPeer(device);
-                    if (device.isGroupOwner()) {
-                        groupOwnerTable.put(device.deviceAddress, device);
+                ArrayList<WifiP2pDevice> devices = getDevices();
+                if(!new ArrayList<>(peerList.getDeviceList()).equals(devices)){
+                    groupOwnerTable.clear();
+                    ArrayList<WifiP2pDevice> newDevices = new ArrayList<>(peerList.getDeviceList());
+                    setDevicesList(newDevices);
+                    for(int i = 0; i < newDevices.size(); i++) {
+                        WifiP2pDevice device = newDevices.get(i);
+                        connectPeer(device);
+                        if (device.isGroupOwner()) {
+                            groupOwnerTable.put(device.deviceAddress, device);
+                        }
                     }
                 }
             }
         };
+        this.connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
+            @Override
+            public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
+                final InetAddress groupOwnerAddress = wifiP2pInfo.groupOwnerAddress;
+                if(wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner){
+                        server = new Server();
+                        server.start();
 
+                }
+                else if(wifiP2pInfo.groupFormed){
+                        client = new Client(groupOwnerAddress);
+                        client.start();
+                }
+            }
+        };
 
-        this.broadcastReceiver = new WifiDirectBroadcastReceiver(this.wifiP2pManager, this.channel,this.peersListListener);
+        this.broadcastReceiver = new WifiDirectBroadcastReceiver(this.wifiP2pManager, this.channel,this.peersListListener,this.connectionInfoListener);
         this.context.registerReceiver(this.broadcastReceiver, this.intentFilter);
         this.groupOwnerTable = new HashMap<String, WifiP2pDevice>();
         this.asyncIsOkHandler = asyncIsOkHandler;
@@ -87,6 +107,7 @@ public class NetCore {
         this.wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
+
                 int test = 0;
             }
 
@@ -95,6 +116,27 @@ public class NetCore {
                 int test = 0;
             }
         });
+    }
+
+    public boolean writeServer(byte[] data){
+        if(server.sendReceive.isAlive()){
+            server.setMessage(data);
+            return  true;
+        }
+        return false;
+    }
+
+    public boolean writeClient(byte[] data){
+        try{
+            if(client.sendReceive.isAlive()){
+                client.setMessage(data);
+                return true;
+            }
+        }
+        catch(Exception e){
+            int go = 0;
+        }
+        return false;
     }
 
     public void connectPeer(WifiP2pDevice device) {
