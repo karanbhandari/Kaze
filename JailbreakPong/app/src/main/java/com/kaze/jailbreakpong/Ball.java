@@ -223,6 +223,18 @@ public class Ball extends View implements Observer {
 
     /*
     *
+    * Helper Methods
+    *
+    * */
+
+    public void pause(){
+        animatorX.pause();
+        animatorY.pause();
+    }
+
+
+    /*
+    *
     * Animator methods
     *
     * */
