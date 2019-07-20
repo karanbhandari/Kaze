@@ -55,7 +55,6 @@ public class videoCapture extends AppCompatActivity {
 
     // View
     private ToggleButton toggleButton;
-    private VideoView videoView;
     private String videoUri = "";
 
 
@@ -73,7 +72,6 @@ public class videoCapture extends AppCompatActivity {
 
         // View
         toggleButton = (ToggleButton) findViewById(R.id.recording);
-        videoView = (VideoView) findViewById(R.id.videoView);
 
         Log.d("VIDEOCApyute", " toggle button got");
 
@@ -117,9 +115,9 @@ public class videoCapture extends AppCompatActivity {
             stopRecordScreen();
 
             // view
-            videoView.setVisibility(View.VISIBLE);
-            videoView.setVideoURI(Uri.parse(videoUri));
-            videoView.start();
+//            videoView.setVisibility(View.VISIBLE);
+//            videoView.setVideoURI(Uri.parse(videoUri));
+//            videoView.start();
         }
     }
 
