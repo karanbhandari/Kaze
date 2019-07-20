@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
 
         BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
 
-        Paddle paddle1 = new Paddle(getApplicationContext(), 200, boardBoundaries.playerTop);
+        Paddle paddle1 = new Paddle(getApplicationContext(), 200, boardBoundaries.playerTop, R.drawable.ic_bluepaddle);
         layout.addView(paddle1);
 
-        Paddle paddle2 = new Paddle(getApplicationContext(), 200, boardBoundaries.opponentTop);
+        Paddle paddle2 = new Paddle(getApplicationContext(), 200, boardBoundaries.opponentTop, R.drawable.ic_orangepaddle);
         layout.addView(paddle2);
     }
 }

@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
@@ -50,16 +51,24 @@ public class Paddle extends AppCompatImageView implements Observer {
         }
 
     };
-    public Paddle(Context context,float x, float y) {
+    public Paddle(Context context,float x, float y, int imgId) {
         super(context);
         this.setOnTouchListener(touchListener);
-        this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        this.setImageResource(R.drawable.paddle);
+        this.setImageResource(imgId);
         this.left = (int) x;
         this.screenWidth = Helper.getDisplayMetrics(getContext()).widthPixels;
-        this.paddleWidth = (int) Helper.getGridItemSize() * 4;
+        int gridItemSize = (int) Helper.getGridItemSize();
+        this.paddleWidth = (int) Helper.getGridItemSize() * 3;
+        int paddleHeight = (int) (gridItemSize *0.75);
+        this.setLayoutParams(new LinearLayout.LayoutParams(paddleWidth, paddleHeight));
+        ViewGroup.LayoutParams params = this.getLayoutParams();
+        params.height = paddleHeight;
+        params.width = paddleWidth;
+        this.setLayoutParams(params);
+        this.setScaleType(ScaleType.FIT_XY);
+
         this.setX(x);
-        this.setY(y);
+        this.setY(y - (int) params.height/2);
         Helper.addObserver(this);
     }
 
