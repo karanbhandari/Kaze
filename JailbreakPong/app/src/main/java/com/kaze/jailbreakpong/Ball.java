@@ -151,9 +151,9 @@ public class Ball extends View implements Observer {
         // hit the end of the screen
         // Ideally this conditionshould be getPosX() == 0 and getPosX() + getSize == metrics.widthPixels
         // but Android doesn't play a long too well :(
-        if ( Math.abs(getPosX()) <= getSize() ||  Math.abs(getPosX() + getSize() - metrics.widthPixels) <= getSize()){
-            reverseX();
-        }
+//        if ( Math.abs(getPosX()) <= getSize() ||  Math.abs(getPosX() + getSize() - metrics.widthPixels) <= getSize()){
+//            reverseX();
+//        }
 
         Random rand = new Random();
         int num = rand.nextInt(2);
@@ -188,7 +188,17 @@ public class Ball extends View implements Observer {
          *      - starting probably be getPosX() and ending will have to be calculated
          */
 
+        /*
+        *   Reverse direction and set new X
+        */
+
+//        reverseX();
         animatorX.pause();
+        Helper.setupAnimatorVals(animatorX, getPosX(), getEndX());
+
+        setAnimatorTimeUsingSpeed(animatorX, getPosX(), getEndX());
+        animatorX.resume();
+//        animatorX.pause();
     }
 
     public float getEndY(float topY, float botY){
@@ -271,11 +281,13 @@ public class Ball extends View implements Observer {
                 Log.d("BALL", "onAnimationRepeat: getPostX(): " + getPosX());
                 // get end direction of ball
                 float newEnd = getEndX();
+                setAnimatorTimeUsingSpeed(animatorX ,getPosX(), newEnd);
                 Helper.setupAnimatorVals((ValueAnimator) animation, getPosX(), newEnd);
 
             }
         });
-        setAnimatorTimeUsingSpeed(animatorX, speed);
+        Log.d("FIRSTTIME", "addXAnimator: getPosX(): " + getPosX() + " and endPoint: " + endPoint);
+        setAnimatorTimeUsingSpeed(animatorX, getPosX(), endPoint);
         animatorX.setInterpolator(new LinearInterpolator());
         animatorX.setRepeatCount(ValueAnimator.INFINITE);
         animatorX.start();
@@ -310,16 +322,21 @@ public class Ball extends View implements Observer {
 
             }
         });
-        setAnimatorTimeUsingSpeed(animatorY, speed);
+//        setAnimatorTimeUsingSpeed(animatorY, speed);
         animatorY.setInterpolator(new LinearInterpolator());
         animatorY.setRepeatCount(ValueAnimator.INFINITE);
         animatorY.start();
     }
 
     // speed property is used to set the duration of the animation.
-    private void setAnimatorTimeUsingSpeed(ValueAnimator animator, float speed){
+    private void setAnimatorTimeUsingSpeed(ValueAnimator animator, float start, float end){
         // calculate the time of the animation
-        int ms = (int) (( 1 /speed ) * 1000);
+
+        // get the distance that needs to be moved from the animator
+        float distance = Math.abs(end - start);
+        int ms = (int) (distance / getSpeed());
+        Log.d("CREED", "setAnimatorTimeUsingSpeed: time set: " + ms);
+//        int ms = (int) (( 1 /speed ) * 1000);
         animator.setDuration(ms);
     }
 
@@ -333,6 +350,7 @@ public class Ball extends View implements Observer {
                 break;
             case PAUSE:
                 this.setVisibility(View.GONE); // should instead pause the ball, visibility should be VISIBLE
+                // TODO: have a method
                 break;
             case END:
                 this.setVisibility(View.GONE);
