@@ -173,7 +173,17 @@ public class GameControlView extends LinearLayout implements Observer {
                 restartBtn.setVisibility(VISIBLE);
                 msg.setVisibility(VISIBLE);
                 msg.bringToFront();
-                msg.setText("game over");
+                int oppScore = Helper.getOpponentScore();
+                int plyrScore = Helper.getPlayerScore();
+                String text = "game over";
+                if (oppScore == plyrScore) {
+                    text = "tie";
+                } else if((isOpponent &&  oppScore > plyrScore) || (!isOpponent && oppScore < plyrScore)) {
+                    text = "you win!";
+                } else {
+                    text = "you lost";
+                }
+                msg.setText(text);
                 msg.animate().alpha(0.0f).setStartDelay(2000)
                         .alpha(0.0f)
                         .setDuration(1500)
