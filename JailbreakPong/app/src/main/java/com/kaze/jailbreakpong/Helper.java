@@ -170,9 +170,11 @@ public class Helper {
 
         // setup new values for the animator
         PropertyValuesHolder[] vals = (animator).getValues();
+        Log.d("HELPER", "setting newStart: " + newStart + " and newEnd: " + newEnd);
         vals[0].setFloatValues(newStart, newEnd);
 
         animator.setValues(vals);
+
     }
     
     // would use this in getNavBarHeight

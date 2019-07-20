@@ -193,12 +193,18 @@ public class Ball extends View implements Observer {
         */
 
 //        reverseX();
-        animatorX.pause();
-        Helper.setupAnimatorVals(animatorX, start, getEndX());
-
-        setAnimatorTimeUsingSpeed(animatorX, start, getEndX());
-        animatorX.resume();
 //        animatorX.pause();
+//        animatorX = animatorX.clone();
+        animatorX.end();
+//        animatorX.cancel();
+        Helper.setupAnimatorVals(animatorX, start - 5, getEndX());
+        Log.d("BALL", "setNewEnd: new start: " + start + " new end: " + getEndX());
+        Log.d("BALL", "setNewEnd: ball pos when animator reset: " + getPosX());
+//        setAnimatorTimeUsingSpeed(animatorX, start, getEndX());
+        animatorX.start();
+//        animatorX.resume();
+
+
     }
 
     public float getEndY(float topY, float botY){
@@ -269,31 +275,44 @@ public class Ball extends View implements Observer {
                 Log.d("BALL", "onAnimationUpdate: called");
                 float animatedVal = (float) animatorX.getAnimatedValue();
                 setPosX(animatedVal);
-                board.isHit(animatedVal, getPosY(), size, ball, getContext());  // TODO: need to change this hardcoded value too
+                boolean hit = board.isHit(animatedVal, getPosY(), size, ball, getContext());  // TODO: need to change this hardcoded value too
+                if (hit){
+                    // need to reverse
+                    ball.reverseX();
+                    ball.setNewEnd(animatedVal);
+                }
             }
         });
 
         // setup what happens when animation starts over
-//        animatorX.addListener(new AnimatorListenerAdapter() {
-//
+        animatorX.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                super.onAnimationEnd(animation);
+                // done
+                Log.d("BALL", "onAnimationEnd: called" );
+            }
+
 //            @Override
 //            public void onAnimationRepeat(Animator animation) {
 //                super.onAnimationEnd(animation);
 //                float animatedVal = (float) animatorX.getAnimatedValue();
 //                setPosX(animatedVal);
-//                Log.d("BALL", "onAnimationRepeat: getPostX(): " + getPosX());
-//                // get end direction of ball
+
+                // get end direction of ball
 //                float newEnd = getEndX();
 //                setAnimatorTimeUsingSpeed(animatorX ,getPosX(), newEnd);
 //                Helper.setupAnimatorVals((ValueAnimator) animation, getPosX(), newEnd);
 //                reverseX();
-//
+
 //            }
-//        });
+        });
         Log.d("FIRSTTIME", "addXAnimator: getPosX(): " + getPosX() + " and endPoint: " + endPoint);
         setAnimatorTimeUsingSpeed(animatorX, getPosX(), endPoint);
         animatorX.setInterpolator(new LinearInterpolator());
-        animatorX.setRepeatCount(ValueAnimator.INFINITE);
+//        animatorX.setRepeatCount(ValueAnimator.INFINITE);
         animatorX.start();
     }
 
@@ -335,13 +354,13 @@ public class Ball extends View implements Observer {
     // speed property is used to set the duration of the animation.
     private void setAnimatorTimeUsingSpeed(ValueAnimator animator, float start, float end){
         // calculate the time of the animation
-
+        animator.setDuration(5000);
         // get the distance that needs to be moved from the animator
-        float distance = Math.abs(end - start);
-        int ms = (int) (distance / getSpeed());
-        Log.d("CREED", "setAnimatorTimeUsingSpeed: time set: " + ms);
-//        int ms = (int) (( 1 /speed ) * 1000);
-        animator.setDuration(ms);
+//        float distance = Math.abs(end - start);
+//        int ms = (int) (distance / getSpeed());
+//        Log.d("CREED", "setAnimatorTimeUsingSpeed: time set: " + ms);
+////        int ms = (int) (( 1 /speed ) * 1000);
+//        animator.setDuration(ms);
     }
 
     @Override

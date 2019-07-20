@@ -53,7 +53,7 @@ public class Square extends Brick {
         // TODO:
         //  - this will eventually call the hit method()
         //  - also needs a reference to the Ball to reverse direction. Or maybe board??
-        return false;
+        return true;
     }
 
     @Override
@@ -61,9 +61,11 @@ public class Square extends Brick {
         Log.d("SQUARE", "hasHit: called with x: " + coordinates[0] + " and y: " + coordinates[1]);
         Log.d("SQUARE", "hasHit: ball hit with posX: " + ball.getPosX());
         float newStart = (coordinates[0] * Helper.getGridItemSize()) - ball.getSize();
-        Log.d("SQUARE", "hasHit: coordinates[0] * Helper.getGridItemSize() - ball.getSize() = " + newStart);
+        Log.d("SQUARE", "hasHit: coordinates" +
+                "[0] * Helper.getGridItemSize() - ball.getSize() = " + newStart);
         hit();
 //        ball.pause();
+
         ball.reverseX();
         ball.setNewEnd(newStart);
 

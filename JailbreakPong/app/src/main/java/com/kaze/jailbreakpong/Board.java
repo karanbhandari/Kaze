@@ -297,7 +297,8 @@ public class Board extends Observable {
     }
 
     public boolean isHit(float pxX, float pxY, float size, Ball ball, Context context) {
-        Log.d("BOARD", "isHit: called with pxX: " + pxX + " and pxY: " + pxY);
+//        Log.d("BOARD", "isHit: called with pxX: " + pxX + " and pxY: " + pxY);
+
         ArrayList<int[]> boundaries = new ArrayList<int[]>();
         // worst case scenario, the ball is simultaneously on 4 gridItems
         boundaries.add(translateToCoordinate(pxX, pxY));
@@ -315,7 +316,7 @@ public class Board extends Observable {
 
             if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
                 boolean localHasHit = affectedGridItem.onHit(boundaries);   // TODO - eric
-                affectedGridItem.hasHit(coordinate, ball);
+//                affectedGridItem.hasHit(coordinate, ball);
                 visitedCoordinates.add(coordinate);
 
                 if (localHasHit) hasHit = true;
