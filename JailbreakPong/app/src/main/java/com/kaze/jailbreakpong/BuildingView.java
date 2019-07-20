@@ -27,6 +27,7 @@ public class BuildingView extends LinearLayout implements Observer {
     private LinearLayout fakePrisonBtn;
     private LinearLayout doneBuildingBtn;
     private LinearLayout cancelDoneBtn;
+    private Boolean isOpponent = false;
     int selectedColor;
     private Selected selected;
     TypedValue rippleEffect;
@@ -42,6 +43,11 @@ public class BuildingView extends LinearLayout implements Observer {
     /* Programmatic Constructor */
     public BuildingView(Context context) {
         super(context);
+        init(context);
+    }
+    public BuildingView(Context context, Boolean isOpponent) {
+        super(context);
+        isOpponent = true;
         init(context);
     }
     /* An XML Constructor */
@@ -132,9 +138,21 @@ public class BuildingView extends LinearLayout implements Observer {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    delayUpdateBackground(selected, Selected.DONE);
-                    selected = Selected.DONE;
-                    Helper.onDoneBuild(true);
+                    int [] numPrisons = Helper.getNumPrisonsPerPlayer();
+                    if ((numPrisons[0] > 0 && isOpponent) || (numPrisons[1] > 0 && !isOpponent)) {
+                        delayUpdateBackground(selected, Selected.DONE);
+                        selected = Selected.DONE;
+                        Helper.onDoneBuild(true);
+                    } else {
+                        int white = Color.TRANSPARENT;
+                        int red = Color.RED;
+                        prisonBtn.setBackground(new ColorDrawable(red));
+
+                        ColorDrawable[] color = {new ColorDrawable(red), new ColorDrawable(white)};
+                        TransitionDrawable transition = new TransitionDrawable(color);
+                        prisonBtn.setBackground(transition);
+                        transition.startTransition(1000);
+                    }
                 }
                 return false;
             }

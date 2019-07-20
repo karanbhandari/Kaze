@@ -295,6 +295,9 @@ public class Ball extends View implements Observer {
             case PAUSE:
                 this.setVisibility(View.GONE); // should instead pause the ball, visibility should be VISIBLE
                 break;
+            case END:
+                this.setVisibility(View.GONE);
+                break;
             default:
                 this.setVisibility(View.GONE);
         }

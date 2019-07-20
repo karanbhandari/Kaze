@@ -16,6 +16,7 @@ public class Board extends Observable {
     private int numRows, numCols;   // number of GridItems horizontally and vertically on screen
     private int playerRows, neutralRows;   // number of rows per player, and number of neutral ones
     private int playerScore, opponentScore;     // score
+    private int playerNumPrisons, opponentNumPrisons;
     private boolean isRecording = false;
     private State state;
     private BoardView boardView;
@@ -25,7 +26,7 @@ public class Board extends Observable {
 
     private Board() {}
 
-    public enum State { START, BUILD, PAUSE, PLAY, END, LOSE, WIN; }
+    public enum State { START, BUILD, PAUSE, PLAY, END; }
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
     public void init(Context context) {
@@ -139,9 +140,11 @@ public class Board extends Observable {
             if (row <= playerRows) {
                 tileColorLight = ResourcesCompat.getColor(res, R.color.jailYellow, null);
                 tileColorDark = ResourcesCompat.getColor(res, R.color.gradientYellowDark, null);
+                opponentNumPrisons += 1;
             } else {
                 tileColorLight = ResourcesCompat.getColor(res, R.color.jailBlue, null);
                 tileColorDark = ResourcesCompat.getColor(res, R.color.gradientBlueDark, null);
+                playerNumPrisons += 1;
             }
         }
 
@@ -157,20 +160,61 @@ public class Board extends Observable {
         boardView.addView(bf.getItem());
     }
 
+    public void removePrison(int row, int column) {
+        if (state == State.PLAY || state == State.BUILD) {
+            if (row <= playerRows) {
+                opponentNumPrisons -= 1;
+            } else {
+                playerNumPrisons -= 1;
+            }
+        }
+
+        remove(row, column);
+    }
+
     public void remove(int row, int column) {
         if (state == State.PLAY) {
             GridItem hitObj = grid.get(row).get(column);
             if (row <= playerRows) {
-            playerScore += hitObj.getScore();
+                playerScore += hitObj.getScore();
             } else {
-            opponentScore += hitObj.getScore();
+                opponentScore += hitObj.getScore();
+            }
+
+            if (opponentNumPrisons == 0 || playerNumPrisons == 0) {
+                state = State.END;
             }
 
             setChanged();
             notifyObservers();
         }
+
         GridItem replacementBlank = new GridItem(boardView.getContext(), row, column);
         grid.get(row).set(column, replacementBlank);
+    }
+
+    public void randomPrisonAdd() {
+        int rowsOpponent = playerRows - 1;                  // minus 1 row for opponent paddle clearance
+        int rowsMiddle = rowsOpponent + 1 + neutralRows + 1;    // add 1 row for player paddle clearance
+        int rowsPlayer = numRows;
+        Random rand = new Random();
+
+        if (opponentNumPrisons < 1) {
+            int row = rand.nextInt(rowsOpponent);
+            int col = rand.nextInt(getNumColumns());
+            add(BuildingView.Selected.PRISON, row, col);
+        }
+
+        if (playerNumPrisons < 1) {
+            int row = rand.nextInt(rowsPlayer - rowsMiddle) + rowsMiddle;
+            int col = rand.nextInt(getNumColumns());
+            add(BuildingView.Selected.PRISON, row, col);
+        }
+    }
+
+    public int[] getNumPrisonsPerPlayer() {
+        int[] numPrisons = {opponentNumPrisons, playerNumPrisons};
+        return numPrisons;
     }
 
     public void initBoard(FrameLayout fl, Context context, int playerTileColorLight, int playerTileColorDark, int opponentTileColorLight, int opponentTileColorDark) {

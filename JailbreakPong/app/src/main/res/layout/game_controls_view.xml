@@ -78,7 +78,6 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
                     android:layout_weight="1"
                     android:background="?android:selectableItemBackground"
                     android:elevation="12dp"
@@ -87,9 +86,22 @@
                     tools:srcCompat="@drawable/ic_pause_black_24dp" />
 
                 <ImageButton
+                    android:id="@+id/restartBtn"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:elevation="12dp"
+                    android:tint="@color/white"
+                    app:srcCompat="@drawable/ic_refresh"
+                    tools:srcCompat="@drawable/ic_refresh" />
+
+                <ImageButton
                     android:id="@+id/endBtn"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:layout_marginLeft="12dp"
                     android:layout_weight="1"
                     android:background="?android:selectableItemBackground"
                     android:elevation="12dp"

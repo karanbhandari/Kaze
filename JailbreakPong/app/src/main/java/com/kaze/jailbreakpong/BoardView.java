@@ -71,8 +71,8 @@ public class BoardView extends FrameLayout implements Observer {
         wrapper.addView(HUDContainer);
 
         // initialize opponent and player HUD
-        opponentHUD = new GameControlView(getContext());
-        playerHUD = new GameControlView(getContext());
+        opponentHUD = new GameControlView(getContext(), true);
+        playerHUD = new GameControlView(getContext(), false);
         HUDContainer.addView(opponentHUD);
         HUDContainer.addView(playerHUD);
 
@@ -145,6 +145,11 @@ public class BoardView extends FrameLayout implements Observer {
 
     private void triggerPlay() {
         if (doneBuildCount >=1 && Helper.getGameState() == Board.State.BUILD) {
+            int[] numPrisons = Helper.getNumPrisonsPerPlayer();
+            // opponent or player has no prisons
+            if (numPrisons[0] < 1 || numPrisons[1] < 1) {
+                Helper.randomPrisonAdd();
+            }
             board.play();
         }
     }
@@ -218,7 +223,7 @@ public class BoardView extends FrameLayout implements Observer {
             playerBackground.setClickable(false);
             doneBuildCount = 0;
 
-            if (state == Board.State.PAUSE) {
+            if (state == Board.State.PAUSE || state == Board.State.END) {
                 scrim.setVisibility(VISIBLE);
                 scrim.bringToFront();
             } else {

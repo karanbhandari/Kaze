@@ -103,6 +103,9 @@ public class Paddle extends AppCompatImageView implements Observer {
             case PAUSE:
                 this.setVisibility(View.GONE); // should instead disable touch events on the board, visibility should be VISIBLE
                 break;
+            case END:
+                this.setVisibility(View.GONE);
+                break;
             default:
                 this.setVisibility(View.GONE);
         }

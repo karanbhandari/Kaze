@@ -29,9 +29,10 @@ public class Prison extends Brick {
         int gridRow = (int) column/width;
         int gridColumn = (int) row/height;
         if (selection == BuildingView.Selected.BRICK) {
+            Helper.removePrison(gridRow, gridColumn);
             Helper.add(selection, gridRow, gridColumn);
         } else if (selection == BuildingView.Selected.PRISON) {
-            Helper.remove(gridRow, gridColumn);
+            Helper.removePrison(gridRow, gridColumn);
         }
         if (this.getParent() != null) ((ViewGroup) this.getParent()).removeView(this);
     }
