@@ -3,7 +3,6 @@ package com.kaze.jailbreakpong;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,15 +13,12 @@ import androidx.appcompat.widget.AppCompatImageView;
 import java.util.Observable;
 import java.util.Observer;
 
-import static com.kaze.jailbreakpong.Helper.getDisplayMetrics;
-
 public class Paddle extends AppCompatImageView implements Observer {
 
-    int left;//, top,right,bottom;
+    int left;
     int width;
     int paddleWidth;
     float dX = 0;
-    String TAG = "Paddle";
     View.OnTouchListener touchListener = new View.OnTouchListener(){
         @Override
         public boolean onTouch(View view, MotionEvent event) {
