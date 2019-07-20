@@ -59,9 +59,15 @@ public class Square extends Brick {
     @Override
     public void hasHit(int [] coordinates, Ball ball){
         Log.d("SQUARE", "hasHit: called with x: " + coordinates[0] + " and y: " + coordinates[1]);
+        Log.d("SQUARE", "hasHit: ball hit with posX: " + ball.getPosX());
+        float newStart = (coordinates[0] * Helper.getGridItemSize()) - ball.getSize();
+        Log.d("SQUARE", "hasHit: coordinates[0] * Helper.getGridItemSize() - ball.getSize() = " + newStart);
         hit();
+//        ball.pause();
         ball.reverseX();
-        ball.setNewEnd();
+        ball.setNewEnd(newStart);
+
+//        ball.setNewEnd((coordinates[0] - 1) * Helper.getGridItemSize());
     }
 
     @Override

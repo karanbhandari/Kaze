@@ -1,6 +1,7 @@
 package com.kaze.jailbreakpong;
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.FrameLayout;
 
@@ -295,7 +296,7 @@ public class Board extends Observable {
         return coordinate;
     }
 
-    public boolean isHit(float pxX, float pxY, float size, Ball ball) {
+    public boolean isHit(float pxX, float pxY, float size, Ball ball, Context context) {
         Log.d("BOARD", "isHit: called with pxX: " + pxX + " and pxY: " + pxY);
         ArrayList<int[]> boundaries = new ArrayList<int[]>();
         // worst case scenario, the ball is simultaneously on 4 gridItems
@@ -307,6 +308,7 @@ public class Board extends Observable {
         boolean hasHit = false;
         ArrayList<int[]> visitedCoordinates = new ArrayList<>();
 
+        // check grid item hit
         for (int i = 0; i < 4; ++i) {
             int[] coordinate = boundaries.get(i);
             GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
