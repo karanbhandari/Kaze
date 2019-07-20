@@ -107,6 +107,7 @@ public class Board extends Observable {
     }
 
     public void build(BuildingView.Selected selection, float x, float y) {
+        if (selection == null) return;
         int coordinate[] = translateToCoordinate(x, y);
 
         // range of rows where no building is allowed
