@@ -3,6 +3,7 @@ package com.kaze.jailbreakpong;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,10 +14,15 @@ import androidx.appcompat.widget.AppCompatImageView;
 import java.util.Observable;
 import java.util.Observer;
 
+import static com.kaze.jailbreakpong.Helper.getDisplayMetrics;
+
 public class Paddle extends AppCompatImageView implements Observer {
 
-    int left, top,right,bottom;
+    int left;//, top,right,bottom;
+    int width;
+    int paddleWidth;
     float dX = 0;
+    String TAG = "Paddle";
     View.OnTouchListener touchListener = new View.OnTouchListener(){
         @Override
         public boolean onTouch(View view, MotionEvent event) {
@@ -29,8 +35,11 @@ public class Paddle extends AppCompatImageView implements Observer {
 
                 case MotionEvent.ACTION_MOVE:
                     float value = event.getRawX() + dX;
-                    if(value > 800){
-                        value = 770;
+                    if(value <= 0) {
+                        value = 0;
+                    }
+                    if(value >= width - paddleWidth ) {
+                        value = width - paddleWidth ;
                     }
                     view.animate()
                             .x(value)
@@ -50,6 +59,9 @@ public class Paddle extends AppCompatImageView implements Observer {
         this.setOnTouchListener(touchListener);
         this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         this.setImageResource(R.drawable.paddle);
+        this.left = (int) x;
+        this.width = Helper.getDisplayMetrics(getContext()).widthPixels;
+        this.paddleWidth = (int) Helper.getGridItemSize() * 4;
         this.setX(x);
         this.setY(y);
         Helper.addObserver(this);
