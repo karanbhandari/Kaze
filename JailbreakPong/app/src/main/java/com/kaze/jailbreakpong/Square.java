@@ -31,8 +31,14 @@ public class Square extends Brick {
     }
 
     public void hit() {
+        int gridRow = (int) column/width;
+        int gridColumn = (int) row/height;
         this.hp-=1;
         // change the image so that it shows one with a broken brick or decrease color
+        if (this.hp == 0) {
+            Helper.remove(gridRow, gridColumn);
+            if (this.getParent() != null) ((ViewGroup) this.getParent()).removeView(this);
+        }
     }
 
     @Override

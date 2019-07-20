@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class GridItem extends View {
     private int row, column;   // position of GridItem in our Board object
+    protected int score;
     private boolean isVisible;
 
     public GridItem(Context context, int rowPos, int columnPos) {
@@ -41,6 +42,10 @@ public class GridItem extends View {
     public void setPosition(int row, int column) {
         row = row;
         column = column;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public boolean onHit(ArrayList<int[]> boundaries) {

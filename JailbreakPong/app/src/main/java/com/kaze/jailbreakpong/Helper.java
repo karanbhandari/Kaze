@@ -101,14 +101,14 @@ public class Helper {
         return board.getState();
     }
 
+    public static int[] getNumPrisonsPerPlayer() {
+        Board board = Board.getInstance();
+        return board.getNumPrisonsPerPlayer();
+    }
+
     public static void addObserver(Observer o) {
         Board board = Board.getInstance();
         board.addObserver(o);
-    }
-
-    public static void remove(int row, int col) {
-        Board board = Board.getInstance();
-        board.remove(row, col);
     }
 
     public static void removePrison(int row, int col) {
@@ -116,9 +116,19 @@ public class Helper {
         board.removePrison(row, col);
     }
 
+    public static void remove(int row, int col) {
+        Board board = Board.getInstance();
+        board.remove(row, col);
+    }
+
     public static void add(BuildingView.Selected selection, int row, int col) {
         Board board = Board.getInstance();
         board.add(selection, row, col);
+    }
+
+    public static void randomPrisonAdd() {
+        Board board = Board.getInstance();
+        board.randomPrisonAdd();
     }
 
     public static void onDoneBuild(boolean isDone) {

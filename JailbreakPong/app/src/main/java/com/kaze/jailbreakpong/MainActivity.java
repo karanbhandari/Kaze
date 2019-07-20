@@ -1,7 +1,6 @@
 package com.kaze.jailbreakpong;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Bundle;
 import android.view.View;
@@ -80,13 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-//        int playerTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientBlueLight, null);
-//        int playerTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientBlueDark, null);
-//        int opponentTileColorLight = ResourcesCompat.getColor(getResources(), R.color.gradientYellowLight, null);
-//        int opponentTileColorDark = ResourcesCompat.getColor(getResources(), R.color.gradientYellowDark, null);
-//        board.initBoard(layout , getApplicationContext(), playerTileColorLight, playerTileColorDark, opponentTileColorLight, opponentTileColorDark);
-
     }
 
     private void setupBall(){
