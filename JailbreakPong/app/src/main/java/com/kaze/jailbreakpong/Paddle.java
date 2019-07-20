@@ -16,7 +16,7 @@ import java.util.Observer;
 public class Paddle extends AppCompatImageView implements Observer {
 
     int left;
-    int width;
+    int screenWidth;
     int paddleWidth;
     float dX = 0;
     View.OnTouchListener touchListener = new View.OnTouchListener(){
@@ -34,8 +34,8 @@ public class Paddle extends AppCompatImageView implements Observer {
                     if(value <= 0) {
                         value = 0;
                     }
-                    if(value >= width - paddleWidth ) {
-                        value = width - paddleWidth ;
+                    if(value >= screenWidth - paddleWidth ) {
+                        value = screenWidth - paddleWidth;
                     }
                     view.animate()
                             .x(value)
@@ -56,7 +56,7 @@ public class Paddle extends AppCompatImageView implements Observer {
         this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         this.setImageResource(R.drawable.paddle);
         this.left = (int) x;
-        this.width = Helper.getDisplayMetrics(getContext()).widthPixels;
+        this.screenWidth = Helper.getDisplayMetrics(getContext()).widthPixels;
         this.paddleWidth = (int) Helper.getGridItemSize() * 4;
         this.setX(x);
         this.setY(y);
