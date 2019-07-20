@@ -9,7 +9,6 @@ import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.min;
-import static java.lang.Math.round;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -316,10 +315,16 @@ public class Board extends Observable {
 
             if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
                 boolean localHasHit = affectedGridItem.onHit(boundaries);   // TODO - eric
-//                affectedGridItem.hasHit(coordinate, ball);
                 visitedCoordinates.add(coordinate);
 
-                if (localHasHit) hasHit = true;
+                if (localHasHit) {
+                    hasHit = true;
+                    affectedGridItem.hasHit(coordinate, ball);
+                    // need to replace this gridItem with an empty GridItem
+                    GridItem newItem = new GridItem(boardView.getContext(), coordinate[1], coordinate[0]);
+                    grid.get(coordinate[1]).set(coordinate[0], newItem);
+
+                }
             }
 
         }

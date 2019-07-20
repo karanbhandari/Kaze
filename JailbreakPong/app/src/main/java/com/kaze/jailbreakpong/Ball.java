@@ -22,6 +22,8 @@ import java.util.Random;
 
 public class Ball extends View implements Observer {
 
+    final int SCREEN_BOUNCE_THRESHOLD = 25;
+
     // Coordinates
     private float posX, posY;
 
@@ -188,22 +190,15 @@ public class Ball extends View implements Observer {
          *      - starting probably be getPosX() and ending will have to be calculated
          */
 
-        /*
-        *   Reverse direction and set new X
-        */
-
-//        reverseX();
-//        animatorX.pause();
-//        animatorX = animatorX.clone();
         animatorX.end();
-//        animatorX.cancel();
-        Helper.setupAnimatorVals(animatorX, start - 5, getEndX());
+        if (start <=0){
+            start = 1;
+        }
+        Helper.setupAnimatorVals(animatorX, start - 1, getEndX());
         Log.d("BALL", "setNewEnd: new start: " + start + " new end: " + getEndX());
         Log.d("BALL", "setNewEnd: ball pos when animator reset: " + getPosX());
-//        setAnimatorTimeUsingSpeed(animatorX, start, getEndX());
+        setAnimatorTimeUsingSpeed(animatorX, start, getEndX());
         animatorX.start();
-//        animatorX.resume();
-
 
     }
 
@@ -245,7 +240,7 @@ public class Ball extends View implements Observer {
 
     public void pause(){
         animatorX.pause();
-//        animatorY.pause();    // TOOD: uncomment this
+//        animatorY.pause();    // TOD0: uncomment this
     }
 
 
@@ -275,12 +270,29 @@ public class Ball extends View implements Observer {
                 Log.d("BALL", "onAnimationUpdate: called");
                 float animatedVal = (float) animatorX.getAnimatedValue();
                 setPosX(animatedVal);
-                boolean hit = board.isHit(animatedVal, getPosY(), size, ball, getContext());  // TODO: need to change this hardcoded value too
-                if (hit){
-                    // need to reverse
-                    ball.reverseX();
-                    ball.setNewEnd(animatedVal);
+                board.isHit(animatedVal, getPosY(), size, ball, getContext());  // TODO: need to change this hardcoded value too
+
+                if((animatedVal <= 25) && (dir[0] == -1)){
+                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
+                    // means we are at the start of the screen
+                    reverseX();
+                    setNewEnd(animatedVal);
                 }
+
+                DisplayMetrics metrics = Helper.getDisplayMetrics(context);
+
+                if((animatedVal + getSize() >= metrics.widthPixels - 25) && (dir[0] == 1)){
+                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
+                    // means we are at the start of the screen
+                    reverseX();
+                    setNewEnd(animatedVal);
+                }
+
+//                if (hit){
+//                    // need to reverse
+//                    ball.reverseX();
+//                    ball.setNewEnd(animatedVal);
+//                }
             }
         });
 
@@ -309,10 +321,10 @@ public class Ball extends View implements Observer {
 
 //            }
         });
-        Log.d("FIRSTTIME", "addXAnimator: getPosX(): " + getPosX() + " and endPoint: " + endPoint);
+
         setAnimatorTimeUsingSpeed(animatorX, getPosX(), endPoint);
         animatorX.setInterpolator(new LinearInterpolator());
-//        animatorX.setRepeatCount(ValueAnimator.INFINITE);
+        animatorX.setRepeatCount(ValueAnimator.INFINITE);
         animatorX.start();
     }
 
@@ -354,13 +366,13 @@ public class Ball extends View implements Observer {
     // speed property is used to set the duration of the animation.
     private void setAnimatorTimeUsingSpeed(ValueAnimator animator, float start, float end){
         // calculate the time of the animation
-        animator.setDuration(5000);
+//        animator.setDuration(1000);
         // get the distance that needs to be moved from the animator
-//        float distance = Math.abs(end - start);
-//        int ms = (int) (distance / getSpeed());
-//        Log.d("CREED", "setAnimatorTimeUsingSpeed: time set: " + ms);
-////        int ms = (int) (( 1 /speed ) * 1000);
-//        animator.setDuration(ms);
+        float distance = Math.abs(end - start);
+        int ms = (int) (distance / getSpeed());
+        Log.d("CREED", "setAnimatorTimeUsingSpeed: time set: " + ms);
+//        int ms = (int) (( 1 /speed ) * 1000);
+        animator.setDuration(ms);
     }
 
     @Override
