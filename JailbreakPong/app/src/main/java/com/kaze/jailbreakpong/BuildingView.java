@@ -27,7 +27,7 @@ public class BuildingView extends LinearLayout implements Observer {
     private LinearLayout fakePrisonBtn;
     private LinearLayout doneBuildingBtn;
     private LinearLayout cancelDoneBtn;
-    private Boolean isOpponent = false;
+    private Boolean isOpponent;
     int selectedColor;
     private Selected selected;
     TypedValue rippleEffect;
@@ -40,24 +40,9 @@ public class BuildingView extends LinearLayout implements Observer {
         return selected;
     }
 
-    /* Programmatic Constructor */
-    public BuildingView(Context context) {
-        super(context);
-        init(context);
-    }
     public BuildingView(Context context, Boolean isOpponent) {
         super(context);
-        isOpponent = true;
-        init(context);
-    }
-    /* An XML Constructor */
-    public BuildingView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
-    /* An XML Constructor */
-    public BuildingView(Context context, AttributeSet attrs, int resId) {
-        super(context, attrs, resId);
+        this.isOpponent = isOpponent;
         init(context);
     }
 

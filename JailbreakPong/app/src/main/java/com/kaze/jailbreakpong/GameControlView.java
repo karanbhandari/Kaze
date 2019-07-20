@@ -27,26 +27,11 @@ public class GameControlView extends LinearLayout implements Observer {
     private ImageButton restartBtn;
     private BuildingView buildingKit;
     private TextView msg, playerScore, opponentScore;
-    private boolean isOpponent = false;
+    private boolean isOpponent;
 
-    /* Programmatic Constructor */
-    public GameControlView(Context context) {
-        super(context);
-        init(context);
-    }
     public GameControlView(Context context, Boolean isOpponent) {
         super(context);
         this.isOpponent = isOpponent;
-        init(context);
-    }
-    /* An XML Constructor */
-    public GameControlView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
-    /* An XML Constructor */
-    public GameControlView(Context context, AttributeSet attrs, int resId) {
-        super(context, attrs, resId);
         init(context);
     }
 
