@@ -18,7 +18,7 @@ public class Paddle extends AppCompatImageView implements Observer {
 
     int left;
     int screenWidth;
-    int paddleWidth;
+    int paddleWidth, paddleHeight;
     float dX = 0;
     View.OnTouchListener touchListener = new View.OnTouchListener(){
         @Override
@@ -51,15 +51,19 @@ public class Paddle extends AppCompatImageView implements Observer {
         }
 
     };
-    public Paddle(Context context,float x, float y, int imgId) {
+    public Paddle(Context context, float x, float y, int imgId) {
         super(context);
+        init(x, y, imgId);
+    }
+
+    private void init(float x, float y, int imgId) {
         this.setOnTouchListener(touchListener);
         this.setImageResource(imgId);
         this.left = (int) x;
         this.screenWidth = Helper.getDisplayMetrics(getContext()).widthPixels;
         int gridItemSize = (int) Helper.getGridItemSize();
         this.paddleWidth = (int) Helper.getGridItemSize() * 3;
-        int paddleHeight = (int) (gridItemSize *0.75);
+        this.paddleHeight = (int) (gridItemSize *0.75);
         this.setLayoutParams(new LinearLayout.LayoutParams(paddleWidth, paddleHeight));
         ViewGroup.LayoutParams params = this.getLayoutParams();
         params.height = paddleHeight;
@@ -68,27 +72,19 @@ public class Paddle extends AppCompatImageView implements Observer {
         this.setScaleType(ScaleType.FIT_XY);
 
         this.setX(x);
-        this.setY(y - (int) params.height/2);
+        this.setY(y - (int) ((float) params.height/2));
         Helper.addObserver(this);
     }
 
-    public Paddle(Context context, AttributeSet attrs,float x, float y) {
-        super(context, attrs);
-        this.setOnTouchListener(touchListener);
-        this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        this.setImageResource(R.drawable.paddle);
-        this.setX(x);
-        this.setY(y);
-    }
-
-    public Paddle(Context context, AttributeSet attrs, int defStyleAttr,float x, float y) {
-        super(context, attrs, defStyleAttr);
-        this.setOnTouchListener(touchListener);
-        this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        this.setImageResource(R.drawable.paddle);
-        this.setX(x);
-        this.setY(y);
-    }
+    // TODO: also need to consider the 4 corners of the ball
+//    public boolean isHit(float x, float y, float size) {
+//        float topBound = y - (float) paddleHeight/2;
+//        float bottomBound = y + (float) paddleHeight/2;
+//        float leftBound = x;
+//        float rightBound = x + paddleWidth;
+//
+//        return (leftBound <= x && x <= rightBound) && (topBound <= y && y <= bottomBound);
+//    }
 
     public boolean isTouching(View v){
         Rect R1=new Rect((int)this.getX(), (int)this.getY(), (int)this.getX() + this.getWidth(), (int)this.getTop() - this.getHeight());
