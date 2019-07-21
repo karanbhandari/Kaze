@@ -250,8 +250,10 @@ public class Ball extends View implements Observer {
         Helper.setupAnimatorVals(animatorY, start - 1, getEndY());
         Log.d("BALL", "setNewEnd: new start: " + start + " new end: " + getEndY());
         Log.d("BALL", "setNewEnd: ball pos when animator reset: " + getPosY());
-        setAnimatorTimeUsingSpeed(animatorY, start, getEndX());
+        setAnimatorTimeUsingSpeed(animatorY, start, getEndY());
         animatorY.start();
+
+        // TODO - Implement bouncing off the two end points - remove Y hit griditem (i think already being done)
 
     }
 
