@@ -22,7 +22,6 @@ public class Helper {
         // x and y are the left and top coordinates of the
         // 'rectangle' that is used to draw the ball
         Ball ball = new Ball(context, x, y, size, speed);
-        Log.d("HELPER", "initBall: ball.posX : " + ball.getPosX());
 
         return ball;
     }

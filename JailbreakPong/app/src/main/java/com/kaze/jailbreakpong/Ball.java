@@ -234,22 +234,10 @@ public class Ball extends View implements Observer {
     }
 
     public void setNewEndY(float start){
-        /*
-         *  TODO:
-         *      this methods will setup new endpoints for the animators.
-         *      will possibly be called AFTER a bounce (hit)
-         *
-         *      - Need reference to both of the animators
-         *      - update their animation values based on what we get here.
-         *      - starting probably be getPosX() and ending will have to be calculated
-         */
-
 
         animatorY.end();
 
         Helper.setupAnimatorVals(animatorY, start + 1, getEndY());
-        Log.d("BALL", "setNewEnd: new start: " + start + " new end: " + getEndY());
-        Log.d("BALL", "setNewEnd: ball pos when animator reset: " + getPosY());
         setAnimatorTimeUsingSpeed(animatorY, start, getEndY());
         animatorY.start();
 
@@ -265,12 +253,12 @@ public class Ball extends View implements Observer {
     * */
 
     public void pause(){
-//        animatorX.pause();
-        animatorY.pause();    // TOD0: uncomment this
+        animatorX.pause();
+        animatorY.pause();
     }
 
     public void unpause(){
-//        animatorX.resume();
+        animatorX.resume();
         animatorY.resume();
     }
 
@@ -298,13 +286,11 @@ public class Ball extends View implements Observer {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 // On Update, set the X position of Ball
-                Log.d("BALL", "onAnimationUpdate: called");
                 float animatedVal = (float) animatorX.getAnimatedValue();
                 setPosX(animatedVal);
                 board.isHit(animatedVal, getPosY(), size, ball, getContext());
 
                 if((animatedVal <= SCREEN_BOUNCE_THRESHOLD) && (dir[0] == -1)){
-                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
                     // means we are at the start of the screen
                     reverseX();
                     setNewEndX(animatedVal);
@@ -313,7 +299,6 @@ public class Ball extends View implements Observer {
                 DisplayMetrics metrics = Helper.getDisplayMetrics(context);
 
                 if((animatedVal + getSize() >= metrics.widthPixels - SCREEN_BOUNCE_THRESHOLD) && (dir[0] == 1)){
-                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
                     // means we are at the start of the screen
                     reverseX();
                     setNewEndX(animatedVal);
@@ -330,7 +315,6 @@ public class Ball extends View implements Observer {
             {
                 super.onAnimationEnd(animation);
                 // done
-                Log.d("BALL", "onAnimationEnd: called" );
             }
 
         });
@@ -349,8 +333,6 @@ public class Ball extends View implements Observer {
         DisplayMetrics metrics = Helper.getDisplayMetrics(context);
         // subtract size cus endingFloat is supposed to be top left corner
         float endPoint = botY - getSize();
-        Log.d("BALL", "addYAnimator: endPoint: " + endPoint);
-        Log.d("BALL", "addYAnimator: getPosY(): " + getPosY());
         animatorY = ValueAnimator.ofFloat(getPosY(), endPoint);
 
         // setup initial animator listener
@@ -360,14 +342,10 @@ public class Ball extends View implements Observer {
                 float animatedVal = (float) animatorY.getAnimatedValue();
                 setPosY(animatedVal);
                 board.isHit(getPosX(), animatedVal, size, ball, getContext());
-                Log.d("BALL", "onAnimationUpdate: animatedVal: " + animatedVal);
 
                 BoardView.Boundaries boundaries = Helper.getBoundaries();
 
-                Log.d("BALL", "onAnimationUpdate: boundaries.boardTop + SCREEN_THRESHOLD: " + (boundaries.boardTop + SCREEN_BOUNCE_THRESHOLD));
-
                 if((animatedVal <= (boundaries.boardTop + SCREEN_BOUNCE_THRESHOLD) ) && (dir[1] == -1)){
-                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
                     // means we are at the start of the screen
                     reverseY();
                     setNewEndY(animatedVal);
@@ -375,7 +353,6 @@ public class Ball extends View implements Observer {
 
 
                 if((animatedVal + getSize() >= boundaries.boardBottom - SCREEN_BOUNCE_THRESHOLD) && (dir[1] == 1)){
-                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
                     // means we are at the start of the screen
                     reverseY();
                     setNewEndY(animatedVal);
@@ -391,7 +368,7 @@ public class Ball extends View implements Observer {
             {
                 super.onAnimationEnd(animation);
                 // done
-                Log.d("BALL", "onAnimationEnd: called" );
+
             }
 
         });
@@ -408,7 +385,6 @@ public class Ball extends View implements Observer {
         // get the distance that needs to be moved from the animator
         float distance = Math.abs(end - start);
         int ms = (int) (distance / getSpeed());
-        Log.d("CREED", "setAnimatorTimeUsingSpeed: time set: " + ms);
         animator.setDuration(ms);
     }
 
@@ -425,7 +401,6 @@ public class Ball extends View implements Observer {
                 this.setVisibility(View.GONE); // should instead pause the ball, visibility should be VISIBLE
             case PAUSE:
                 pause();
-                // TODO: have a method
                 break;
             case END:
                 this.setVisibility(View.GONE);

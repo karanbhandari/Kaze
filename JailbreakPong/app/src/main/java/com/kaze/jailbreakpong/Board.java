@@ -314,7 +314,7 @@ public class Board extends Observable {
             GridItem affectedGridItem = grid.get(coordinate[1]).get(coordinate[0]);
 
             if (!visitedCoordinates.contains(affectedGridItem.getPosition())) {
-                boolean localHasHit = affectedGridItem.onHit(boundaries);   // TODO - eric
+                boolean localHasHit = affectedGridItem.onHit(boundaries);
                 visitedCoordinates.add(coordinate);
 
                 if (localHasHit) {

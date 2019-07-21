@@ -74,17 +74,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onGlobalLayout() {
                     setupBall();
                     setupPaddles();
-                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 7, board.getBoundaries().boardTop);
-                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 8, board.getBoundaries().boardTop);
-                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 9, board.getBoundaries().boardTop);
-
-//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardBottom - (board.getGridItemSize() * 2));
-                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardBottom - (board.getGridItemSize() * 4));
-                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardBottom - (board.getGridItemSize() * 3));
-//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().opponentTop * 2);
-//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().opponentTop * 3);
-//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().opponentTop * 4);
-//                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 9, board.getBoundaries().boardTop);
                     board.initObservers();
                     ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
@@ -95,11 +84,8 @@ public class MainActivity extends AppCompatActivity {
     private void setupBall(){
         BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
         // create a ball
-        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 0.5f);
-//        ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
-
-//        ball.addXAnimator();
-        ball.addYAnimator(boardBoundaries.boardTop, boardBoundaries.boardBottom);
+        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, (int) Helper.getGridItemSize(), 0.5f);
+        ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
 
         // add to the layout
         layout.addView(ball);
