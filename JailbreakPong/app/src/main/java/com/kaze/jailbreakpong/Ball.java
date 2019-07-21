@@ -265,8 +265,13 @@ public class Ball extends View implements Observer {
     * */
 
     public void pause(){
-        animatorX.pause();
-//        animatorY.pause();    // TOD0: uncomment this
+//        animatorX.pause();
+        animatorY.pause();    // TOD0: uncomment this
+    }
+
+    public void unpause(){
+//        animatorX.resume();
+        animatorY.resume();
     }
 
 
@@ -414,9 +419,12 @@ public class Ball extends View implements Observer {
         switch(state) {
             case PLAY:
                 this.setVisibility(View.VISIBLE);
+                unpause();
                 break;
-            case PAUSE:
+            case BUILD:
                 this.setVisibility(View.GONE); // should instead pause the ball, visibility should be VISIBLE
+            case PAUSE:
+                pause();
                 // TODO: have a method
                 break;
             case END:

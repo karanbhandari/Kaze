@@ -33,7 +33,7 @@ public class Board extends Observable {
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
     public void init(Context context) {
-        state = State.PLAY; // TODO: testing change
+        state = State.BUILD;
         // square grid system that follows the 16:9 ratio
         numRows = 21; // default is 21 GridItems vertically across
         numCols = 12; // default is 12 GridItems horizontally across
