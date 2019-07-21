@@ -125,12 +125,14 @@ public class MainActivity extends AppCompatActivity implements Observer {
         // create ball and paddle after boardView is completed inflated, to get accurate boundaries
         final ViewTreeObserver viewTreeObserver = boardView.getViewTreeObserver();
         final BoardView ref = boardView;
+        final MainActivity refMain = this;
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     setupBall();
                     setupPaddles();
+                    Helper.addObserver(refMain);
                     board.initObservers();
                     ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
@@ -186,10 +188,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private void toggleScreenShare() {
-        if(Helper.isRecording()) {
+        if(Helper.isRecording() && !wasRecording) {
+            wasRecording = true;
             initRecorder();
             recordScreen();
-        } else {
+        } else if (!Helper.isRecording() && wasRecording) {
+            wasRecording = false;
             mediaRecorder.stop();
             mediaRecorder.reset();
             stopRecordScreen();
@@ -314,15 +318,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        if (!wasRecording && Helper.isRecording()) {    // you were not recording, but you are now, trigger record
-            initRecorder();
-            recordScreen();
-            wasRecording = true;
-        } else if (wasRecording && !Helper.isRecording()) { // you were recording, but not anymore, end it.
-            mediaRecorder.stop();
-            mediaRecorder.reset();
-            stopRecordScreen();
-            wasRecording = false;
+        if (!wasRecording && Helper.isRecording() || wasRecording && !Helper.isRecording()) {    // if toggle was updated, toggle recording
+            startRecording();
         }
     }
 }
