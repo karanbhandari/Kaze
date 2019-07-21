@@ -140,6 +140,13 @@ public class Helper {
         board.togglePlayPause();
     }
 
+    // to be used by screen capture, must pause game
+    // and do not toggle play if game is already paused
+    public static void setPause() {
+        Board board = Board.getInstance();
+        board.pause();
+    }
+
     public static void restart() {
         Board board = Board.getInstance();
         board.restart();
