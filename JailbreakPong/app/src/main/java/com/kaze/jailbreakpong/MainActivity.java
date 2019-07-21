@@ -6,6 +6,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,10 +16,11 @@ import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.View;
@@ -197,19 +200,33 @@ public class MainActivity extends AppCompatActivity implements Observer {
             mediaRecorder.stop();
             mediaRecorder.reset();
 
-            Intent myIntent = new Intent(Intent.ACTION_SEND);
-            myIntent.setType("text/plain");
-            String shareBody = "Your body is here";
-            String shareSub = "Your subject";
-            myIntent.putExtra(Intent.EXTRA_SUBJECT, shareBody);
-            myIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-            startActivity(Intent.createChooser(myIntent, "Share using"));
-
+            startSharingIntent();
             // TODO: needs to be changed to Helper.Pause after rebase master
             Helper.togglePlayPause();
 
             stopRecordScreen();
         }
+    }
+
+    private void startSharingIntent() {
+
+        ContentValues content = new ContentValues(4);
+        content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
+                System.currentTimeMillis() / 1000);
+        content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+        content.put(MediaStore.Video.Media.DATA, videoUri);
+
+        ContentResolver resolver = getApplicationContext().getContentResolver();
+        Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
+
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        myIntent.setType("video/*");
+        String shareBody = "Your Jailbreak Pong video is here";
+        String shareSub = "JailbreakPong Video";
+        myIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
+        myIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        myIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(myIntent, "Share video"));
     }
 
     private void recordScreen() {
