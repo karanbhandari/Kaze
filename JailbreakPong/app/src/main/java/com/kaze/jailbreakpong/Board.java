@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import androidx.core.content.res.ResourcesCompat;
 
 import static java.lang.Math.ceil;
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -287,7 +288,9 @@ public class Board extends Observable {
 
         // make sure we don't get out of bounds in later .get() calls
         y = min(y, numRows - 1);
+        y = max(y, 0);
         x = min(x, numCols - 1);
+        x = max(x, 0);
 
         Log.d("BOARD", "translateToCoordinate: x: " + x + " y: " + y + " topPffset: " + topOffset);
 
