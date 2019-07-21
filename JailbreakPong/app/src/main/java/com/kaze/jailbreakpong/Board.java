@@ -304,9 +304,9 @@ public class Board extends Observable {
         ArrayList<int[]> boundaries = new ArrayList<int[]>();
         // worst case scenario, the ball is simultaneously on 4 gridItems
         boundaries.add(translateToCoordinate(pxX, pxY));
+        boundaries.add(translateToCoordinate(pxX+size, pxY+size));
         boundaries.add(translateToCoordinate(pxX+size, pxY));
         boundaries.add(translateToCoordinate(pxX, pxY+size));
-        boundaries.add(translateToCoordinate(pxX+size, pxY+size));
 
         boolean hasHit = false;
         ArrayList<int[]> visitedCoordinates = new ArrayList<>();
@@ -319,6 +319,28 @@ public class Board extends Observable {
         *   if ball.dir[1] == 1 --> ball is moving down, only check hits by pxY + size
         *   if ball.sir[1] == -1 --> ball is moving up, only check hits by pxY
         */
+
+//        int[] ballDir = ball.getDir();
+//
+//        if (ballDir[0] == 1){
+//
+//            if (ballDir[1] == 1){
+//                boundaries.add(translateToCoordinate(pxX+size, pxY+size));
+//            } else {
+//                // ballDir[1] == -1
+//                boundaries.add(translateToCoordinate(pxX+size, pxY));
+//            }
+//
+//        } else {
+//            // ballDir[0] == -1
+//
+//            if (ballDir[1] == 1){
+//                boundaries.add(translateToCoordinate(pxX, pxY+size));
+//            } else {
+//                // ballDir[0] == -1
+//                boundaries.add(translateToCoordinate(pxX, pxY));
+//            }
+//        }
 
         // check grid item hit
         for (int i = 0; i < 4; ++i) {

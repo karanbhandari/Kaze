@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                     board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 3, board.getBoundaries().boardTop);
+                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 8, board.getBoundaries().boardTop);
 //                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 2, board.getBoundaries().boardTop);
 //                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 1, board.getBoundaries().boardTop);
 
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private void setupBall(){
         BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
         // create a ball
-        Ball ball = Helper.initBall(this, 800, boardBoundaries.boardTop, (int) Helper.getGridItemSize(), 0.5f);
+        Ball ball = Helper.initBall(this, 500, boardBoundaries.boardTop, (int) Helper.getGridItemSize(), 0.2f);
         // TODO: Uncomment below after testing
 //        ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
 
