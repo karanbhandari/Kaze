@@ -247,7 +247,7 @@ public class Ball extends View implements Observer {
 
         animatorY.end();
 
-        Helper.setupAnimatorVals(animatorY, start - 1, getEndY());
+        Helper.setupAnimatorVals(animatorY, start + 1, getEndY());
         Log.d("BALL", "setNewEnd: new start: " + start + " new end: " + getEndY());
         Log.d("BALL", "setNewEnd: ball pos when animator reset: " + getPosY());
         setAnimatorTimeUsingSpeed(animatorY, start, getEndY());
@@ -357,21 +357,24 @@ public class Ball extends View implements Observer {
                 board.isHit(getPosX(), animatedVal, size, ball, getContext());
                 Log.d("BALL", "onAnimationUpdate: animatedVal: " + animatedVal);
 
+                BoardView.Boundaries boundaries = Helper.getBoundaries();
 
-//                if((animatedVal <= 25) && (dir[0] == -1)){
-//                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
-//                    // means we are at the start of the screen
-//                    reverseX();
-//                    setNewEnd(animatedVal);
-//                }
+                Log.d("BALL", "onAnimationUpdate: boundaries.boardTop + SCREEN_THRESHOLD: " + (boundaries.boardTop + SCREEN_BOUNCE_THRESHOLD));
+
+                if((animatedVal <= (boundaries.boardTop + SCREEN_BOUNCE_THRESHOLD) ) && (dir[1] == -1)){
+                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
+                    // means we are at the start of the screen
+                    reverseY();
+                    setNewEndY(animatedVal);
+                }
 
 
-//                if((animatedVal + getSize() >= metrics.widthPixels - 25) && (dir[0] == 1)){
-//                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
-//                    // means we are at the start of the screen
-//                    reverseX();
-//                    setNewEnd(animatedVal);
-//                }
+                if((animatedVal + getSize() >= boundaries.boardBottom - SCREEN_BOUNCE_THRESHOLD) && (dir[1] == 1)){
+                    Log.d("BALL", "onAnimationUpdate: called with animatedValue: " + animatedVal);
+                    // means we are at the start of the screen
+                    reverseY();
+                    setNewEndY(animatedVal);
+                }
             }
         });
 

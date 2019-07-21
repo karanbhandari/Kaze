@@ -78,7 +78,12 @@ public class MainActivity extends AppCompatActivity {
                     board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 8, board.getBoundaries().boardTop);
                     board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 9, board.getBoundaries().boardTop);
 
-                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().opponentTop * 2);
+//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardBottom - (board.getGridItemSize() * 2));
+                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardBottom - (board.getGridItemSize() * 4));
+                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardBottom - (board.getGridItemSize() * 3));
+//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().opponentTop * 2);
+//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().opponentTop * 3);
+//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().opponentTop * 4);
 //                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 9, board.getBoundaries().boardTop);
                     board.initObservers();
                     ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
