@@ -71,7 +71,7 @@ public class videoCapture extends AppCompatActivity {
         mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
         // View
-        toggleButton = (ToggleButton) findViewById(R.id.recording);
+        toggleButton = (ToggleButton) findViewById(R.id.recordBtn);
 
         Log.d("VIDEOCApyute", " toggle button got");
 
