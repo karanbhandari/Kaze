@@ -60,11 +60,17 @@ public class Square extends Brick {
     public void hasHit(int [] coordinates, Ball ball){
         Log.d("SQUARE", "hasHit: called with x: " + coordinates[0] + " and y: " + coordinates[1]);
         Log.d("SQUARE", "hasHit: ball hit with posX: " + ball.getPosX());
-        float newStart = (coordinates[0] * Helper.getGridItemSize()) - ball.getSize();
-        Log.d("SQUARE", "hasHit: coordinates[0] * Helper.getGridItemSize() - ball.getSize() = " + newStart);
+//        float newStartX = (coordinates[0] * Helper.getGridItemSize()) - ball.getSize();
+//        Log.d("SQUARE", "hasHit: coordinates[0] * Helper.getGridItemSize() - ball.getSize() = " + newStartX);
         hit();
-        ball.reverseX();
-        ball.setNewEnd(newStart);
+        // TODO: need to figure out if need to reverse X or Y
+//        ball.reverseX();
+//        ball.setNewEndX(newStart);
+
+        float newStartY = (coordinates[1] * Helper.getGridItemSize()) - ball.getSize();
+        Log.d("SQUARE", "hasHit: coordinates[1] * Helper.getGridItemSize() - ball.getSize() = " + newStartY);
+        ball.reverseY();
+        ball.setNewEndY(newStartY);
     }
 
     @Override

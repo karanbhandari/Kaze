@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                     board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 7, board.getBoundaries().boardTop);
                     board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 8, board.getBoundaries().boardTop);
                     board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 9, board.getBoundaries().boardTop);
+
+                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().opponentTop * 2);
+//                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 9, board.getBoundaries().boardTop);
                     board.initObservers();
                     ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
@@ -90,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
         Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop, 100, 0.5f);
 //        ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
 
-        ball.addXAnimator();
+//        ball.addXAnimator();
+        ball.addYAnimator(boardBoundaries.boardTop, boardBoundaries.boardBottom);
 
         // add to the layout
         layout.addView(ball);

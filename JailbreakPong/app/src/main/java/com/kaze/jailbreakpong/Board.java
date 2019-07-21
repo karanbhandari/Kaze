@@ -296,7 +296,7 @@ public class Board extends Observable {
     }
 
     public boolean isHit(float pxX, float pxY, float size, Ball ball, Context context) {
-//        Log.d("BOARD", "isHit: called with pxX: " + pxX + " and pxY: " + pxY);
+        Log.d("BOARD", "isHit: called with pxX: " + pxX + " and pxY: " + pxY);
 
         ArrayList<int[]> boundaries = new ArrayList<int[]>();
         // worst case scenario, the ball is simultaneously on 4 gridItems
