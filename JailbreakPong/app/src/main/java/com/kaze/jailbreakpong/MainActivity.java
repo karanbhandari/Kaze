@@ -196,6 +196,18 @@ public class MainActivity extends AppCompatActivity implements Observer {
             wasRecording = false;
             mediaRecorder.stop();
             mediaRecorder.reset();
+
+            Intent myIntent = new Intent(Intent.ACTION_SEND);
+            myIntent.setType("text/plain");
+            String shareBody = "Your body is here";
+            String shareSub = "Your subject";
+            myIntent.putExtra(Intent.EXTRA_SUBJECT, shareBody);
+            myIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(myIntent, "Share using"));
+
+            // TODO: needs to be changed to Helper.Pause after rebase master
+            Helper.togglePlayPause();
+
             stopRecordScreen();
         }
     }
