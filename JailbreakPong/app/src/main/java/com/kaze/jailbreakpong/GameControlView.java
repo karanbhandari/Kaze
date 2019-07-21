@@ -179,9 +179,6 @@ public class GameControlView extends LinearLayout implements Observer {
                                 msg.clearAnimation();
                                 msg.setAlpha(1);
                                 msg.setVisibility(GONE);
-                                wrapper.setVisibility(GONE);
-                                buildingKit.setVisibility(VISIBLE);
-                                buildingKit.animate().alpha(1.0f);
                             }
                         });
                 break;

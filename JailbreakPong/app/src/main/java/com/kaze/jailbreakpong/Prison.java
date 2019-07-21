@@ -43,7 +43,7 @@ public class Prison extends Brick {
         this.hp-=1;
         // change the image so that it shows one with a broken brick or decrease color
         if (this.hp == 0) {
-            Helper.remove(gridRow, gridColumn);
+            Helper.removePrison(gridRow, gridColumn);
             if (this.getParent() != null) ((ViewGroup) this.getParent()).removeView(this);
         }
     }
