@@ -34,7 +34,7 @@ public class Board extends Observable {
 
     // during runtime, MainActivity tells us the screen dimensions in pixels, and the dpi
     public void init(Context context) {
-        state = State.BUILD;
+        state = State.PLAY;
         // square grid system that follows the 16:9 ratio
         numRows = 21; // default is 21 GridItems vertically across
         numCols = 12; // default is 12 GridItems horizontally across
@@ -310,6 +310,15 @@ public class Board extends Observable {
 
         boolean hasHit = false;
         ArrayList<int[]> visitedCoordinates = new ArrayList<>();
+
+        // check hits depending on Ball's direction
+        /*
+        *   if ball.dir[0] == 1 --> ball is moving to the right, only check hits by pxX + size
+        *   if ball.dir[0] == -1 --> ball is moving to the left, only check hits by pxX
+        *
+        *   if ball.dir[1] == 1 --> ball is moving down, only check hits by pxY + size
+        *   if ball.sir[1] == -1 --> ball is moving up, only check hits by pxY
+        */
 
         // check grid item hit
         for (int i = 0; i < 4; ++i) {
