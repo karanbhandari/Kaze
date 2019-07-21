@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private int mScreenDensity;
     private static final int DISPLAY_WIDTH = 720;
     private static final int DISPLAY_HEIGHT = 1280;
+    private boolean wasRecording = false;
 
     static {
         ORIENTATION.append(Surface.ROTATION_0, 90);
@@ -313,6 +314,15 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-
+        if (!wasRecording && Helper.isRecording()) {    // you were not recording, but you are now, trigger record
+            initRecorder();
+            recordScreen();
+            wasRecording = true;
+        } else if (wasRecording && !Helper.isRecording()) { // you were recording, but not anymore, end it.
+            mediaRecorder.stop();
+            mediaRecorder.reset();
+            stopRecordScreen();
+            wasRecording = false;
+        }
     }
 }
