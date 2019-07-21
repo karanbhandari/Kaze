@@ -153,9 +153,6 @@ public class Ball extends View implements Observer {
         // hit the end of the screen
         // Ideally this conditionshould be getPosX() == 0 and getPosX() + getSize == metrics.widthPixels
         // but Android doesn't play a long too well :(
-//        if ( Math.abs(getPosX()) <= getSize() ||  Math.abs(getPosX() + getSize() - metrics.widthPixels) <= getSize()){
-//            reverseX();
-//        }
 
         Random rand = new Random();
         int num = rand.nextInt(2);
@@ -178,23 +175,12 @@ public class Ball extends View implements Observer {
     }
 
     public void setNewEndX(float start){
-        /*
-         *  TODO:
-         *      this methods will setup new endpoints for the animators.
-         *      will possibly be called AFTER a bounce (hit)
-         *
-         *      - Need reference to both of the animators
-         *      - update their animation values based on what we get here.
-         *      - starting probably be getPosX() and ending will have to be calculated
-         */
 
         animatorX.end();
         if (start <=0){
             start = 1;
         }
         Helper.setupAnimatorVals(animatorX, start - 1, getEndX());
-        Log.d("BALL", "setNewEnd: new start: " + start + " new end: " + getEndX());
-        Log.d("BALL", "setNewEnd: ball pos when animator reset: " + getPosX());
         setAnimatorTimeUsingSpeed(animatorX, start, getEndX());
         animatorX.start();
 
@@ -207,19 +193,11 @@ public class Ball extends View implements Observer {
         Random rand = new Random();
         int num = rand.nextInt(2);
 
-        // reverse direction of ball
-//        if (Math.abs(getPosY() - topY) < getSize() || Math.abs(getPosY() + getSize() - botY) < getSize()){
-//            reverseY();
-//        }
-
-        float actualHeight = boardBoundaries.boardBottom - boardBoundaries.boardTop;
-
         // moving up
         if (dir[1] == -1){
             if (num == 1){
                 return boardBoundaries.boardTop;
             } else {
-//                return actualHeight / 2;
                 return boardBoundaries.boardTop;
             }
 
@@ -227,7 +205,6 @@ public class Ball extends View implements Observer {
             if (num == 1){
                 return boardBoundaries.boardBottom - getSize();
             } else {
-//                return actualHeight / 2;
                 return boardBoundaries.boardBottom  - getSize();
             }
         }
@@ -240,8 +217,6 @@ public class Ball extends View implements Observer {
         Helper.setupAnimatorVals(animatorY, start + 1, getEndY());
         setAnimatorTimeUsingSpeed(animatorY, start, getEndY());
         animatorY.start();
-
-        // TODO - Implement bouncing off the two end points - remove Y hit griditem (i think already being done)
 
     }
 

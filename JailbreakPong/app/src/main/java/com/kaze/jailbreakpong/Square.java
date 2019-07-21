@@ -70,7 +70,6 @@ public class Square extends Brick {
 
         if(hp <= 0){
             // not draw
-            Log.d("SQUARE", "onDraw: called with " + hp + " hp");
             canvas.save();
             canvas.restore();
         } else {
