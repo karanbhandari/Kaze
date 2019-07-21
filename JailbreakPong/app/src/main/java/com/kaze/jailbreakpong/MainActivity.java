@@ -236,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
         virtualDisplay = createVirtualDisplay();
         mediaRecorder.start();
-        Log.d("VideoCapture", "Recording video");
     }
 
     private VirtualDisplay createVirtualDisplay() {
@@ -309,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private void stopRecordScreen() {
-        Log.d("VideoCapture","VIDEO CAPTURE STOPEED");
         if(virtualDisplay == null) {
             return;
         }
