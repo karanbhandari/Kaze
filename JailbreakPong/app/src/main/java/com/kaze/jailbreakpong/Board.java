@@ -292,14 +292,11 @@ public class Board extends Observable {
         x = min(x, numCols - 1);
         x = max(x, 0);
 
-//        Log.d("BOARD", "translateToCoordinate: x: " + x + " y: " + y + " topPffset: " + topOffset);
-
         int coordinate[] = {x, y};
         return coordinate;
     }
 
     public boolean isHit(float pxX, float pxY, float size, Ball ball, Context context) {
-//        Log.d("BOARD", "isHit: called with pxX: " + pxX + " and pxY: " + pxY);
 
         ArrayList<int[]> boundaries = new ArrayList<int[]>();
         // worst case scenario, the ball is simultaneously on 4 gridItems

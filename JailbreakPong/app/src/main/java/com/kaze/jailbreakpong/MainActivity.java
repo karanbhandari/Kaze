@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private Ball setupBall(){
         BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
         // create a ball
-        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop + 500, (int) Helper.getGridItemSize(), 0.3f);
+        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop + 500, (int) Helper.getGridItemSize(), 0.5f);
         ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
 
         // add to the layout

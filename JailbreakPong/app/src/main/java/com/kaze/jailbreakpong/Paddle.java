@@ -120,7 +120,6 @@ public class Paddle extends AppCompatImageView implements Observer {
                 if (newY + ball.getSize() >= y && newY + ball.getSize() <= (y + paddleHeight)){
 
                     ball.reverseY();
-                    Log.d("PADDLE", "checkHit: called reverseY on ball");
                     ball.setNewEndY(y - ball.getSize());
                 }
 
