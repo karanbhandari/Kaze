@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
+
 public class Prison extends Brick {
     int HP = 1;
     //Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -38,6 +40,7 @@ public class Prison extends Brick {
     }
 
     public void hit() {
+        Log.d("PRISON", "hit: CALLED FROM PRISON");
         int gridRow = (int) column/width;
         int gridColumn = (int) row/height;
         this.hp-=1;
@@ -49,7 +52,16 @@ public class Prison extends Brick {
     }
 
     @Override
+    public boolean onHit(ArrayList<int[]> boundaries) {
+        // do nothing for blank item
+        // children classes overwrite this function.
+        return true;
+    }
+
+    @Override
     public void hasHit(int [] coordinates, Ball ball, float pxX, float pxY){
+
+        Log.d("PRISON", "hit: CALLED FROM PRISON");
 
         hit();
 
