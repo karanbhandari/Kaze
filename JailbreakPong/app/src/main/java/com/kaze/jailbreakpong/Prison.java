@@ -65,6 +65,8 @@ public class Prison extends Brick {
 
         hit();
 
+        if (Helper.getGameState() == Board.State.END) return;
+
         final float THRESHOLD = 10;
 
         int[] ballDir = ball.getDir();
