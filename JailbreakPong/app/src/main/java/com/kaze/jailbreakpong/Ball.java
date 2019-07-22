@@ -29,12 +29,14 @@ public class Ball extends View implements Observer {
 
     // Coordinates
     private float posX, posY;
+    private float initX, initY;
 
     // Size
     private int size;
 
     // Speed
     public float speed;
+    private  float initSpeed;
 
     // direction
     private int [] dir = {1, 1};
@@ -57,9 +59,12 @@ public class Ball extends View implements Observer {
         super(context);
 
         this.posX = posX;
+        this.initX = posX;
         this.size = size;
         this.posY = posY;
+        this.initY = posY;
         this.speed = speed;
+        this.initSpeed = speed;
         Log.d("CONSTRUCTOR", "Ball: posX: " + posX);
 
         rect = new RectF(posX, getTop(), posX + size, getTop() + size);
@@ -230,16 +235,24 @@ public class Ball extends View implements Observer {
     *
     * */
 
+    public void reset(){
+        dir[0] = 1;
+        dir[1] = 1;
+
+        this.speed = initSpeed;
+        this.posX = initX;
+        this.posY = initY;
+
+        setNewEndX(initX);
+        setNewEndY(initY);
+
+    }
+
     public void pause(){
         animatorX.pause();
         animatorY.pause();
     }
-
-    public void end(){
-        animatorX.end();
-        animatorY.end();
-    }
-
+    
     public void unpause(){
         animatorX.resume();
         animatorY.resume();
@@ -398,9 +411,9 @@ public class Ball extends View implements Observer {
                 pause();
                 break;
             case END:
-//                this.setVisibility(View.GONE);
-                end();
-//                pause();
+                this.setVisibility(View.GONE);
+                reset();
+                pause();
                 break;
             default:
                 this.setVisibility(View.GONE);
