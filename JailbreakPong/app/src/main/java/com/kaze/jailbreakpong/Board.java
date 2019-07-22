@@ -353,7 +353,7 @@ public class Board extends Observable {
 
                 if (localHasHit) {
                     hasHit = true;
-                    affectedGridItem.hasHit(coordinate, ball);
+                    affectedGridItem.hasHit(coordinate, ball, pxX, pxY);
                     // need to replace this gridItem with an empty GridItem
                     GridItem newItem = new GridItem(boardView.getContext(), coordinate[1], coordinate[0]);
                     grid.get(coordinate[1]).set(coordinate[0], newItem);

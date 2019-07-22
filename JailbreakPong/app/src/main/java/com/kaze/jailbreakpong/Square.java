@@ -52,41 +52,94 @@ public class Square extends Brick {
     }
 
     @Override
-    public void hasHit(int [] coordinates, Ball ball){
+    public void hasHit(int [] coordinates, Ball ball, float pxX, float pxY){
+//        Log.d("SQUARE", "hasHit: coordinates: " + coordinates[0] + " " + coordinates[1]);
+//        Log.d("SQUARE", "hasHit: hit coordinates: " + pxX + " " + pxY);
+//        Log.d("SQUARE", "hasHit: brick coordinates: " + row + " " + column);
+//        Log.d("SQUARE", "hasHit: brick coordinates: " + (row + width) + " " + column);
+//        Log.d("SQUARE", "hasHit: brick coordinates: " + row + " " + (column + height));
+//        Log.d("SQUARE", "hasHit: brick coordinates: " + (row + width)+ " " + (column + height));
         hit();
-//        float newStartY = (coordinates[1] * Helper.getGridItemSize()) - ball.getSize();
-//        ball.reverseY();
-//        ball.setNewEndY(newStartY);
-        float newStartX = 0f;
-        float newStartY = 0f;
+
+        // remember: pxX and pxY are the top left corners
+
+        final float THRESHOLD = 10;
+
         int[] ballDir = ball.getDir();
-
-
-        if (ballDir[0] == 1){
-            // ball is moving to the right, needs to bounce to the left
-            newStartX = (coordinates[0] * Helper.getGridItemSize()) - ball.getSize();
-
-        } else {
-            // ballDir[0] == -1
-            newStartX = (coordinates[0] * Helper.getGridItemSize()) + Helper.getGridItemSize();
-
-        }
 
         BoardView.Boundaries boundaries = Helper.getBoundaries();
 
-        if (ballDir[1] == 1){
-            // ball is moving to the right, needs to bounce to the left
-            newStartY =  boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) - ball.getSize();
+        float newStartX = 0f;
+        float newStartY = 0f;
+        float brickActualY = column + boundaries.boardTop;
 
-        } else {
-            // ballDir[0] == -1
-            newStartY = boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) + ball.getSize();
+        if (ballDir[1] == 1){
+
+            // cases to consider
+            if (pxY + ball.getSize() > brickActualY){
+
+                if (ballDir[0] == 1){
+                    // ball is moving to the right, needs to bounce to the left
+                   newStartX = (coordinates[0] * Helper.getGridItemSize()) - ball.getSize();
+                } else if (ballDir[0] == -1) {
+                    // ball is moving to the left, needs to bounce to the right
+                    newStartX = (coordinates[0] * Helper.getGridItemSize()) + Helper.getGridItemSize();
+                }
+
+                ball.reverseX();
+                ball.setNewEndX(newStartX);
+
+            } else if (Math.abs(pxY + ball.getSize() - brickActualY) <= THRESHOLD){
+
+                if (ballDir[1] == 1){
+                    // ball is moving to the bottom, needs to bounce to the top
+                    newStartY =  boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) - ball.getSize();
+                } else {
+                    // ball is moving to the top, needs to bounce back to the bottom
+                    newStartY = boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) + ball.getSize();
+                }
+
+                ball.reverseY();
+                ball.setNewEndY(newStartY);
+
+            }
+
+        } else if (ballDir[1] == -1) {
+
+            if (pxY < brickActualY + height){
+
+                // reverse X
+
+                if (ballDir[0] == 1){
+                    // ball is moving to the right, needs to bounce to the left
+                    newStartX = (coordinates[0] * Helper.getGridItemSize()) - ball.getSize();
+                } else if (ballDir[0] == -1) {
+                    // ball is moving to the left, needs to bounce to the right
+                    newStartX = (coordinates[0] * Helper.getGridItemSize()) + Helper.getGridItemSize();
+                }
+
+                ball.reverseX();
+                ball.setNewEndX(newStartX);
+
+            } else if (Math.abs(pxY - (brickActualY + height)) <= THRESHOLD){
+
+                // reverse Y
+
+                if (ballDir[1] == 1){
+                    // ball is moving to the bottom, needs to bounce to the top
+                    newStartY =  boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) - ball.getSize();
+                } else {
+                    // ball is moving to the top, needs to bounce back to the bottom
+                    newStartY = boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) + ball.getSize();
+                }
+
+                ball.reverseY();
+                ball.setNewEndY(newStartY);
+
+            }
+
         }
 
-        ball.reverseX();
-        ball.setNewEndX(newStartX);
-        ball.reverseY();
-        ball.setNewEndY(newStartY);
     }
 
     @Override

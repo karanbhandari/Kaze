@@ -59,7 +59,8 @@ public class GridItem extends View {
 //        ((ViewGroup) this.getParent()).removeView(this);
     }
 
-    public void hasHit(int [] coordinates, Ball ball){
+    public void hasHit(int [] coordinates, Ball ball, float pxX, float pxY){
+        // need pxX, pxY to figure out which side the hit was one
 
     }
 
