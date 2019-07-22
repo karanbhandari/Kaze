@@ -199,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
             mediaRecorder.reset();
 
             startSharingIntent();
-            // TODO: needs to be changed to Helper.Pause after rebase master
             Helper.setPause();
 
             stopRecordScreen();
@@ -292,7 +291,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private class MediaProjectionCallback extends MediaProjection.Callback {
-        // Ctrl+O
 
         @Override
         public void onStop() {
