@@ -28,8 +28,6 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-import android.widget.ToggleButton;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -202,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
             startSharingIntent();
             // TODO: needs to be changed to Helper.Pause after rebase master
-            Helper.togglePlayPause();
+            Helper.setPause();
 
             stopRecordScreen();
         }
@@ -231,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     private void recordScreen() {
         if(mediaProjection == null) {
+            Helper.togglePlayPause();
             startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), REQUEST_CODE);
             return;
         }
@@ -268,8 +267,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
     }
 
-    // CTRL+O
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -290,6 +287,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         virtualDisplay = createVirtualDisplay();
         mediaRecorder.start();
+
+        Helper.togglePlayPause();
     }
 
     private class MediaProjectionCallback extends MediaProjection.Callback {
