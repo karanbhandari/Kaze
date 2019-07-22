@@ -112,20 +112,24 @@ public class Paddle extends AppCompatImageView implements Observer {
         if (ball.getPosX() >= left && ball.getPosX() <= (left + paddleWidth)){
 
             float y = this.getY();
-//            if (ball.getPosY() >= y && ball.getPosY() <= (y + paddleHeight)){
-            if (newY >= y && newY <= (y + paddleHeight)){
+            int[] dir = ball.getDir();
 
-                ball.reverseY();
-                Log.d("PADDLE", "checkHit: y: " + y);
-                int[] dir = ball.getDir();
-//                if (dir[1] == 1){
-//                    ball.setNewEndY(y - ball.getSize());
-//                } else {
-//                    ball.setNewEndY(y + paddleHeight);
-//                }
+            if (dir[1] == 1){
+                // ball going down
+//                if (newY + ball.getSize() >= y && newY + ball.getSize() <= (y + paddleHeight)){
+                if (newY + ball.getSize() >= y && newY + ball.getSize() <= (y + paddleHeight)){
 
-                ball.setNewEndY(y + paddleHeight);
+                    ball.reverseY();
+                    Log.d("PADDLE", "checkHit: called reverseY on ball");
+                    ball.setNewEndY(y - ball.getSize());
+                }
 
+            } else if (dir[1] == -1){
+
+                if (ball.getPosY() >= y && ball.getPosY() <= (y + paddleHeight)){
+                    ball.reverseY();
+                    ball.setNewEndY(y + paddleHeight);
+                }
 
             }
 
