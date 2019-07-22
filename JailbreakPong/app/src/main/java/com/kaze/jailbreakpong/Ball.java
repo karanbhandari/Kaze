@@ -228,13 +228,13 @@ public class Ball extends View implements Observer {
     * */
 
     public void pause(){
-        animatorX.pause();
-//        animatorY.pause();    // TODO: TESTING
+//        animatorX.pause();
+        animatorY.pause();    // TODO: TESTING
     }
 
     public void unpause(){
-        animatorX.resume();
-//        animatorY.resume();   // TODO: TESTING
+//        animatorX.resume();
+        animatorY.resume();   // TODO: TESTING
     }
 
 

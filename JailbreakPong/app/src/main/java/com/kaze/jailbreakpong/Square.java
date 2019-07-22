@@ -58,6 +58,7 @@ public class Square extends Brick {
 //        ball.reverseY();
 //        ball.setNewEndY(newStartY);
         float newStartX = 0f;
+        float newStartY = 0f;
         int[] ballDir = ball.getDir();
 
 
@@ -71,18 +72,21 @@ public class Square extends Brick {
 
         }
 
+        BoardView.Boundaries boundaries = Helper.getBoundaries();
+
         if (ballDir[1] == 1){
             // ball is moving to the right, needs to bounce to the left
-//            newStartX = (coordinates[0] * Helper.getGridItemSize()) - ball.getSize();
+            newStartY =  boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) - ball.getSize();
 
         } else {
             // ballDir[0] == -1
-//            newStartX = (coordinates[0] * Helper.getGridItemSize()) + Helper.getGridItemSize();
-
+            newStartY = boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) + ball.getSize();
         }
 
-        ball.reverseX();
-        ball.setNewEndX(newStartX);
+//        ball.reverseX();
+//        ball.setNewEndX(newStartX);
+        ball.reverseY();
+        ball.setNewEndY(newStartY);
     }
 
     @Override
