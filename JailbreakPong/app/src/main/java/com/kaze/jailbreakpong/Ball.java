@@ -232,6 +232,11 @@ public class Ball extends View implements Observer {
         animatorY.pause();
     }
 
+    public void end(){
+        animatorX.end();
+        animatorY.end();
+    }
+
     public void unpause(){
         animatorX.resume();
         animatorY.resume();
@@ -379,6 +384,7 @@ public class Ball extends View implements Observer {
                 break;
             case END:
                 this.setVisibility(View.GONE);
+                end();
                 break;
             default:
                 this.setVisibility(View.GONE);
