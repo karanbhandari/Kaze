@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private VirtualDisplay createVirtualDisplay() {
-        return mediaProjection.createVirtualDisplay("videoCapture", DISPLAY_WIDTH, DISPLAY_HEIGHT, mScreenDensity,
+        return mediaProjection.createVirtualDisplay("mainActivity", DISPLAY_WIDTH, DISPLAY_HEIGHT, mScreenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 mediaRecorder.getSurface(), null, null);
     }
