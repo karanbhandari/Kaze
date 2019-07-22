@@ -22,6 +22,9 @@ import java.util.Random;
 
 public class Ball extends View implements Observer {
 
+    public Paddle paddle1 = null;
+    public Paddle paddle2 = null;
+
     final int SCREEN_BOUNCE_THRESHOLD = 25;
 
     // Coordinates
@@ -322,6 +325,18 @@ public class Ball extends View implements Observer {
                 float animatedVal = (float) animatorY.getAnimatedValue();
                 setPosY(animatedVal);
                 board.isHit(getPosX(), animatedVal, size, ball, getContext());
+
+                // check paddle hits
+
+                if (paddle1 != null){
+                    paddle1.checkHit(ball, animatedVal);
+                }
+
+                if (paddle2 != null){
+                    paddle2.checkHit(ball, animatedVal);
+                }
+
+
 
                 BoardView.Boundaries boundaries = Helper.getBoundaries();
 

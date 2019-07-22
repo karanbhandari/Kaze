@@ -3,6 +3,7 @@ package com.kaze.jailbreakpong;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,16 @@ public class Paddle extends AppCompatImageView implements Observer {
 
                 case MotionEvent.ACTION_MOVE:
                     float value = event.getRawX() + dX;
+
                     if(value <= 0) {
                         value = 0;
                     }
                     if(value >= screenWidth - paddleWidth ) {
                         value = screenWidth - paddleWidth;
                     }
+
+                    left = (int)value;
+
                     view.animate()
                             .x(value)
                             .setDuration(0)
@@ -95,6 +100,37 @@ public class Paddle extends AppCompatImageView implements Observer {
     public boolean performClick() {
         // do what you want
         return true;
+    }
+
+    public void checkHit(Ball ball, float newY){
+
+        // need to check if ball.getPosX is within my own x ... x + width
+        // if yes then check if ball.getPosY is within my own y ... y + height
+        // if yes then reverse Y direction
+        // set the start point to be my own Y coordinate, or even the animatedVal = ball.getPosY(). TRY
+
+        if (ball.getPosX() >= left && ball.getPosX() <= (left + paddleWidth)){
+
+            float y = this.getY();
+//            if (ball.getPosY() >= y && ball.getPosY() <= (y + paddleHeight)){
+            if (newY >= y && newY <= (y + paddleHeight)){
+
+                ball.reverseY();
+                Log.d("PADDLE", "checkHit: y: " + y);
+                int[] dir = ball.getDir();
+//                if (dir[1] == 1){
+//                    ball.setNewEndY(y - ball.getSize());
+//                } else {
+//                    ball.setNewEndY(y + paddleHeight);
+//                }
+
+                ball.setNewEndY(y + paddleHeight);
+
+
+            }
+
+        }
+
     }
 
     @Override

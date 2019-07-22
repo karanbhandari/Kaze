@@ -149,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    setupBall();
-                    setupPaddles();
+                    Ball ball = setupBall();
+                    setupPaddles(ball);
                     Helper.addObserver(refMain);
                     board.initObservers();
                     ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -159,14 +159,16 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
     }
 
-    private void setupBall(){
+    private Ball setupBall(){
         BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
         // create a ball
-        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop + 500, (int) Helper.getGridItemSize(), 1f);
+        Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop + 500, (int) Helper.getGridItemSize(), 0.5f);
         ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
-        
+
         // add to the layout
         layout.addView(ball);
+
+        return ball;
     }
 
     // call start recording when the isRecording is called
@@ -177,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         toggleScreenShare();
     }
 
-    private void setupPaddles(){
+    private void setupPaddles(Ball ball){
 
         BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
 
@@ -186,6 +188,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         Paddle paddle2 = new Paddle(getApplicationContext(), 200, boardBoundaries.opponentTop, R.drawable.ic_orangepaddle);
         layout.addView(paddle2);
+
+        ball.paddle1 = paddle1;
+        ball.paddle2 = paddle2;
+
     }
 
     private void toggleScreenShare() {
