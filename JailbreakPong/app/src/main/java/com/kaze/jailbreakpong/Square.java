@@ -53,15 +53,8 @@ public class Square extends Brick {
 
     @Override
     public void hasHit(int [] coordinates, Ball ball, float pxX, float pxY){
-//        Log.d("SQUARE", "hasHit: coordinates: " + coordinates[0] + " " + coordinates[1]);
-//        Log.d("SQUARE", "hasHit: hit coordinates: " + pxX + " " + pxY);
-//        Log.d("SQUARE", "hasHit: brick coordinates: " + row + " " + column);
-//        Log.d("SQUARE", "hasHit: brick coordinates: " + (row + width) + " " + column);
-//        Log.d("SQUARE", "hasHit: brick coordinates: " + row + " " + (column + height));
-//        Log.d("SQUARE", "hasHit: brick coordinates: " + (row + width)+ " " + (column + height));
-        hit();
 
-        // remember: pxX and pxY are the top left corners
+        hit();
 
         final float THRESHOLD = 10;
 
