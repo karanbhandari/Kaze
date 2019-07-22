@@ -121,6 +121,7 @@ public class Paddle extends AppCompatImageView implements Observer {
 
                     ball.reverseY();
                     ball.setNewEndY(y - ball.getSize());
+                    ball.speed += 0.1;
                 }
 
             } else if (dir[1] == -1){
@@ -128,6 +129,7 @@ public class Paddle extends AppCompatImageView implements Observer {
                 if (ball.getPosY() >= y && ball.getPosY() <= (y + paddleHeight)){
                     ball.reverseY();
                     ball.setNewEndY(y + paddleHeight);
+                    ball.speed += 0.1;
                 }
 
             }

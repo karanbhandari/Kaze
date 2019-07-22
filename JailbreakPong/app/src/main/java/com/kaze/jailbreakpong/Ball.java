@@ -34,7 +34,7 @@ public class Ball extends View implements Observer {
     private int size;
 
     // Speed
-    private float speed;
+    public float speed;
 
     // direction
     private int [] dir = {1, 1};
