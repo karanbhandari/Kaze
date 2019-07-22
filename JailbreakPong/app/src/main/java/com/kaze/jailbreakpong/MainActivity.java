@@ -136,23 +136,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     Helper.addObserver(refMain);
                     board.initObservers();
                     ref.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                    board.build(BuildingView.Selected.PRISON, board.getGridItemSize() * 3, board.getBoundaries().boardTop);
-                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 4, board.getBoundaries().boardTop);
-                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 5, board.getBoundaries().boardTop);
-                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 6, board.getBoundaries().boardTop);
-                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 8, board.getBoundaries().boardTop);
-
-//                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 2, board.getBoundaries().boardTop);
-//                    board.build(BuildingView.Selected.BRICK, board.getGridItemSize() * 1, board.getBoundaries().boardTop);
-
-                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardTop + (Helper.getGridItemSize() * 3));
-
-//                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardTop + (Helper.getGridItemSize() * 5));
-
-                    board.build(BuildingView.Selected.BRICK, 0, board.getBoundaries().boardBottom - Helper.getGridItemSize() * 3);
-
-                    board.build(BuildingView.Selected.PRISON, board.getBoundaries().boardBottom - board.getGridItemSize(), board.getBoundaries().boardBottom);
                 }
             });
         }
@@ -161,20 +144,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private void setupBall(){
         BoardView.Boundaries boardBoundaries = Helper.getBoundaries();
         // create a ball
-
-        // TESTING CODE FOR X
-//        Ball ball = Helper.initBall(this, 500, boardBoundaries.boardTop, (int) Helper.getGridItemSize(), 0.2f);
-        // TODO: Uncomment below after testing
-//        ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
-
-//        ball.addXAnimator();
-//        ball.addYAnimator(boardBoundaries.boardTop, boardBoundaries.boardBottom);
-
-        // TESTING CODE FOR Y
         Ball ball = Helper.initBall(this, 0, boardBoundaries.boardTop + 500, (int) Helper.getGridItemSize(), 1f);
-
-//        ball.addYAnimator(boardBoundaries.boardTop, boardBoundaries.boardBottom);
         ball.addAnimators(boardBoundaries.boardTop, boardBoundaries.boardBottom);
+        
         // add to the layout
         layout.addView(ball);
     }
