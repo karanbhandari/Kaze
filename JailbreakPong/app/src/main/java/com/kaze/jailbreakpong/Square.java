@@ -83,8 +83,8 @@ public class Square extends Brick {
             newStartY = boundaries.boardTop + (coordinates[1] * Helper.getGridItemSize()) + ball.getSize();
         }
 
-//        ball.reverseX();
-//        ball.setNewEndX(newStartX);
+        ball.reverseX();
+        ball.setNewEndX(newStartX);
         ball.reverseY();
         ball.setNewEndY(newStartY);
     }
