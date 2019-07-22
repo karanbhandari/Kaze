@@ -311,37 +311,6 @@ public class Board extends Observable {
         boolean hasHit = false;
         ArrayList<int[]> visitedCoordinates = new ArrayList<>();
 
-        // check hits depending on Ball's direction
-        /*
-        *   if ball.dir[0] == 1 --> ball is moving to the right, only check hits by pxX + size
-        *   if ball.dir[0] == -1 --> ball is moving to the left, only check hits by pxX
-        *
-        *   if ball.dir[1] == 1 --> ball is moving down, only check hits by pxY + size
-        *   if ball.sir[1] == -1 --> ball is moving up, only check hits by pxY
-        */
-
-//        int[] ballDir = ball.getDir();
-//
-//        if (ballDir[0] == 1){
-//
-//            if (ballDir[1] == 1){
-//                boundaries.add(translateToCoordinate(pxX+size, pxY+size));
-//            } else {
-//                // ballDir[1] == -1
-//                boundaries.add(translateToCoordinate(pxX+size, pxY));
-//            }
-//
-//        } else {
-//            // ballDir[0] == -1
-//
-//            if (ballDir[1] == 1){
-//                boundaries.add(translateToCoordinate(pxX, pxY+size));
-//            } else {
-//                // ballDir[0] == -1
-//                boundaries.add(translateToCoordinate(pxX, pxY));
-//            }
-//        }
-
         // check grid item hit
         for (int i = 0; i < 4; ++i) {
             int[] coordinate = boundaries.get(i);
@@ -362,6 +331,8 @@ public class Board extends Observable {
             }
 
         }
+
+        // TODO: need to check Paddle hits here
 
         return hasHit;
     }
